@@ -6,25 +6,45 @@
 
 // ข้อมูลตัวอย่างโน้ตและข้อสอบเก่า (จำลองฐานข้อมูล)
 const notesData = [
-  { id: 1, title: "สรุปแคลคูลัส 1", subject: "แคลคูลัส 1", faculty: "engineering", year: "1", type: "note", author: "สมชาย ใจดี" },
-  { id: 2, title: "ข้อสอบเก่า ฟิสิกส์ทั่วไป", subject: "ฟิสิกส์ทั่วไป", faculty: "engineering", year: "1", type: "exam", author: "วิชัย ตั้งใจ" },
-  { id: 3, title: "สรุปโครงสร้างข้อมูล", subject: "โครงสร้างข้อมูล", faculty: "engineering", year: "2", type: "note", author: "สมหญิง รักเรียน" },
-  { id: 4, title: "ข้อสอบเก่า ระบบฐานข้อมูล", subject: "ระบบฐานข้อมูล", faculty: "engineering", year: "3", type: "exam", author: "สมชาย ใจดี" },
-  { id: 5, title: "สรุปหลักเศรษฐศาสตร์จุลภาค", subject: "เศรษฐศาสตร์จุลภาค", faculty: "business", year: "1", type: "note", author: "น้ำผึ้ง สดใส" },
-  { id: 6, title: "ข้อสอบเก่า การตลาดเบื้องต้น", subject: "การตลาดเบื้องต้น", faculty: "business", year: "2", type: "exam", author: "วิชัย ตั้งใจ" },
-  { id: 7, title: "สรุปการบัญชีการเงิน", subject: "การบัญชีการเงิน", faculty: "business", year: "2", type: "note", author: "สมหญิง รักเรียน" },
-  { id: 8, title: "สรุปกายวิภาคศาสตร์", subject: "กายวิภาคศาสตร์", faculty: "medicine", year: "1", type: "note", author: "น้ำผึ้ง สดใส" },
-  { id: 9, title: "ข้อสอบเก่า สรีรวิทยา", subject: "สรีรวิทยา", faculty: "medicine", year: "2", type: "exam", author: "วิชัย ตั้งใจ" },
-  { id: 10, title: "สรุปกฎหมายแพ่งและพาณิชย์", subject: "กฎหมายแพ่งและพาณิชย์", faculty: "law", year: "1", type: "note", author: "สมชาย ใจดี" },
-  { id: 11, title: "ข้อสอบเก่า กฎหมายอาญา", subject: "กฎหมายอาญา", faculty: "law", year: "2", type: "exam", author: "สมหญิง รักเรียน" },
-  { id: 12, title: "สรุปภาษาอังกฤษเพื่อการสื่อสาร", subject: "ภาษาอังกฤษเพื่อการสื่อสาร", faculty: "arts", year: "1", type: "note", author: "น้ำผึ้ง สดใส" },
+  { id: 1, title: "สรุปคณิตศาสตร์ ม.4", subject: "คณิตศาสตร์เพิ่มเติม", category: "math", grade: "m4", type: "note", author: "สมชาย ใจดี" },
+  { id: 2, title: "ข้อสอบเก่า ฟิสิกส์ ม.5", subject: "ฟิสิกส์", category: "science", grade: "m5", type: "exam", author: "วิชัย ตั้งใจ" },
+  { id: 3, title: "สรุปชีววิทยา ม.ปลาย", subject: "ชีววิทยา", category: "science", grade: "senior", type: "note", author: "สมหญิง รักเรียน" },
+  { id: 4, title: "แกรมมาร์ภาษาอังกฤษ ม.3", subject: "ภาษาอังกฤษ", category: "english", grade: "m3", type: "note", author: "น้ำผึ้ง สดใส" },
+  { id: 5, title: "ข้อสอบเก่า เคมี ม.6", subject: "เคมี", category: "science", grade: "m6", type: "exam", author: "วิชัย ตั้งใจ" },
+  { id: 6, title: "สรุปหลักภาษาไทย ม.2", subject: "ภาษาไทย", category: "thai", grade: "m2", type: "note", author: "สมหญิง รักเรียน" },
+  { id: 7, title: "สรุปประวัติศาสตร์ไทย ม.1", subject: "ประวัติศาสตร์ไทย", category: "social", grade: "m1", type: "note", author: "สมชาย ใจดี" },
+  { id: 8, title: "ข้อสอบเก่า เรขาคณิต ม.ต้น", subject: "เรขาคณิต", category: "math", grade: "junior", type: "exam", author: "น้ำผึ้ง สดใส" },
+  { id: 9, title: "สรุปวรรณคดีไทย ม.4", subject: "วรรณคดีไทย", category: "thai", grade: "m4", type: "note", author: "สมหญิง รักเรียน" },
+  { id: 10, title: "ข้อสอบเก่า หน้าที่พลเมือง ม.5", subject: "หน้าที่พลเมือง", category: "social", grade: "m5", type: "exam", author: "วิชัย ตั้งใจ" },
+  { id: 11, title: "สรุปการอ่านจับใจความภาษาอังกฤษ ม.6", subject: "ภาษาอังกฤษ", category: "english", grade: "m6", type: "note", author: "น้ำผึ้ง สดใส" },
+  { id: 12, title: "สรุปเซตและตรรกศาสตร์ ม.4", subject: "คณิตศาสตร์เพิ่มเติม", category: "math", grade: "m4", type: "note", author: "สมชาย ใจดี" },
 ];
+
+// ป้ายกำกับหมวดวิชา/ระดับชั้น ใช้แสดงเป็น tag บนการ์ด
+const categoryLabels = {
+  math: "คณิตศาสตร์",
+  science: "วิทยาศาสตร์",
+  english: "ภาษาอังกฤษ",
+  thai: "ภาษาไทย",
+  social: "สังคมศึกษา",
+};
+
+const gradeLabels = {
+  m1: "ม.1",
+  m2: "ม.2",
+  m3: "ม.3",
+  m4: "ม.4",
+  m5: "ม.5",
+  m6: "ม.6",
+  junior: "ม.ต้น",
+  senior: "ม.ปลาย",
+};
 
 // สีของปกโน้ตแต่ละใบ ใช้วนซ้ำตามลำดับ เพื่อให้ดูเหมือนชั้นหนังสือ
 const coverColors = ["#3F49A5", "#AB3730", "#EDBD60"];
 
 // สถานะการกรองปัจจุบัน
-const activeFilter = { faculty: "all", year: "all", keyword: "" };
+const activeFilter = { subject: "all", grade: "all", keyword: "" };
 
 const cardGrid = document.querySelector("#cardGrid");
 const resultTitle = document.querySelector("#resultTitle");
@@ -46,8 +66,8 @@ function createNoteCard(note, colorIndex) {
     <h3>${note.title}</h3>
     <p class="author">โพสต์โดย: ${note.author}</p>
     <div class="note-tags">
-      <span>${note.subject}</span>
-      <span>ชั้นปี ${note.year}</span>
+      <span>${categoryLabels[note.category] || note.category}</span>
+      <span>${gradeLabels[note.grade] || note.grade}</span>
       <span>${note.type === "exam" ? "ข้อสอบเก่า" : "สรุปเนื้อหา"}</span>
     </div>
     <button class="btn btn-primary">ดูรายละเอียด</button>
@@ -74,17 +94,17 @@ function renderNotes(list) {
   }
 }
 
-// กรองข้อมูลตามคณะ ชั้นปี และคำค้นหาที่เลือกไว้ในปัจจุบัน
+// กรองข้อมูลตามหมวดวิชา ระดับชั้น และคำค้นหาที่เลือกไว้ในปัจจุบัน
 function applyFilters() {
   const filtered = notesData.filter((note) => {
-    const matchFaculty = activeFilter.faculty === "all" || note.faculty === activeFilter.faculty;
-    const matchYear = activeFilter.year === "all" || note.year === activeFilter.year;
+    const matchSubject = activeFilter.subject === "all" || note.category === activeFilter.subject;
+    const matchGrade = activeFilter.grade === "all" || note.grade === activeFilter.grade;
     const matchKeyword =
       activeFilter.keyword === "" ||
       note.title.toLowerCase().includes(activeFilter.keyword) ||
       note.subject.toLowerCase().includes(activeFilter.keyword);
 
-    return matchFaculty && matchYear && matchKeyword;
+    return matchSubject && matchGrade && matchKeyword;
   });
 
   renderNotes(filtered);

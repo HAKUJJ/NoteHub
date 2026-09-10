@@ -37,40 +37,42 @@
     <form id="postForm" class="post-form" novalidate>
       <div class="field">
         <label for="postTitle">ชื่อโน้ต</label>
-        <input type="text" id="postTitle" name="title" required placeholder="เช่น สรุปแคลคูลัส 1"
+        <input type="text" id="postTitle" name="title" required placeholder="เช่น สรุปคณิตศาสตร์ ม.4"
           data-error-message="กรุณากรอกชื่อโน้ต" />
         <p class="error-message" id="postTitle-error"></p>
       </div>
 
       <div class="field">
         <label for="postSubject">รายวิชา</label>
-        <input type="text" id="postSubject" name="subject" required placeholder="เช่น แคลคูลัส 1"
+        <input type="text" id="postSubject" name="subject" required placeholder="เช่น คณิตศาสตร์เพิ่มเติม"
           data-error-message="กรุณากรอกชื่อวิชา" />
         <p class="error-message" id="postSubject-error"></p>
       </div>
 
       <div class="post-form-grid">
         <div class="field">
-          <label for="postFaculty">คณะ</label>
-          <select id="postFaculty" name="faculty" required data-error-message="กรุณาเลือกคณะ">
-            <option value="">-- เลือกคณะ --</option>
-            <option value="engineering">วิศวกรรมศาสตร์</option>
-            <option value="business">บริหารธุรกิจ</option>
-            <option value="medicine">แพทยศาสตร์</option>
-            <option value="law">นิติศาสตร์</option>
-            <option value="arts">ศิลปศาสตร์</option>
+          <label for="postFaculty">หมวดวิชา</label>
+          <select id="postFaculty" name="faculty" required data-error-message="กรุณาเลือกหมวดวิชา">
+            <option value="">-- เลือกหมวดวิชา --</option>
+            <option value="math">คณิตศาสตร์</option>
+            <option value="science">วิทยาศาสตร์</option>
+            <option value="english">ภาษาอังกฤษ</option>
+            <option value="thai">ภาษาไทย</option>
+            <option value="social">สังคมศึกษา</option>
           </select>
           <p class="error-message" id="postFaculty-error"></p>
         </div>
 
         <div class="field">
-          <label for="postYear">ชั้นปี</label>
-          <select id="postYear" name="year" required data-error-message="กรุณาเลือกชั้นปี">
-            <option value="">-- เลือกชั้นปี --</option>
-            <option value="1">ปี 1</option>
-            <option value="2">ปี 2</option>
-            <option value="3">ปี 3</option>
-            <option value="4">ปี 4</option>
+          <label for="postYear">ระดับชั้น</label>
+          <select id="postYear" name="year" required data-error-message="กรุณาเลือกระดับชั้น">
+            <option value="">-- เลือกระดับชั้น --</option>
+            <option value="m1">ม.1</option>
+            <option value="m2">ม.2</option>
+            <option value="m3">ม.3</option>
+            <option value="m4">ม.4</option>
+            <option value="m5">ม.5</option>
+            <option value="m6">ม.6</option>
           </select>
           <p class="error-message" id="postYear-error"></p>
         </div>
@@ -110,7 +112,7 @@
   </main>
 
   <footer>
-    <p>&copy; 2026 NotesHub. สร้างขึ้นเพื่อการศึกษา (โปรเจกต์รายวิชา).</p>
+    <p>&copy; 2026 NotesHub.Mini Project</p>
   </footer>
 
   <!-- ========== Modal: Login / Register ========== -->

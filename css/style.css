@@ -224,6 +224,10 @@ img {
   margin: 0 0 10px;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 .hero-image {
   width: 220px;
   flex-shrink: 0;
