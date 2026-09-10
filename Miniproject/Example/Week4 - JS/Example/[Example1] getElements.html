@@ -1,0 +1,34 @@
+<!-- สมมติว่ามีช่องกรอก 3 ช่องในหน้าเว็บ -->
+<div id="formContainer">
+    <input type="text" class="field-input" value="Data 1">
+    <input type="text" class="field-input" value="Data 2">
+    <input type="text" class="field-input" value="Data 3">
+</div>
+
+<script>
+    // ==========================================
+    // แบบดั้งเดิม: getElementsByClassName (HTMLCollection - Live)
+    // ==========================================
+    const liveInputs = document.getElementsByClassName("field-input");
+    console.log("จำนวนเริ่มต้น (Live):", liveInputs.length); // 3
+
+    // ข้อควรระวัง: HTMLCollection ไม่รองรับคำสั่ง .forEach() โดยตรง!
+    // ต้องแปลงเป็น Array ก่อน: Array.from(liveInputs).forEach(...)
+
+    // ==========================================
+    // แบบสมัยใหม่: querySelectorAll (NodeList - Static Snapshot)
+    // ==========================================
+    const staticInputs = document.querySelectorAll("#formContainer .field-input");
+    console.log("จำนวนเริ่มต้น (Static):", staticInputs.length); // 3
+
+    // ใช้งาน .forEach() ได้ทันทีตามมาตรฐานสมัยใหม่
+    staticInputs.forEach((inputEl, index) => {
+        console.log(`ช่องที่ ${index + 1}:`, inputEl.value);
+    });
+
+        staticInputs.forEach(test);
+
+    function test(inputEl, index) {
+        console.log(`ช่องที่ ${index + 1}:`, inputEl.value)
+    }
+</script>

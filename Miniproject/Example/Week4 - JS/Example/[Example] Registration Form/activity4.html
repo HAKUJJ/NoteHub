@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS319 Activity 4 - Student Registration</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: #f1f5f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .card { background: white; padding: 28px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); width: 100%; max-width: 440px; }
+        h2 { margin-top: 0; color: #1e293b; text-align: center; margin-bottom: 20px; }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: #334155; }
+        input { width: 100%; padding: 10px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        input:focus { border-color: #2563eb; }
+        input.invalid { border-color: #ef4444; background-color: #fef2f2; }
+        input.valid { border-color: #10b981; background-color: #f0fdf4; }
+        .error-msg { color: #ef4444; font-size: 12px; margin-top: 4px; display: none; }
+        button { width: 100%; padding: 12px; background-color: #2563eb; color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #1d4ed8; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>ลงทะเบียนนักศึกษา (CS319)</h2>
+    <form id="studentRegForm" novalidate>
+        <div class="form-group">
+            <label for="studentId">รหัสนักศึกษา (10 หลัก):</label>
+            <input type="text" id="studentId" placeholder="165070xxxx">
+            <span class="error-msg" id="studentIdErr">รหัสนักศึกษาต้องเป็นตัวเลข 10 หลัก</span>
+        </div>
+
+        <div class="form-group">
+            <label for="fullName">ชื่อ-นามสกุล:</label>
+            <input type="text" id="fullName" placeholder="นายสมชาย ใจดี">
+            <span class="error-msg" id="fullNameErr">กรุณากรอกชื่อ-นามสกุล</span>
+        </div>
+
+        <div class="form-group">
+            <label for="email">อีเมลมหาวิทยาลัย (@bu.ac.th):</label>
+            <input type="email" id="email" placeholder="student@bu.ac.th">
+            <span class="error-msg" id="emailErr">อีเมลต้องลงท้ายด้วย @bu.ac.th เท่านั้น</span>
+        </div>
+
+        <div class="form-group">
+            <label for="gpa">เกรดเฉลี่ยสะสม (0.00 - 4.00):</label>
+            <input type="number" step="0.01" id="gpa" placeholder="3.50">
+            <span class="error-msg" id="gpaErr">เกรดเฉลี่ยต้องอยู่ระหว่าง 0.00 ถึง 4.00</span>
+        </div>
+
+        <div class="form-group">
+            <label for="password">รหัสผ่าน (อย่างน้อย 8 ตัวอักษร):</label>
+            <input type="password" id="password">
+            <span class="error-msg" id="passwordErr">รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร</span>
+        </div>
+
+        <button type="submit">ลงทะเบียนข้อมูล</button>
+    </form>
+</div>
+
+<script src="activity4.js"></script>
+</body>
+</html>
