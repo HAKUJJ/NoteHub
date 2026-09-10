@@ -6,18 +6,18 @@
 
 // ข้อมูลตัวอย่างโน้ตและข้อสอบเก่า (จำลองฐานข้อมูล)
 const notesData = [
-  { id: 1, title: "สรุปแคลคูลัส 1", subject: "แคลคูลัส 1", faculty: "engineering", year: "1", type: "note" },
-  { id: 2, title: "ข้อสอบเก่า ฟิสิกส์ทั่วไป", subject: "ฟิสิกส์ทั่วไป", faculty: "engineering", year: "1", type: "exam" },
-  { id: 3, title: "สรุปโครงสร้างข้อมูล", subject: "โครงสร้างข้อมูล", faculty: "engineering", year: "2", type: "note" },
-  { id: 4, title: "ข้อสอบเก่า ระบบฐานข้อมูล", subject: "ระบบฐานข้อมูล", faculty: "engineering", year: "3", type: "exam" },
-  { id: 5, title: "สรุปหลักเศรษฐศาสตร์จุลภาค", subject: "เศรษฐศาสตร์จุลภาค", faculty: "business", year: "1", type: "note" },
-  { id: 6, title: "ข้อสอบเก่า การตลาดเบื้องต้น", subject: "การตลาดเบื้องต้น", faculty: "business", year: "2", type: "exam" },
-  { id: 7, title: "สรุปการบัญชีการเงิน", subject: "การบัญชีการเงิน", faculty: "business", year: "2", type: "note" },
-  { id: 8, title: "สรุปกายวิภาคศาสตร์", subject: "กายวิภาคศาสตร์", faculty: "medicine", year: "1", type: "note" },
-  { id: 9, title: "ข้อสอบเก่า สรีรวิทยา", subject: "สรีรวิทยา", faculty: "medicine", year: "2", type: "exam" },
-  { id: 10, title: "สรุปกฎหมายแพ่งและพาณิชย์", subject: "กฎหมายแพ่งและพาณิชย์", faculty: "law", year: "1", type: "note" },
-  { id: 11, title: "ข้อสอบเก่า กฎหมายอาญา", subject: "กฎหมายอาญา", faculty: "law", year: "2", type: "exam" },
-  { id: 12, title: "สรุปภาษาอังกฤษเพื่อการสื่อสาร", subject: "ภาษาอังกฤษเพื่อการสื่อสาร", faculty: "arts", year: "1", type: "note" },
+  { id: 1, title: "สรุปแคลคูลัส 1", subject: "แคลคูลัส 1", faculty: "engineering", year: "1", type: "note", author: "สมชาย ใจดี" },
+  { id: 2, title: "ข้อสอบเก่า ฟิสิกส์ทั่วไป", subject: "ฟิสิกส์ทั่วไป", faculty: "engineering", year: "1", type: "exam", author: "วิชัย ตั้งใจ" },
+  { id: 3, title: "สรุปโครงสร้างข้อมูล", subject: "โครงสร้างข้อมูล", faculty: "engineering", year: "2", type: "note", author: "สมหญิง รักเรียน" },
+  { id: 4, title: "ข้อสอบเก่า ระบบฐานข้อมูล", subject: "ระบบฐานข้อมูล", faculty: "engineering", year: "3", type: "exam", author: "สมชาย ใจดี" },
+  { id: 5, title: "สรุปหลักเศรษฐศาสตร์จุลภาค", subject: "เศรษฐศาสตร์จุลภาค", faculty: "business", year: "1", type: "note", author: "น้ำผึ้ง สดใส" },
+  { id: 6, title: "ข้อสอบเก่า การตลาดเบื้องต้น", subject: "การตลาดเบื้องต้น", faculty: "business", year: "2", type: "exam", author: "วิชัย ตั้งใจ" },
+  { id: 7, title: "สรุปการบัญชีการเงิน", subject: "การบัญชีการเงิน", faculty: "business", year: "2", type: "note", author: "สมหญิง รักเรียน" },
+  { id: 8, title: "สรุปกายวิภาคศาสตร์", subject: "กายวิภาคศาสตร์", faculty: "medicine", year: "1", type: "note", author: "น้ำผึ้ง สดใส" },
+  { id: 9, title: "ข้อสอบเก่า สรีรวิทยา", subject: "สรีรวิทยา", faculty: "medicine", year: "2", type: "exam", author: "วิชัย ตั้งใจ" },
+  { id: 10, title: "สรุปกฎหมายแพ่งและพาณิชย์", subject: "กฎหมายแพ่งและพาณิชย์", faculty: "law", year: "1", type: "note", author: "สมชาย ใจดี" },
+  { id: 11, title: "ข้อสอบเก่า กฎหมายอาญา", subject: "กฎหมายอาญา", faculty: "law", year: "2", type: "exam", author: "สมหญิง รักเรียน" },
+  { id: 12, title: "สรุปภาษาอังกฤษเพื่อการสื่อสาร", subject: "ภาษาอังกฤษเพื่อการสื่อสาร", faculty: "arts", year: "1", type: "note", author: "น้ำผึ้ง สดใส" },
 ];
 
 // สีของปกโน้ตแต่ละใบ ใช้วนซ้ำตามลำดับ เพื่อให้ดูเหมือนชั้นหนังสือ
@@ -44,6 +44,7 @@ function createNoteCard(note, colorIndex) {
   body.className = "note-card-body";
   body.innerHTML = `
     <h3>${note.title}</h3>
+    <p class="author">โพสต์โดย: ${note.author}</p>
     <div class="note-tags">
       <span>${note.subject}</span>
       <span>ชั้นปี ${note.year}</span>

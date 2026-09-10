@@ -302,6 +302,13 @@ img {
   color: var(--color-navy);
 }
 
+.note-card-body .author {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-navy);
+  opacity: 0.7;
+}
+
 .note-tags {
   display: flex;
   flex-wrap: wrap;
@@ -394,15 +401,24 @@ footer {
   color: var(--color-navy);
 }
 
-.field input {
+.field input,
+.field select,
+.field textarea {
   width: 100%;
   padding: 9px 12px;
   border-radius: 8px;
   border: 1px solid var(--color-shell);
   font-size: 0.95rem;
+  font-family: inherit;
 }
 
-.field input[aria-invalid="true"] {
+.field textarea {
+  resize: vertical;
+}
+
+.field input[aria-invalid="true"],
+.field select[aria-invalid="true"],
+.field textarea[aria-invalid="true"] {
   border-color: var(--color-strawberry);
 }
 
@@ -558,6 +574,33 @@ footer {
 
 .matcher-result {
   margin-top: 36px;
+}
+
+/* ---------- Post page ---------- */
+.post-hero {
+  background-color: var(--color-shell);
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.post-hero h1 {
+  color: var(--color-navy);
+  margin: 0 0 8px;
+}
+
+.post-form {
+  max-width: 640px;
+  margin: 32px auto;
+  padding: 28px 24px;
+  background-color: var(--color-shell);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.post-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0 12px;
 }
 
 /* ---------- Responsive ---------- */
