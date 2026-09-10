@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="แฟ้มสะสมผลงานส่วนตัวและการเรียนรู้ HTML5 รายวิชา CS319 Internet Programming I มหาวิทยาลัยกรุงเทพ">
+    <title>Personal Portfolio - นายณัฐดนัย คอมพิวเตอร์ (CS319) - Vanilla CSS</title>
+    <!-- Google Fonts: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        /* CSS Reset & Global Styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+            line-height: 1.65;
+            padding: 24px 16px;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Header & Navigation Bar */
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
+            border: 1px solid #334155;
+        }
+
+        header h1 {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        header p strong {
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        nav {
+            margin-top: 1.5rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        nav a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.2s ease;
+        }
+
+        nav a:hover {
+            background: #0284c7;
+            color: #ffffff;
+            border-color: #0284c7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+
+        /* Divider */
+        hr {
+            display: none;
+        }
+
+        /* Main Sections Card Style */
+        main {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        section {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        section:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: #0284c7;
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 2px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+        }
+
+        h3 {
+            font-size: 1.05rem;
+            color: #334155;
+            font-weight: 600;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Section 1: About Me Layout */
+        #about .about-content {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        #about img {
+            border-radius: 50%;
+            border: 4px solid #e0f2fe;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.15);
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #f8fafc;
+        }
+
+        #about .about-text {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        #about p {
+            margin-bottom: 0.75rem;
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        #about p:last-child {
+            margin-bottom: 0;
+        }
+
+        mark {
+            background-color: #fef08a;
+            color: #854d0e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        em {
+            color: #0284c7;
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        a {
+            color: #0284c7;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #0369a1;
+            text-decoration: underline;
+        }
+
+        /* Section 2: Education Table */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            margin-top: 0.75rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background: #f8fafc;
+            color: #1e293b;
+            font-weight: 600;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        th,
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Section 3: Skills Lists */
+        ol,
+        ul {
+            padding-left: 1.5rem;
+            color: #475569;
+            font-size: 0.92rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        li strong {
+            color: #1e293b;
+        }
+
+        /* Section 4: Contact Form */
+        #contact p.intro {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        fieldset {
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 1.5rem;
+            background: #fafafa;
+        }
+
+        legend {
+            padding: 0 10px;
+            color: #0284c7;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        form p {
+            margin-bottom: 1.1rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #334155;
+            display: inline-block;
+            margin-bottom: 0.35rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background-color: #ffffff;
+            color: #1e293b;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #0284c7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18);
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 0.5rem;
+        }
+
+        button {
+            padding: 10px 22px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        button[type="submit"] {
+            background-color: #0284c7;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0369a1;
+            transform: translateY(-1px);
+        }
+
+        button[type="reset"] {
+            background-color: #e2e8f0;
+            color: #475569;
+        }
+
+        button[type="reset"]:hover {
+            background-color: #cbd5e1;
+            color: #1e293b;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header & Navigation Bar Section -->
+        <header>
+            <h1>Natdanai Computer | Personal Portfolio</h1>
+            <p>นักศึกษาวิทยาการคอมพิวเตอร์ ผู้สนใจในการพัฒนา <strong>Frontend Web Development</strong> และ
+                <strong>Software Engineering</strong>
+            </p>
+
+            <!-- Navigation Menu with Anchor Links -->
+            <nav>
+                <ul>
+                    <li><a href="#about">ประวัติส่วนตัว</a></li>
+                    <li><a href="#education">ประวัติการศึกษา</a></li>
+                    <li><a href="#skills">ทักษะและความสนใจ</a></li>
+                    <li><a href="#contact">แบบฟอร์มติดต่อ</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main>
+            <!-- Section 1: About Me -->
+            <section id="about">
+                <h2>ประวัติส่วนตัว (About Me)</h2>
+                <div class="about-content">
+                    <!-- Profile Image with alt and dimensions -->
+                    <img src="https://blockspot.io/wp-content/uploads/niu-lai-niulai-space-niu-lai-58050-coin-logo.png"
+                        alt="รูปถ่ายโปรไฟล์นายณัฐดนัย คอมพิวเตอร์" width="180" height="180">
+
+                    <div class="about-text">
+                        <p>สวัสดีครับ! ผมชื่อ <strong>นายณัฐดนัย คอมพิวเตอร์</strong> ปัจจุบันกำลังศึกษาอยู่ชั้นปีที่ 3
+                            สาขาวิชาวิทยาการคอมพิวเตอร์ คณะเทคโนโลยีสารสนเทศและนวัตกรรม <a href="https://www.bu.ac.th"
+                                target="_blank" rel="noopener noreferrer">มหาวิทยาลัยกรุงเทพ</a></p>
+                        <p>ผมมีความหลงใหลในการสร้างสรรค์เว็บแอปพลิเคชันที่ใช้งานง่าย และกำลังมุ่งมั่นเรียนรู้ในรายวิชา
+                            <mark>CS319 Internet Programming I</mark> เพื่อพัฒนาทักษะสู่การเป็น <em>Full-Stack
+                                Developer</em> มืออาชีพในอนาคตครับ
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Education & Experience -->
+            <section id="education">
+                <h2>ประวัติการศึกษาและผลงาน (Education & Experience)</h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ปีการศึกษา</th>
+                                <th>ระดับการศึกษา / สถาบัน</th>
+                                <th>สาขาวิชา / เกรดเฉลี่ย</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024 - ปัจจุบัน</td>
+                                <td>ปริญญาตรี - มหาวิทยาลัยกรุงเทพ</td>
+                                <td>วิทยาการคอมพิวเตอร์ (CS)</td>
+                            </tr>
+                            <tr>
+                                <td>2021 - 2023</td>
+                                <td>มัธยมศึกษาตอนปลาย - โรงเรียนวิทยาศาสตร์</td>
+                                <td>แผนการเรียน วิทย์-คณิต (GPA: 3.85)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Section 3: Skills & Interests -->
+            <section id="skills">
+                <h2>ทักษะและความสนใจ (Skills & Interests)</h2>
+
+                <h3>ทักษะทางเทคนิค (Technical Skills)</h3>
+                <ol>
+                    <li><strong>HTML5 & CSS3:</strong> การจัดโครงสร้าง Semantic Web และการจัดวาง Layout</li>
+                    <li><strong>Programming Languages:</strong> C++, Java, และ JavaScript (ES6+)</li>
+                    <li><strong>Developer Tools:</strong> VS Code, Git, GitHub, และ Chrome DevTools</li>
+                </ol>
+
+                <h3>งานอดิเรกและความสนใจ (Hobbies & Interests)</h3>
+                <ul>
+                    <li>ติดตามข่าวสารเทคโนโลยีเว็บ และ AI Tools สมัยใหม่</li>
+                    <li>ฝึกแก้ปัญหาโจทย์อัลกอริทึมบน LeetCode</li>
+                    <li>เล่นดนตรี และฟังเพลงเพื่อผ่อนคลาย</li>
+                </ul>
+            </section>
+
+            <!-- Section 4: Contact Form -->
+            <section id="contact">
+                <h2>ติดต่อฉัน (Contact Me)</h2>
+                <p class="intro">หากอาจารย์หรือผู้ที่สนใจต้องการสอบถามข้อมูลเพิ่มเติม
+                    สามารถส่งข้อความถึงผมได้ผ่านแบบฟอร์มนี้ครับ:</p>
+
+                <form action="https://postman-echo.com/get" method="GET">
+                    <fieldset>
+                        <legend><b>แบบฟอร์มส่งข้อความติดต่อ</b></legend>
+
+                        <p>
+                            <label for="sender-name">ชื่อ-นามสกุล ผู้ติดต่อ:</label><br>
+                            <input type="text" id="sender-name" name="sender_name" placeholder="กรุณากรอกชื่อของคุณ"
+                                required>
+                        </p>
+
+                        <p>
+                            <label for="sender-email">อีเมลตอบกลับ:</label><br>
+                            <input type="email" id="sender-email" name="sender_email" placeholder="example@bu.ac.th"
+                                required>
+                        </p>
+
+                        <p>
+                            <label for="subject">หัวข้อการติดต่อ:</label><br>
+                            <select id="subject" name="subject">
+                                <option value="general">สอบถามข้อมูลทั่วไป</option>
+                                <option value="project">สอบถามเกี่ยวกับโปรเจกต์ CS319</option>
+                                <option value="recruitment">เสนองาน / ฝึกงาน</option>
+                            </select>
+                        </p>
+
+                        <p>
+                            <label for="message">ข้อความเพิ่มเติม:</label><br>
+                            <textarea id="message" name="message" rows="4" placeholder="พิมพ์ข้อความของคุณที่นี่..."
+                                required></textarea>
+                        </p>
+
+                        <div class="button-group">
+                            <button type="submit">ส่งข้อความ (Submit)</button>
+                            <button type="reset">ล้างข้อมูล (Reset)</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </section>
+        </main>
+
+        <!-- Footer Section -->
+        <footer>
+            <p><small>&copy; 2026 Natdanai Computer. All Rights Reserved. | พัฒนาขึ้นเพื่อประกอบการเรียนวิชา CS319
+                    มหาวิทยาลัยกรุงเทพ (Vanilla CSS)</small></p>
+        </footer>
+    </div>
+</body>
+
+</html>

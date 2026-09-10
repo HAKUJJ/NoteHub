@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>เปรียบเทียบ Form Validation</title>
+    <style>
+        /* กำหนดรูปแบบกล่องฟอร์มเพื่อให้เห็นว่ามี 2 แบบการตรวจสอบต่างกัน */
+        .form-box {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+        }
+
+        /* สไตล์สำหรับแสดงสถานะผิดพลาดของ input */
+        .input-error {
+            border: 2px solid #ef4444;
+            background-color: #fef2f2;
+        }
+
+        /* ข้อความแจ้งเตือนจะแสดงเฉพาะเมื่อมีข้อผิดพลาด */
+        .error-label {
+            color: #ef4444;
+            font-size: 13px;
+            display: none;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- แบบที่ 1: Native Browser Validation
+         ใช้ attribute ของ HTML เช่น required, type="email" และเบราว์เซอร์จะตรวจสอบเองโดยอัตโนมัติ -->
+    <div class="form-box">
+        <h3>แบบที่ 1: HTML5 Native Validation</h3>
+        <form action="#" method="POST">
+            <label for="nativeEmail">อีเมล:</label>
+            <input type="email" id="nativeEmail" required placeholder="name@domain.com">
+            <button type="submit">ส่งข้อมูล (Native)</button>
+            <p><small>*ข้อสังเกต: กล่องเตือนเป็นป๊อปอัปสีเทา ข้อความภาษาอังกฤษตามเบราว์เซอร์</small></p>
+        </form>
+    </div>
+
+    <!-- แบบที่ 2: Modern Custom Validation
+         ใช้ novalidate เพื่อปิดการตรวจสอบจากเบราว์เซอร์ แล้วเขียนกฎเองด้วย JavaScript
+         เพื่อให้สามารถควบคุมข้อความและความสามารถในการเข้าถึง (accessibility) ได้ดีขึ้น -->
+    <div class="form-box">
+        <h3>แบบที่ 2: Modern Accessible Validation (แนะนำ)</h3>
+        <form id="customForm" novalidate>
+            <label for="customEmail">อีเมลมหาวิทยาลัย:</label><br>
+            <input type="email" id="customEmail" placeholder="student@bu.ac.th" aria-describedby="customEmailErr">
+            <div id="customEmailErr" class="error-label" role="alert">อีเมลต้องลงท้ายด้วย @bu.ac.th เท่านั้น</div>
+            <br><br>
+            <button type="submit">ส่งข้อมูล (Custom)</button>
+        </form>
+    </div>
+
+    <script>
+        // เก็บ reference ของ element ที่ใช้ในฟอร์มแบบ custom validation
+        const customForm = document.querySelector("#customForm");
+        const customEmail = document.querySelector("#customEmail");
+        const customEmailErr = document.querySelector("#customEmailErr");
+
+        // ฟังก์ชันตรวจสอบความถูกต้องของอีเมลตามเงื่อนไขที่กำหนดเอง
+        // เงื่อนไข: ต้องลงท้ายด้วย @bu.ac.th และมีความยาวมากกว่า 10 ตัวอักษร
+        function checkEmailValidity() {
+            const val = customEmail.value.trim().toLowerCase();
+            const isValid = val.endsWith("@bu.ac.th") && val.length > 10;
+
+            // ถ้าไม่ผ่านเงื่อนไข ให้แสดงข้อความผิดพลาดและทำเครื่องหมายแดงที่ input
+            if (!isValid) {
+                customEmail.classList.add("input-error");
+                customEmailErr.style.display = "block";
+                return false;
+            } else {
+                // ถ้าผ่าน ให้ลบสไตล์ผิดพลาดและซ่อนข้อความแจ้งเตือน
+                customEmail.classList.remove("input-error");
+                customEmailErr.style.display = "none";
+                return true;
+            }
+        }
+
+        // ตรวจสอบทันทีเมื่อผู้ใช้เลื่อนโฟกัสออกจากช่อง (blur)
+        customEmail.addEventListener("blur", checkEmailValidity);
+
+        // เมื่อผู้ใช้พิมพ์ข้อความใหม่และมีข้อผิดพลาดเดิมอยู่ ให้ตรวจสอบซ้ำแบบเรียลไทม์
+        customEmail.addEventListener("input", () => {
+            if (customEmail.classList.contains("input-error")) checkEmailValidity();
+        });
+
+        // เมื่อกด submit ให้ป้องกันการโหลดหน้าใหม่ แล้วตรวจสอบความถูกต้องก่อนส่งข้อมูล
+        customForm.addEventListener("submit", (e) => {
+            e.preventDefault(); // ยับยั้งการรีเฟรชหน้าเว็บ
+            if (checkEmailValidity()) {
+                alert(" ข้อมูลถูกต้องตามเงื่อนไข พร้อมแปลงเป็น JSON Payload");
+            }
+        });
+    </script>
+</body>
+
+</html>

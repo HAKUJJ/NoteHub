@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการ Login และอัปโหลดเว็บไซต์ด้วย Netlify (Netlify Deploy Guide) | CS319</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Fira+Code:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        bu: {
+                            primary: '#ff4d00',
+                            dark: '#0f172a',
+                            navy: '#1e293b',
+                            slate: '#334155'
+                        },
+                        netlify: {
+                            teal: '#00c7b7',
+                            dark: '#0e1e25',
+                            light: '#e6fffa'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        pre code {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        .drag-zone-animation {
+            background-size: 30px 30px;
+            background-image: linear-gradient(45deg, rgba(0, 199, 183, 0.08) 25%, transparent 25%, transparent 50%, rgba(0, 199, 183, 0.08) 50%, rgba(0, 199, 183, 0.08) 75%, transparent 75%, transparent);
+            animation: moveStripes 4s linear infinite;
+        }
+
+        @keyframes moveStripes {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 60px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-teal-500 selection:text-slate-950">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 shadow-xl">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand & Course Logo -->
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-tr from-teal-500 to-emerald-400 rounded-xl flex items-center justify-center font-extrabold text-slate-950 text-xl shadow-lg">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-base sm:text-lg text-white tracking-wide">Netlify Deployment Guide</span>
+                            <span
+                                class="bg-teal-500/20 text-teal-400 border border-teal-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">CS319 Manual</span>
+                        </div>
+                        <p class="text-xs text-slate-400">คู่มือการ Login และอัปโหลดเว็บไซต์ขึ้น Netlify สำหรับส่งงานและสร้าง Portfolio</p>
+                    </div>
+                </div>
+
+                <!-- Quick Action Button -->
+                <div class="hidden sm:flex items-center space-x-3">
+                    <a href="https://app.netlify.com/login" target="_blank" rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 text-xs sm:text-sm font-bold px-4 py-2 rounded-xl shadow-lg shadow-teal-500/20 transition transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                        <span>เข้าสู่ระบบ Netlify</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+
+        <!-- Hero Section -->
+        <section
+            class="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-teal-950/60 border border-teal-800/40 rounded-3xl p-8 sm:p-10 shadow-2xl">
+            <div
+                class="absolute -right-12 -bottom-12 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl pointer-events-none">
+            </div>
+            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                <div class="lg:col-span-2 space-y-4">
+                    <div
+                        class="inline-flex items-center gap-2 bg-teal-500/15 border border-teal-500/30 text-teal-300 text-xs px-3.5 py-1.5 rounded-full font-semibold">
+                        <i class="fa-solid fa-shield-halved text-teal-400"></i> Login First • Permanent Hosting & Project Management
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                        เข้าสู่ระบบและอัปโหลดเว็บ<br class="hidden sm:inline">
+                        <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-emerald-300 to-cyan-400">สู่ Netlify อย่างถูกต้องและถาวร</span>
+                    </h1>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        การนำเว็บไซต์ HTML/CSS ขึ้นโฮสติ้งจริงด้วยการ <b>Login ผ่านบัญชี Netlify ก่อนอัปโหลด (Manual Deploy)</b> เป็นวิธีที่ถูกต้องและปลอดภัยที่สุด 
+                        ช่วยให้เว็บไซต์ของคุณคงอยู่ถาวร สามารถย้อนกลับมาแก้ไขโค้ด (Re-deploy), ปรับแต่ง Subdomain เป็นชื่อตัวเอง และรวบรวมงานทั้งหมดเป็น Portfolio ส่งอาจารย์ได้อย่างสมบูรณ์แบบ
+                    </p>
+                    <div class="flex flex-wrap gap-3 pt-2 text-xs">
+                        <span
+                            class="bg-slate-800/80 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-2">
+                            <i class="fa-solid fa-user-lock text-teal-400"></i> เว็บผูกกับ Account ถาวร ไม่สูญหาย
+                        </span>
+                        <span
+                            class="bg-slate-800/80 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-2">
+                            <i class="fa-solid fa-rotate text-teal-400"></i> อัปเดตโค้ดใหม่ได้ตลอดเวลา (URL เดิม)
+                        </span>
+                        <span
+                            class="bg-slate-800/80 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-2">
+                            <i class="fa-solid fa-lock text-teal-400"></i> ได้ HTTPS และ SSL Certificate ฟรี
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Visual Badge / Interactive Box -->
+                <div
+                    class="bg-slate-950/80 border border-teal-500/30 rounded-2xl p-6 text-center shadow-xl flex flex-col items-center justify-center relative drag-zone-animation">
+                    <div
+                        class="w-20 h-20 bg-teal-500/20 text-teal-300 rounded-2xl flex items-center justify-center text-4xl mb-4 border border-teal-500/40 shadow-inner">
+                        <i class="fa-solid fa-user-check text-emerald-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">Login & Upload Deploy</h3>
+                    <p class="text-xs text-slate-400 mb-4">เข้าสู่ระบบ Netlify แล้วอัปโหลดโฟลเดอร์งานได้ทันที</p>
+                    <a href="https://app.netlify.com/login" target="_blank" rel="noopener noreferrer"
+                        class="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-md">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> ไปที่หน้า Login ของ Netlify
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Login Matters & Login Options Section -->
+        <section class="space-y-4">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/30">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-white">ช่องทางการ Login เข้าสู่ระบบ Netlify</h2>
+                    <p class="text-xs text-slate-400">เลือกช่องทางการเข้าสู่ระบบที่สะดวก เพื่อเป็นเจ้าของเว็บไซต์และจัดการงานทั้งหมดได้ในที่เดียว</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <!-- Option 1: GitHub -->
+                <div class="bg-slate-800/80 border border-teal-500/40 rounded-2xl p-5 space-y-3 relative overflow-hidden">
+                    <div class="absolute top-2 right-2 bg-teal-500/20 text-teal-400 border border-teal-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        แนะนำสูงสุด ⭐
+                    </div>
+                    <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-xl text-white border border-slate-700">
+                        <i class="fa-brands fa-github"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-base">เข้าสู่ระบบด้วย GitHub</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        สะดวกที่สุดสำหรับสายโปรแกรมเมอร์ เพียงกด <b>"Log in with GitHub"</b> และอนุมัติสิทธิ์ ระบบจะสร้างบัญชีให้ทันที พร้อมต่อยอดเชื่อม Git Repository ในอนาคต
+                    </p>
+                </div>
+
+                <!-- Option 2: Email -->
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 space-y-3">
+                    <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-xl text-teal-400 border border-slate-700">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-base">เข้าสู่ระบบด้วย Email</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        ใช้อีเมล (เช่น อีเมลนักศึกษาหรือ Gmail ส่วนตัว) สมัครผ่าน <b>"Sign up with Email"</b> แล้วยืนยันลิงก์ในกล่องจดหมายเพื่อเริ่มใช้งาน
+                    </p>
+                </div>
+
+                <!-- Option 3: Google -->
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 space-y-3">
+                    <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-xl text-amber-400 border border-slate-700">
+                        <i class="fa-brands fa-google"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-base">เข้าสู่ระบบด้วย Google</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        คลิก <b>"Log in with Google"</b> เพื่อล็อกอินอย่างรวดเร็วโดยไม่ต้องจำรหัสผ่านแยก จัดการสิทธิ์การเข้าถึงผ่านบัญชี Google ส่วนตัวของคุณได้ทันที
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Preparation & Folder Structure Section -->
+        <section class="space-y-4">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-sm border border-orange-500/30">
+                    <i class="fa-solid fa-folder-tree"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-white">ขั้นตอนเตรียมความพร้อม: โครงสร้างโฟลเดอร์โปรเจกต์ (Folder Structure)</h2>
+                    <p class="text-xs text-slate-400">หัวใจสำคัญที่สุดก่อนนำเว็บขึ้นโฮสติ้ง หากโครงสร้างผิด ลิงก์ CSS และรูปภาพจะไม่แสดงผล</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Directory Tree Card -->
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-700">
+                        <span
+                            class="text-xs font-bold text-teal-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-folder-open"></i> ตัวอย่างโครงสร้างที่ถูกต้อง (Recommended)
+                        </span>
+                        <span class="text-[10px] bg-slate-900 text-slate-400 px-2 py-0.5 rounded">Root Level</span>
+                    </div>
+                    <div
+                        class="bg-slate-950 p-4 rounded-xl font-mono text-xs text-slate-300 leading-relaxed border border-slate-900 shadow-inner">
+                        <span class="text-amber-400 font-bold">📁 my-cs319-assignment/</span> <span
+                            class="text-slate-500">&lt;-- โฟลเดอร์หลักที่จะลากอัปโหลด (Root)</span><br>
+                        │<br>
+                        ├── <span class="text-emerald-400 font-semibold">📄 index.html</span> <span
+                            class="text-slate-500">&lt;-- ต้องชื่อนี้เท่านั้น! (หน้าแรก)</span><br>
+                        ├── <span class="text-sky-400">📄 style.css</span> <span class="text-slate-500">&lt;--
+                            ไฟล์สไตล์ชีต CSS</span><br>
+                        └── <span class="text-amber-400">📁 images/</span> <span class="text-slate-500">&lt;--
+                            โฟลเดอร์เก็บภาพ</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;├── 🖼️ profile.jpg<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;└── 🖼️ banner.png
+                    </div>
+                    <p class="text-xs text-slate-300">
+                        <i class="fa-solid fa-circle-info text-teal-400 mr-1"></i> เซิร์ฟเวอร์ของ Netlify
+                        จะค้นหาไฟล์ชื่อ <code
+                            class="text-emerald-400 bg-slate-900 px-1 py-0.5 rounded">index.html</code> ที่ Root
+                        Directory เป็นหน้าแรกโดยอัตโนมัติ
+                    </p>
+                </div>
+
+                <!-- Critical Rules Checklist -->
+                <div
+                    class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 flex flex-col justify-between space-y-3">
+                    <div>
+                        <div class="flex items-center justify-between pb-2 border-b border-slate-700 mb-3">
+                            <span
+                                class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-triangle-exclamation"></i> 3 กฎเหล็กในการอ้างอิงไฟล์ (Path Rules)
+                            </span>
+                        </div>
+                        <ul class="space-y-2.5 text-xs text-slate-300">
+                            <li class="flex items-start gap-2 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                                <i class="fa-solid fa-xmark text-red-400 mt-0.5"></i>
+                                <div>
+                                    <b class="text-white">ห้ามใช้ Absolute Path ในเครื่อง:</b> เช่น <code
+                                        class="text-red-300">C:\Users\Name\img.jpg</code> หรือ <code
+                                        class="text-red-300">D:\project\style.css</code> เพราะเครื่องอื่นจะมองไม่เห็น
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-2 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                                <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                                <div>
+                                    <b class="text-white">ใช้ Relative Path เสมอ:</b> เช่น <code
+                                        class="text-emerald-300">images/profile.jpg</code> หรือ <code
+                                        class="text-emerald-300">./style.css</code>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-2 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                                <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
+                                <div>
+                                    <b class="text-white">ระวัง Case Sensitive:</b> บนเซิร์ฟเวอร์ Linux ชื่อ <code
+                                        class="text-amber-300">Photo.JPG</code> กับ <code
+                                        class="text-amber-300">photo.jpg</code> คือคนละไฟล์กัน
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4 Step Step-by-Step Guide Section (Login & Upload Flow) -->
+        <section class="space-y-6">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-sm border border-teal-500/30">
+                    <i class="fa-solid fa-list-ol"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-white">4 ขั้นตอนการ Login และ Upload เว็บไซต์อย่างละเอียด</h2>
+                    <p class="text-xs text-slate-400">ปฏิบัติตามทีละขั้นตอนเพื่อรับ URL เว็บไซต์ที่ผูกกับบัญชีของคุณอย่างถาวร</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                <!-- Step 1 Card -->
+                <div
+                    class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between hover:border-teal-500/60 transition group">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span
+                                class="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-300 font-extrabold flex items-center justify-center border border-teal-500/30 group-hover:bg-teal-500 group-hover:text-slate-950 transition">1</span>
+                            <i
+                                class="fa-solid fa-right-to-bracket text-slate-500 text-lg group-hover:text-teal-400 transition"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base">Login เข้าสู่ระบบ</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            เปิดเบราว์เซอร์ไปที่ <a href="https://app.netlify.com/login" target="_blank" rel="noopener noreferrer" class="text-teal-400 underline font-semibold hover:text-teal-300">app.netlify.com/login</a> แล้วล็อกอินด้วย GitHub หรือ Email ของคุณ
+                        </p>
+                    </div>
+                    <div
+                        class="mt-4 p-2.5 bg-slate-950/80 rounded-xl text-[11px] text-teal-400 border border-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-check text-xs"></i> ตรวจสอบว่าเข้าสู่ Dashboard เรียบร้อย
+                    </div>
+                </div>
+
+                <!-- Step 2 Card -->
+                <div
+                    class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between hover:border-teal-500/60 transition group">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span
+                                class="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-300 font-extrabold flex items-center justify-center border border-teal-500/30 group-hover:bg-teal-500 group-hover:text-slate-950 transition">2</span>
+                            <i
+                                class="fa-solid fa-plus-circle text-slate-500 text-lg group-hover:text-teal-400 transition"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base">ไปที่เมนู Projects & Deploy</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            คลิกที่เมนู <b>"Projects"</b> ในแถบด้านซ้าย แล้วกดปุ่ม <b>"Add new project"</b> &gt; เลือก <b>"Deploy manually"</b> (หรือเข้า <a href="https://app.netlify.com/drop" target="_blank" rel="noopener noreferrer" class="text-teal-400 underline">app.netlify.com/drop</a>)
+                        </p>
+                    </div>
+                    <div
+                        class="mt-4 p-2.5 bg-slate-950/80 rounded-xl text-[11px] text-emerald-400 border border-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-plus text-xs"></i> จะปรากฏพื้นที่ Drag & Drop Zone
+                    </div>
+                </div>
+
+                <!-- Step 3 Card -->
+                <div
+                    class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between hover:border-teal-500/60 transition group">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span
+                                class="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-300 font-extrabold flex items-center justify-center border border-teal-500/30 group-hover:bg-teal-500 group-hover:text-slate-950 transition">3</span>
+                            <i
+                                class="fa-solid fa-hand-pointer text-slate-500 text-lg group-hover:text-teal-400 transition"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base">ลากโฟลเดอร์เพื่อ Upload</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            ลากโฟลเดอร์โปรเจกต์ (ที่มีไฟล์ <code>index.html</code>) จากเครื่องคอมพิวเตอร์ของคุณมาวางลงในกรอบสี่เหลี่ยมเส้นประ
+                        </p>
+                    </div>
+                    <div
+                        class="mt-4 p-2.5 bg-slate-950/80 rounded-xl text-[11px] text-emerald-400 border border-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-spinner animate-spin text-xs"></i> อัปโหลดและสร้างโปรเจกต์ภายในไม่กี่วินาที
+                    </div>
+                </div>
+
+                <!-- Step 4 Card -->
+                <div
+                    class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between hover:border-teal-500/60 transition group">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span
+                                class="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-300 font-extrabold flex items-center justify-center border border-teal-500/30 group-hover:bg-teal-500 group-hover:text-slate-950 transition">4</span>
+                            <i class="fa-solid fa-link text-slate-500 text-lg group-hover:text-teal-400 transition"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base">รับ Live URL ในบัญชี</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            ระบบจะแสดงสถานะ <b>"Published"</b> พร้อม Live URL (เช่น <code>https://xxxx.netlify.app</code>) ที่บันทึกอยู่ใน Account พร้อมส่งงานทันที
+                        </p>
+                    </div>
+                    <div
+                        class="mt-4 p-2.5 bg-slate-950/80 rounded-xl text-[11px] text-emerald-300 font-mono border border-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-xs"></i> ผูกกับบัญชีคุณถาวร ไม่สูญหาย
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Customization: Change Project Name & Update Code -->
+        <section class="space-y-4">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-sm border border-indigo-500/30">
+                    <i class="fa-solid fa-sliders"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-white">การจัดการโปรเจกต์หลัง Login: เปลี่ยนชื่อ Project Name และอัปเดตโค้ด</h2>
+                    <p class="text-xs text-slate-400">สิทธิประโยชน์ของการ Login คือการจัดการ Project Name และอัปเดตงานเดิมได้อย่างอิสระ</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Change Project Name -->
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center gap-2 text-indigo-400 font-bold text-base">
+                        <i class="fa-solid fa-pen-to-square"></i> วิธีเปลี่ยนชื่อโปรเจกต์ให้อ่านง่าย (Custom Project Name / Subdomain)
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        โดยเริ่มต้น Netlify จะสุ่มชื่อเช่น <i>fluffy-cupcake-12345.netlify.app</i>
+                        เราสามารถเปลี่ยนเป็นชื่อตัวเองได้ฟรี:
+                    </p>
+                    <ol
+                        class="space-y-2 text-xs text-slate-300 list-decimal list-inside bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <li>เข้าสู่หน้าจัดการโปรเจกต์ (Project Overview) บน Netlify Dashboard</li>
+                        <li>กดเมนู <b>Project configuration</b> หรือ <b>Project settings</b></li>
+                        <li>เลือก <b>Project details &gt; Change Project name</b></li>
+                        <li>พิมพ์ชื่อที่ต้องการ เช่น <code class="text-teal-400 font-bold">cs319-natdanai-w3</code></li>
+                        <li>กด <b>Save</b> จะได้ URL ใหม่ทันที: <span
+                                class="text-teal-300 font-mono">cs319-natdanai-w3.netlify.app</span></li>
+                    </ol>
+                </div>
+
+                <!-- Updating Site Code -->
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center gap-2 text-emerald-400 font-bold text-base">
+                        <i class="fa-solid fa-rotate"></i> วิธีอัปเดตโค้ดเมื่อมีการแก้ไขงาน (Re-deploying)
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        หากแก้ไขไฟล์ HTML หรือ CSS ในเครื่องแล้วต้องการให้ออนไลน์เปลี่ยนตาม โดยที่ <b>URL เดิมไม่เปลี่ยน</b>:
+                    </p>
+                    <ol
+                        class="space-y-2 text-xs text-slate-300 list-decimal list-inside bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <li>เข้าสู่โปรเจกต์เดิมบน Netlify Dashboard (ที่ล็อกอินอยู่)</li>
+                        <li>กดที่แท็บ <b>Deploys</b> ในเมนูด้านบน</li>
+                        <li>เลื่อนลงมาด้านล่างจะพบกรอบข้อความ <i>"Need to update your project? Drag and drop your project output folder here"</i></li>
+                        <li>ลากโฟลเดอร์ใหม่ลงในกรอบ ระบบจะอัปเดตเวอร์ชันใหม่ทันทีโดย URL เดิมไม่เปลี่ยนแปลง!</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Troubleshooting & Common Issues -->
+        <section class="bg-slate-800/90 border border-amber-500/30 rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg border border-amber-500/30">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-white">การแก้ปัญหาที่พบบ่อย (Troubleshooting FAQ)</h2>
+                    <p class="text-xs text-slate-400">ตรวจสอบจุดผิดพลาดเหล่านี้หากหน้าเว็บออนไลน์ของคุณแสดงผลไม่ถูกต้อง
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-700/80 space-y-2">
+                    <div class="font-bold text-red-400 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-exclamation"></i> ขึ้นหน้า Page Not Found 404
+                    </div>
+                    <p class="text-slate-300 leading-relaxed">
+                        <b>สาเหตุ:</b> ในโฟลเดอร์ไม่มีไฟล์ชื่อ <code class="text-emerald-400">index.html</code> อยู่ที่
+                        Root หรือเผลอลากโฟลเดอร์ซ้อนโฟลเดอร์<br>
+                        <b>วิธีแก้:</b> ตรวจสอบว่าเปิดโฟลเดอร์แล้วเจอ <code>index.html</code> ทันทีหรือไม่
+                    </p>
+                </div>
+
+                <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-700/80 space-y-2">
+                    <div class="font-bold text-amber-400 flex items-center gap-2">
+                        <i class="fa-solid fa-image"></i> รูปภาพไม่แสดงผล (Broken Image)
+                    </div>
+                    <p class="text-slate-300 leading-relaxed">
+                        <b>สาเหตุ:</b> เขียน path รูปภาพเป็น drive ในเครื่อง (เช่น C:\...)
+                        หรือนามสกุลไฟล์พิมพ์เล็ก-ใหญ่ไม่ตรงกัน<br>
+                        <b>วิธีแก้:</b> แก้ path ในแท็ก <code>&lt;img src="images/pic.jpg"&gt;</code> และเช็คนามสกุล
+                        .jpg / .png ให้ตรง
+                    </p>
+                </div>
+
+                <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-700/80 space-y-2">
+                    <div class="font-bold text-sky-400 flex items-center gap-2">
+                        <i class="fa-solid fa-palette"></i> CSS ไม่ทำงาน หน้าเว็บไม่มีสีสัน
+                    </div>
+                    <p class="text-slate-300 leading-relaxed">
+                        <b>สาเหตุ:</b> ชื่อไฟล์ใน <code>&lt;link rel="stylesheet" href="..."&gt;</code>
+                        ไม่ตรงกับชื่อไฟล์จริง<br>
+                        <b>วิธีแก้:</b> ตรวจสอบแท็ก <code>&lt;link href="style.css" rel="stylesheet"&gt;</code>
+                        ให้อยู่ในตำแหน่งที่ถูกต้อง
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 py-8 text-center text-xs text-slate-500">
+        <div class="max-w-6xl mx-auto px-4 space-y-2">
+            <p class="font-medium text-slate-400">&copy; 2026 CS319 Internet Programming I — Bangkok University.</p>
+            <p>คู่มือแนะนำการ Deploy เว็บไซต์ฉบับสมบูรณ์ พัฒนาเพื่อการเรียนการสอนและการฝึกปฏิบัติ</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

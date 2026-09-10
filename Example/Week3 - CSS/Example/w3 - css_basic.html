@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="แฟ้มสะสมผลงานส่วนตัวและการเรียนรู้ HTML5 รายวิชา CS319 Internet Programming I มหาวิทยาลัยกรุงเทพ">
+    <title>Personal Portfolio - นายณัฐดนัย คอมพิวเตอร์ (CS319) - Basic CSS (Tag, ID, Class)</title>
+
+    <!-- 
+      =========================================================
+      CSS Selector Demonstrations: Tag, ID, and Class Selectors
+      วิชา CS319: แสดงการใช้ CSS ครบทั้ง 3 รูปแบบหลัก
+      1. Tag (Element) Selector  -> เลือกตามชื่อแท็ก เช่น body, h2, table
+      2. ID Selector (#)         -> เลือกตาม id เจาะจงเฉพาะจุด เช่น #about, #contact-form
+      3. Class Selector (.)      -> เลือกตาม class ใช้ซ้ำได้ เช่น .container, .btn-primary
+      =========================================================
+    -->
+    <style>
+        /* -------------------------------------------------------------
+           1. TAG (ELEMENT) SELECTORS: กำหนดรูปแบบพื้นฐานของแท็ก HTML
+           ------------------------------------------------------------- */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333333;
+            margin: 20px;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        header h1 {
+            margin-bottom: 5px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            background-color: #2563eb;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav ul li a:hover {
+            background-color: #60a5fa;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #e5e7eb;
+            margin: 20px 0;
+        }
+
+        h2 {
+            color: #1e3a8a;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #cbd5e1;
+        }
+
+        th {
+            background-color: #e2e8f0;
+            color: #0f172a;
+            padding: 10px;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        fieldset {
+            border: 1px solid #cbd5e1;
+            padding: 15px 20px;
+            border-radius: 6px;
+            background-color: #fafafa;
+        }
+
+        legend {
+            padding: 0 8px;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            margin-top: 20px;
+        }
+
+        /* -------------------------------------------------------------
+           2. CLASS SELECTORS (.): สำหรับจัดสไตล์ชิ้นส่วนที่สามารถนำกลับมาใช้ซ้ำได้
+           ------------------------------------------------------------- */
+        /* กล่องหลักคุมกึ่งกลางหน้า */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+        }
+
+        /* จัดตำแหน่งรูปภาพโปรไฟล์ */
+        .profile-wrapper {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        /* สไตล์รูปโปรไฟล์แบบวงกลม */
+        .profile-img {
+            border: 3px solid #2563eb;
+            border-radius: 50%;
+            padding: 4px;
+            background-color: #ffffff;
+        }
+
+        /* กล่องข้อความไฮไลต์ (Callout Box) */
+        .callout-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 4px;
+            color: #1e40af;
+        }
+
+        .callout-box p {
+            margin: 0;
+        }
+
+        /* สไตล์ข้อความเน้นพิเศษ */
+        .highlight-mark {
+            background-color: #fef08a;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        /* สไตล์ลิงก์สำคัญ */
+        .custom-link {
+            color: #2563eb;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .custom-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ตารางรองรับ Responsive เลื่อนแนวนอน */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* แถวไฮไลต์ในตาราง */
+        .row-highlight {
+            background-color: #7cb8f3;
+        }
+
+        /* ข้อความแสดงเกรดเฉลี่ย */
+        .gpa-badge {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        /* จัดระยะห่างรายการทักษะ */
+        .skill-list {
+            line-height: 1.8;
+            margin-left: 20px;
+        }
+
+        /* ระยะห่างของแต่ละฟิลด์ในฟอร์ม */
+        .form-group {
+            margin-top: 12px;
+        }
+
+        /* สไตล์ปุ่มหลัก (Submit) */
+        .btn-primary {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+        /* สไตล์ปุ่มรอง (Reset) */
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #334155;
+        }
+
+        /* -------------------------------------------------------------
+           3. ID SELECTORS (#): กำหนดสไตล์เฉพาะเจาะจงเฉพาะจุดที่ระบุ ID
+           ------------------------------------------------------------- */
+        #about {
+            padding-top: 5px;
+        }
+
+        #education {
+            padding-top: 5px;
+        }
+
+        #skills {
+            padding-top: 5px;
+        }
+
+        #contact {
+            padding-top: 5px;
+        }
+
+        #contact-form {
+            margin-top: 10px;
+        }
+
+        #main-content {
+            margin-top: 10px;
+        }
+
+        /* -------------------------------------------------------------
+           4. RESPONSIVE DESIGN (Media Query สำหรับจอมือถือ)
+           ------------------------------------------------------------- */
+        @media (max-width: 640px) {
+            body {
+                margin: 10px;
+            }
+
+            .container {
+                padding: 15px 12px;
+                border-radius: 6px;
+            }
+
+            header {
+                padding: 15px 10px;
+            }
+
+            header h1 {
+                font-size: 1.4rem;
+            }
+
+            header p {
+                font-size: 0.9rem;
+            }
+
+            nav ul li {
+                display: inline-block;
+                margin: 4px 3px;
+            }
+
+            nav ul li a {
+                display: inline-block;
+                font-size: 0.85rem;
+                padding: 6px 8px;
+            }
+
+            fieldset {
+                padding: 12px 10px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                margin-bottom: 8px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ใช้ Class Selector: .container -->
+    <div class="container">
+
+        <!-- Header & Navigation Bar Section (ใช้ Tag Selector) -->
+        <header>
+            <h1>Natdanai Computer | Personal Portfolio</h1>
+            <p>นักศึกษาวิทยาการคอมพิวเตอร์ ผู้สนใจในการพัฒนา <strong>Frontend Web Development</strong> และ
+                <strong>Software Engineering</strong></p>
+
+            <!-- Navigation Menu with Anchor Links -->
+            <nav>
+                <ul>
+                    <li><a href="#about">ประวัติส่วนตัว</a></li>
+                    <li><a href="#education">ประวัติการศึกษา</a></li>
+                    <li><a href="#skills">ทักษะและความสนใจ</a></li>
+                    <li><a href="#contact">แบบฟอร์มติดต่อ</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <hr>
+
+        <!-- Main Content Area (ใช้ ID Selector: #main-content) -->
+        <main id="main-content">
+
+            <!-- Section 1: About Me (ใช้ ID: #about และ Class: .profile-wrapper, .profile-img, .callout-box) -->
+            <section id="about">
+                <h2>ประวัติส่วนตัว (About Me)</h2>
+
+                <!-- จัดกึ่งกลางและตกแต่งรูปโปรไฟล์ด้วย Class -->
+                <div class="profile-wrapper">
+                    <img class="profile-img"
+                        src="https://blockspot.io/wp-content/uploads/niu-lai-niulai-space-niu-lai-58050-coin-logo.png"
+                        alt="รูปถ่ายโปรไฟล์นายณัฐดนัย คอมพิวเตอร์" width="150" height="150">
+                </div>
+
+                <p>
+                    สวัสดีครับ! ผมชื่อ <strong>นายณัฐดนัย คอมพิวเตอร์</strong> ปัจจุบันกำลังศึกษาอยู่ชั้นปีที่ 3
+                    สาขาวิชาวิทยาการคอมพิวเตอร์ คณะเทคโนโลยีสารสนเทศและนวัตกรรม
+                    <a class="custom-link" href="https://www.bu.ac.th" target="_blank"
+                        rel="noopener noreferrer">มหาวิทยาลัยกรุงเทพ</a>
+                </p>
+
+                <!-- กล่องเน้นข้อความด้วย Class Selector -->
+                <div class="callout-box">
+                    <p>
+                        ผมมีความหลงใหลในการสร้างสรรค์เว็บแอปพลิเคชันที่ใช้งานง่าย และกำลังมุ่งมั่นเรียนรู้ในรายวิชา
+                        <mark class="highlight-mark">CS319 Internet Programming I</mark>
+                        เพื่อพัฒนาทักษะสู่การเป็น <em>Full-Stack Developer</em> มืออาชีพในอนาคตครับ
+                    </p>
+                </div>
+            </section>
+
+            <hr>
+
+            <!-- Section 2: Education & Experience (ใช้ ID: #education และ Class: .table-container, .row-highlight, .gpa-badge) -->
+            <section id="education">
+                <h2>ประวัติการศึกษาและผลงาน (Education & Experience)</h2>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ปีการศึกษา</th>
+                                <th>ระดับการศึกษา / สถาบัน</th>
+                                <th>สาขาวิชา / เกรดเฉลี่ย</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024 - ปัจจุบัน</td>
+                                <td>ปริญญาตรี - มหาวิทยาลัยกรุงเทพ</td>
+                                <td>วิทยาการคอมพิวเตอร์ (CS)</td>
+                            </tr>
+                            <!-- แถวไฮไลต์ด้วย Class: .row-highlight และ .gpa-badge -->
+                            <tr class="row-highlight">
+                                <td>2021 - 2023</td>
+                                <td>มัธยมศึกษาตอนปลาย - โรงเรียนวิทยาศาสตร์</td>
+                                <td>แผนการเรียน วิทย์-คณิต (<span class="gpa-badge">GPA: 3.85</span>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <hr>
+
+            <!-- Section 3: Skills & Interests (ใช้ ID: #skills และ Class: .skill-list) -->
+            <section id="skills">
+                <h2>ทักษะและความสนใจ (Skills & Interests)</h2>
+
+                <h3>ทักษะทางเทคนิค (Technical Skills)</h3>
+                <ol class="skill-list">
+                    <li><strong>HTML5 &amp; CSS3:</strong> การจัดโครงสร้าง Semantic Web และการจัดวาง Layout</li>
+                    <li><strong>Programming Languages:</strong> C++, Java, และ JavaScript (ES6+)</li>
+                    <li><strong>Developer Tools:</strong> VS Code, Git, GitHub, และ Chrome DevTools</li>
+                </ol>
+
+                <h3 style="margin-top: 15px;">งานอดิเรกและความสนใจ (Hobbies &amp; Interests)</h3>
+                <ul class="skill-list">
+                    <li>ติดตามข่าวสารเทคโนโลยีเว็บ และ AI Tools สมัยใหม่</li>
+                    <li>ฝึกแก้ปัญหาโจทย์อัลกอริทึมบน LeetCode</li>
+                    <li>เล่นดนตรี และฟังเพลงเพื่อผ่อนคลาย</li>
+                </ul>
+            </section>
+
+            <hr>
+
+            <!-- Section 4: Contact Form (ใช้ ID: #contact, #contact-form และ Class: .form-group, .btn-primary, .btn-secondary) -->
+            <section id="contact">
+                <h2>ติดต่อฉัน (Contact Me)</h2>
+                <p>หากอาจารย์หรือผู้ที่สนใจต้องการสอบถามข้อมูลเพิ่มเติม สามารถส่งข้อความถึงผมได้ผ่านแบบฟอร์มนี้ครับ:</p>
+
+                <form id="contact-form" action="https://postman-echo.com/get" method="GET">
+                    <fieldset>
+                        <legend>แบบฟอร์มส่งข้อความติดต่อ</legend>
+
+                        <div class="form-group">
+                            <label for="sender-name"><strong>ชื่อ-นามสกุล ผู้ติดต่อ:</strong></label><br>
+                            <input type="text" id="sender-name" name="sender_name" placeholder="กรุณากรอกชื่อของคุณ"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sender-email"><strong>อีเมลตอบกลับ:</strong></label><br>
+                            <input type="email" id="sender-email" name="sender_email" placeholder="example@bu.ac.th"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject"><strong>หัวข้อการติดต่อ:</strong></label><br>
+                            <select id="subject" name="subject">
+                                <option value="general">สอบถามข้อมูลทั่วไป</option>
+                                <option value="project">สอบถามเกี่ยวกับโปรเจกต์ CS319</option>
+                                <option value="recruitment">เสนองาน / ฝึกงาน</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message"><strong>ข้อความเพิ่มเติม:</strong></label><br>
+                            <textarea id="message" name="message" rows="5" placeholder="พิมพ์ข้อความของคุณที่นี่..."
+                                required></textarea>
+                        </div>
+
+                        <!-- ตกแต่งปุ่มด้วย Class Selector: .btn-primary และ .btn-secondary -->
+                        <div class="form-group" style="margin-top: 15px;">
+                            <button type="submit" class="btn-primary">
+                                ส่งข้อความ (Submit)
+                            </button>
+                            <button type="reset" class="btn-secondary">
+                                ล้างข้อมูล (Reset)
+                            </button>
+                        </div>
+                    </fieldset>
+                </form>
+            </section>
+
+        </main>
+
+        <!-- Footer Section (ใช้ Tag Selector) -->
+        <footer>
+            <hr>
+            <p><small>&copy; 2026 Natdanai Computer. All Rights Reserved. | พัฒนาขึ้นเพื่อประกอบการเรียนวิชา CS319
+                    มหาวิทยาลัยกรุงเทพ</small></p>
+        </footer>
+
+    </div>
+
+</body>
+
+</html>

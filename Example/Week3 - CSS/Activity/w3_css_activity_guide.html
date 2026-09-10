@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือปฏิบัติการฉบับสมบูรณ์: พื้นฐาน CSS สู่ w3 - css_basic.html — CS319</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        prompt: ['Prompt', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                            950: '#172554',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+        }
+
+        pre code {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* 
+          =========================================================
+          PRINT STYLES (@media print)
+          จัดหน้ากระดาษสำหรับการพิมพ์ (Print / Save as PDF)
+          =========================================================
+        */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 12mm 15mm;
+            }
+
+            nav,
+            #mobileMenu,
+            aside,
+            button,
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background-color: #ffffff !important;
+                color: #0f172a !important;
+                font-size: 11pt !important;
+                line-height: 1.5 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .max-w-7xl,
+            .wrapper,
+            main,
+            section {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                display: block !important;
+            }
+
+            header {
+                background: #1e3a8a !important;
+                color: #ffffff !important;
+                padding: 18px 20px !important;
+                border-radius: 6px !important;
+                margin-bottom: 20px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            header h1 {
+                font-size: 18pt !important;
+            }
+
+            section,
+            .card,
+            .bg-white,
+            pre,
+            .grid {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+                margin-bottom: 16px !important;
+                border-radius: 6px !important;
+            }
+
+            pre {
+                background-color: #0f172a !important;
+                color: #f8fafc !important;
+                font-size: 9pt !important;
+                padding: 10px 14px !important;
+                border-radius: 4px !important;
+                overflow: visible !important;
+                white-space: pre-wrap !important;
+                word-break: break-word !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            footer {
+                border-top: 1px solid #cbd5e1 !important;
+                padding-top: 10px !important;
+                margin-top: 20px !important;
+                font-size: 8.5pt !important;
+                color: #64748b !important;
+                text-align: center !important;
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-slate-900/95 backdrop-blur sticky top-0 z-50 border-b border-slate-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <span class="p-2 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-lg text-white shadow-md">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                    </span>
+                    <div>
+                        <span
+                            class="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-300">CS319
+                            Learning Portal</span>
+                        <span
+                            class="hidden md:inline-block text-xs bg-slate-800 text-blue-300 px-2 py-0.5 rounded-full ml-2 border border-slate-700">Week
+                            3 Comprehensive Activity</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Badges & Actions -->
+                <div class="hidden sm:flex items-center space-x-2 text-xs">
+                    <span
+                        class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700">HTML5</span>
+                    <span class="px-2.5 py-1 rounded-md bg-blue-900/50 text-blue-300 border border-blue-700/50">Tag,
+                        Class, ID CSS</span>
+                    <span
+                        class="px-2.5 py-1 rounded-md bg-emerald-900/50 text-emerald-300 border border-emerald-700/50">Responsive
+                        Web</span>
+                    <button onclick="window.print()"
+                        class="no-print ml-2 flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white font-medium shadow-sm transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                        </svg>
+                        <span>พิมพ์คู่มือ / PDF</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center gap-2">
+                    <button onclick="window.print()"
+                        class="no-print p-2 rounded-md bg-blue-600 text-white text-xs flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                        </svg>
+                    </button>
+                    <button id="mobileMenuBtn"
+                        class="p-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Nav -->
+        <div id="mobileMenu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-1">
+            <a href="#overview"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800">0.
+                พื้นฐานและตัวเลือก CSS</a>
+            <a href="#step-1"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800">1.
+                โครงสร้าง Container กลางหน้า</a>
+            <a href="#step-2"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800">2.
+                กำหนด Tag Selectors พื้นฐาน</a>
+            <a href="#step-3"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800">3.
+                ตกแต่ง Header & Navbar</a>
+            <a href="#step-4"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800">4.
+                ปรับแต่ง Section 1: ประวัติส่วนตัว</a>
+            <a href="#step-5"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800">5.
+                ปฏิรูปตารางและ Responsive Table</a>
+            <a href="#step-6"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800">6.
+                Section 3: ทักษะและความสนใจ</a>
+            <a href="#step-7"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800">7.
+                ออกแบบฟอร์ม Contact & Buttons</a>
+            <a href="#step-8"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800">8.
+                Media Queries รองรับมือถือ</a>
+            <a href="#step-9"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800">9.
+                โค้ดฉบับสมบูรณ์ (w3 - css_basic.html)</a>
+            <a href="#step-10"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800">10.
+                เช็คลิสต์ตรวจสอบผลงาน</a>
+        </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <header
+        class="bg-gradient-to-br from-brand-950 via-brand-900 to-brand-800 text-white py-12 md:py-16 px-4 sm:px-6 relative overflow-hidden shadow-lg">
+        <div
+            class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]">
+        </div>
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <span
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-200 border border-blue-400/30 backdrop-blur-sm mb-4">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                CS319 Internet Programming I — Bangkok University
+            </span>
+            <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+                คู่มือการปฏิบัติการ: จาก HTML เปล่าสู่ <span
+                    class="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-sky-300 to-indigo-200">w3 -
+                    css_basic.html</span>
+            </h1>
+            <p class="text-sm sm:text-base md:text-lg text-blue-100 max-w-3xl mx-auto font-light leading-relaxed mb-6">
+                เรียนรู้ขั้นตอนการจัดแต่งหน้าเว็บ Portfolio อย่างเป็นระบบ เข้าใจการทำงานของ <strong>Tag, ID, Class
+                    Selectors</strong>, <strong>Box Model</strong>, และ <strong>Responsive Web Design (Media
+                    Queries)</strong>
+            </p>
+
+            <div class="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm">
+                <div
+                    class="flex items-center gap-2 bg-slate-900/60 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-700/60">
+                    <span class="text-amber-400 font-semibold">📁 ไฟล์ตั้งต้น:</span>
+                    <code class="text-slate-300 font-mono text-xs">W2 - assignment_2_portfolio_solution code.html</code>
+                </div>
+                <div
+                    class="flex items-center gap-2 bg-slate-900/60 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-700/60">
+                    <span class="text-emerald-400 font-semibold">🎯 ไฟล์ผลลัพธ์:</span>
+                    <code class="text-slate-300 font-mono text-xs">w3 - css_basic.html</code>
+                </div>
+                <button onclick="window.print()"
+                    class="no-print flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg shadow-sm font-medium transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    <span>พิมพ์คู่มือ / บันทึก PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Sticky Sidebar Navigation (Desktop) -->
+            <aside class="hidden lg:block lg:col-span-3">
+                <div
+                    class="sticky top-24 bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4 max-h-[calc(100vh-120px)] overflow-y-auto">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">📑 ขั้นตอนการเรียนรู้</h3>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-600">11
+                            หัวข้อ</span>
+                    </div>
+
+                    <nav class="space-y-1 text-xs">
+                        <a href="#overview"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition group">
+                            <span
+                                class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-[10px] font-bold transition shrink-0">0</span>
+                            <span class="truncate">ทฤษฎี & CSS Selectors</span>
+                        </a>
+                        <a href="#step-1"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition group">
+                            <span
+                                class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-[10px] font-bold transition shrink-0">1</span>
+                            <span class="truncate">1. โครงสร้าง .container</span>
+                        </a>
+                        <a href="#step-2"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition group">
+                            <span
+                                class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-[10px] font-bold transition shrink-0">2</span>
+                            <span class="truncate">2. สไตล์พื้นฐาน Body</span>
+                        </a>
+                        <a href="#step-3"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition group">
+                            <span
+                                class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-[10px] font-bold transition shrink-0">3</span>
+                            <span class="truncate">3. Header & Navigation Bar</span>
+                        </a>
+                        <a href="#step-4"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition group">
+                            <span
+                                class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-[10px] font-bold transition shrink-0">4</span>
+                            <span class="truncate">4. Section 1: ประวัติส่วนตัว</span>
+                        </a>
+                        <a href="#step-5"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition group">
+                            <span
+                                class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-[10px] font-bold transition shrink-0">5</span>
+                            <span class="truncate">5. Section 2: ตารางการศึกษา</span>
+                        </a>
+                        <a href="#step-6"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition group">
+                            <span
+                                class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-[10px] font-bold transition shrink-0">6</span>
+                            <span class="truncate">6. Section 3: ทักษะ & งานอดิเรก</span>
+                        </a>
+                        <a href="#step-7"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition group">
+                            <span
+                                class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-[10px] font-bold transition shrink-0">7</span>
+                            <span class="truncate">7. Section 4: ฟอร์ม & ปุ่มกด</span>
+                        </a>
+                        <a href="#step-8"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition group">
+                            <span
+                                class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-[10px] font-bold transition shrink-0">8</span>
+                            <span class="truncate">8. Media Queries (มือถือ)</span>
+                        </a>
+                        <a href="#step-9"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition group">
+                            <span
+                                class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-[10px] font-bold transition shrink-0">9</span>
+                            <span class="truncate">9. โค้ดฉบับเต็มทั้งไฟล์</span>
+                        </a>
+                        <a href="#step-10"
+                            class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-blue-50 hover:text-blue-600 font-medium transition group">
+                            <span
+                                class="w-5 h-5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-[10px] font-bold transition shrink-0">10</span>
+                            <span class="truncate">10. ตรวจสอบผลงาน</span>
+                        </a>
+                    </nav>
+
+                    <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-500">
+                        💡 <strong>คำแนะนำ:</strong> สามารถกดปุ่ม <span class="text-blue-600 font-semibold">Copy</span>
+                        เพื่อนำโค้ดไปทดลองวางใน VS Code ได้ทันที
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="col-span-1 lg:col-span-9 space-y-8">
+
+                <!-- Section 0: Theory & Concept -->
+                <section id="overview"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8 scroll-mt-24">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-6">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold">
+                            💡</div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-900">0. ทฤษฎีพื้นฐาน: CSS Selectors &
+                                Box Model</h2>
+                            <p class="text-sm text-slate-500">พื้นฐานที่ต้องรู้ก่อนเริ่มเขียน Cascading Style Sheets</p>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div
+                            class="bg-slate-50 border border-slate-200 rounded-xl p-4 border-t-4 border-t-blue-500 hover:shadow-md transition">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-bold text-slate-900 text-sm">1. Tag Selector</h3>
+                                <span
+                                    class="text-[10px] font-mono font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded">TAG</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-2">อ้างอิงตามชื่อแท็ก HTML โดยตรง
+                                มีผลกับทุกแท็กชนิดนั้นในทั้งหน้าเว็บ</p>
+                            <div class="bg-slate-900 text-sky-300 font-mono text-[11px] p-2 rounded">
+                                body, h2, table, button
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-slate-50 border border-slate-200 rounded-xl p-4 border-t-4 border-t-emerald-500 hover:shadow-md transition">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-bold text-slate-900 text-sm">2. Class Selector</h3>
+                                <span
+                                    class="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded">.CLASS</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-2">มีจุด <code
+                                    class="text-emerald-600 font-bold">.</code> นำหน้า ใช้สร้างสไตล์ซ้ำๆ แปะในแท็กต่างๆ
+                                ผ่าน <code class="font-mono text-slate-700">class="..."</code></p>
+                            <div class="bg-slate-900 text-emerald-400 font-mono text-[11px] p-2 rounded">
+                                .container, .btn-primary
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-slate-50 border border-slate-200 rounded-xl p-4 border-t-4 border-t-purple-500 hover:shadow-md transition">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-bold text-slate-900 text-sm">3. ID Selector</h3>
+                                <span
+                                    class="text-[10px] font-mono font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded">#ID</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-2">มีเครื่องหมาย <code
+                                    class="text-purple-600 font-bold">#</code> นำหน้า
+                                ใช้เจาะจงเฉพาะจุดเดียวในหน้าเว็บที่มี <code
+                                    class="font-mono text-slate-700">id="..."</code></p>
+                            <div class="bg-slate-900 text-purple-300 font-mono text-[11px] p-2 rounded">
+                                #about, #contact-form
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CSS Box Model Infographic -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
+                        <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
+                            <span>📦</span> CSS Box Model ที่เราจะใช้ในทุก Element:
+                        </h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
+                            <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                                <span class="font-bold text-amber-800 block">Margin</span>
+                                <span class="text-slate-600 text-[11px]">ระยะห่างภายนอกขอบ</span>
+                            </div>
+                            <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <span class="font-bold text-blue-800 block">Border</span>
+                                <span class="text-slate-600 text-[11px]">เส้นขอบของกล่อง</span>
+                            </div>
+                            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                                <span class="font-bold text-emerald-800 block">Padding</span>
+                                <span class="text-slate-600 text-[11px]">ระยะห่างภายในขอบ</span>
+                            </div>
+                            <div class="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                                <span class="font-bold text-purple-800 block">Content</span>
+                                <span class="text-slate-600 text-[11px]">เนื้อหาหรือข้อความ</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 1: Container -->
+                <section id="step-1"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8 scroll-mt-24">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg font-bold">
+                            1</div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-900">ขั้นตอนที่ 1:
+                                ครอบกล่องโครงสร้างด้วย Class .container</h2>
+                            <p class="text-sm text-slate-500">จัดระเบียบเนื้อหาให้อยู่ตรงกลางหน้าจอ ไม่ยืดติดขอบ</p>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+                        เปิดไฟล์ <code
+                            class="text-blue-600 font-mono bg-blue-50 px-1.5 py-0.5 rounded">W2 - assignment_2_portfolio_code.html</code>
+                        แล้วนำแท็ก <code
+                            class="text-emerald-600 font-mono bg-emerald-50 px-1.5 py-0.5 rounded">&lt;div class="container"&gt;</code>
+                        มาครอบเนื้อหาทั้งหมดตั้งแต่ <code>&lt;header&gt;</code> จนถึง <code>&lt;footer&gt;</code>:
+                    </p>
+
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span>HTML Body Structure</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed"><code>&lt;body&gt;
+
+    <span class="bg-emerald-900/40 text-emerald-300 block -mx-4 px-4 py-0.5">&lt;!-- เริ่มต้นครอบ Container --&gt;
+    &lt;div class="container"&gt;</span>
+
+        &lt;header&gt;...&lt;/header&gt;
+        &lt;hr&gt;
+        &lt;main id="main-content"&gt;...&lt;/main&gt;
+        &lt;footer&gt;...&lt;/footer&gt;
+
+    <span class="bg-emerald-900/40 text-emerald-300 block -mx-4 px-4 py-0.5">    &lt;/div&gt; &lt;!-- สิ้นสุด Container --&gt;</span>
+
+&lt;/body&gt;</code></pre>
+                    </div>
+
+                    <div
+                        class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl text-xs sm:text-sm text-blue-900">
+                        <strong>💡 เจาะลึก CSS ของ .container:</strong>
+                        <ul class="list-disc ml-5 mt-1 space-y-1">
+                            <li><code>max-width: 800px;</code> —
+                                กำหนดความกว้างสูงสุดไม่ให้หน้าเว็บกว้างเกินไปเมื่อเปิดบนจอคอมขนาดใหญ่</li>
+                            <li><code>margin: 0 auto;</code> — สั่งให้ระยะขอบซ้าย-ขวาคำนวณอัตโนมัติ
+                                ทำให้กล่องถูกวางไว้กึ่งกลางหน้าจอเสมอ</li>
+                            <li><code>background-color: #ffffff;</code> — พื้นหลังสีขาวตัดกับสีพื้นหลังเพจ (#f4f6f9)
+                            </li>
+                            <li><code>border-radius: 8px;</code> — ปรับขอบมุมกล่องให้มีความโค้งมนสวยงาม</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Step 2: Body Tag Selector -->
+                <section id="step-2"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8 scroll-mt-24">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg font-bold">
+                            2</div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-900">ขั้นตอนที่ 2:
+                                กำหนดสไตล์พื้นฐานของแท็ก Body</h2>
+                            <p class="text-sm text-slate-500">สร้างแท็ก &lt;style&gt; ภายใน &lt;head&gt;
+                                เพื่อตั้งค่าแบบอักษรและสีพื้นหลัง</p>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+                        ไปที่ส่วน <code>&lt;head&gt;</code> ของเอกสาร แล้วเพิ่มแท็ก <code>&lt;style&gt;</code>
+                        พร้อมกำหนดสไตล์ของ <code>body</code>:
+                    </p>
+
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span>CSS Body Styles</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed"><code><span class="text-slate-400">/* จัดฟอนต์และพื้นหลังของทั้งหน้าเว็บ */</span>
+<span class="text-pink-400 font-bold">body</span> {
+    <span class="text-cyan-300">font-family</span>: Arial, sans-serif;  <span class="text-slate-400">/* เปลี่ยนฟอนต์ให้อ่านง่าย */</span>
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#f4f6f9</span>;       <span class="text-slate-400">/* สีเทาฟ้าอ่อน สบายตา */</span>
+    <span class="text-cyan-300">color</span>: <span class="text-amber-300">#333333</span>;                  <span class="text-slate-400">/* สีตัวอักษรเทาเข้ม ชัดเจน */</span>
+    <span class="text-cyan-300">margin</span>: <span class="text-amber-300">20px</span>;                    <span class="text-slate-400">/* เว้นขอบรอบนอก */</span>
+    <span class="text-cyan-300">line-height</span>: <span class="text-amber-300">1.6</span>;                <span class="text-slate-400">/* ระยะห่างระหว่างบรรทัด */</span>
+}</code></pre>
+                    </div>
+                </section>
+
+                <!-- Step 3: Header & Navigation Bar -->
+                <section id="step-3"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8 scroll-mt-24">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg font-bold">
+                            3</div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-900">ขั้นตอนที่ 3: ตกแต่ง Header
+                                และเมนูนำทาง (Navbar)</h2>
+                            <p class="text-sm text-slate-500">แปลงรายการ unordered list (&lt;ul&gt;)
+                                ให้เป็นปุ่มกดแนวนอนพร้อม Hover Effect</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span>CSS Header & Nav</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed"><code><span class="text-pink-400 font-bold">header</span> {
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#1e3a8a</span>; <span class="text-slate-400">/* น้ำเงินเข้ม (Primary Theme) */</span>
+    <span class="text-cyan-300">color</span>: <span class="text-amber-300">#ffffff</span>;
+    <span class="text-cyan-300">padding</span>: <span class="text-amber-300">20px</span>;
+    <span class="text-cyan-300">text-align</span>: center;
+    <span class="text-cyan-300">border-radius</span>: <span class="text-amber-300">6px</span>;
+}
+
+<span class="text-pink-400 font-bold">header h1</span> {
+    <span class="text-cyan-300">margin-bottom</span>: <span class="text-amber-300">5px</span>;
+}
+
+<span class="text-pink-400 font-bold">nav ul</span> {
+    <span class="text-cyan-300">list-style-type</span>: none; <span class="text-slate-400">/* ซ่อนสัญลักษณ์จุด bullet */</span>
+    <span class="text-cyan-300">padding</span>: <span class="text-amber-300">0</span>;
+    <span class="text-cyan-300">margin-top</span>: <span class="text-amber-300">15px</span>;
+    <span class="text-cyan-300">text-align</span>: center;
+}
+
+<span class="text-pink-400 font-bold">nav ul li</span> {
+    <span class="text-cyan-300">display</span>: inline-block; <span class="text-slate-400">/* เรียงเมนูเป็นแนวนอน */</span>
+    <span class="text-cyan-300">margin</span>: <span class="text-amber-300">0 10px</span>;
+}
+
+<span class="text-pink-400 font-bold">nav ul li a</span> {
+    <span class="text-cyan-300">color</span>: <span class="text-amber-300">#ffffff</span>;
+    <span class="text-cyan-300">text-decoration</span>: none; <span class="text-slate-400">/* ซ่อนเส้นใต้ลิงก์ */</span>
+    <span class="text-cyan-300">font-weight</span>: bold;
+    <span class="text-cyan-300">padding</span>: <span class="text-amber-300">5px 10px</span>;
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#2563eb</span>;
+    <span class="text-cyan-300">border-radius</span>: <span class="text-amber-300">4px</span>;
+    <span class="text-cyan-300">transition</span>: background-color 0.2s;
+}
+
+<span class="text-pink-400 font-bold">nav ul li a:hover</span> {
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#60a5fa</span>; <span class="text-slate-400">/* สว่างขึ้นเมื่อชี้เมาส์ */</span>
+}</code></pre>
+                    </div>
+                </section>
+
+                <!-- Step 4: Section 1 (About Me) -->
+                <section id="step-4"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8 scroll-mt-24">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg font-bold">
+                            4</div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-900">ขั้นตอนที่ 4: ตกแต่ง Section 1
+                                (ประวัติส่วนตัว & Profile)</h2>
+                            <p class="text-sm text-slate-500">สร้างรูปโปรไฟล์ทรงกลม และกล่องข้อความ Callout ไฮไลต์ด้วย
+                                Class Selectors</p>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-slate-600 mb-2">เพิ่มโค้ด CSS สำหรับรูปโปรไฟล์และกล่องข้อความ:</p>
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span>CSS Classes for About Section</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed"><code><span class="text-emerald-400 font-bold">.profile-wrapper</span> {
+    <span class="text-cyan-300">text-align</span>: center;
+    <span class="text-cyan-300">margin-bottom</span>: <span class="text-amber-300">15px</span>;
+}
+
+<span class="text-emerald-400 font-bold">.profile-img</span> {
+    <span class="text-cyan-300">border</span>: <span class="text-amber-300">3px solid #2563eb</span>;
+    <span class="text-cyan-300">border-radius</span>: <span class="text-amber-300">50%</span>; <span class="text-slate-400">/* ทำให้เป็นรูปวงกลม */</span>
+    <span class="text-cyan-300">padding</span>: <span class="text-amber-300">4px</span>;
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#ffffff</span>;
+}
+
+<span class="text-emerald-400 font-bold">.callout-box</span> {
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#eff6ff</span>;
+    <span class="text-cyan-300">border-left</span>: <span class="text-amber-300">4px solid #2563eb</span>;
+    <span class="text-cyan-300">padding</span>: <span class="text-amber-300">12px 16px</span>;
+    <span class="text-cyan-300">margin-top</span>: <span class="text-amber-300">12px</span>;
+    <span class="text-cyan-300">border-radius</span>: <span class="text-amber-300">4px</span>;
+    <span class="text-cyan-300">color</span>: <span class="text-amber-300">#1e40af</span>;
+}
+
+<span class="text-emerald-400 font-bold">.highlight-mark</span> {
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#fef08a</span>;
+    <span class="text-cyan-300">padding</span>: <span class="text-amber-300">2px 6px</span>;
+    <span class="text-cyan-300">border-radius</span>: <span class="text-amber-300">3px</span>;
+}</code></pre>
+                    </div>
+
+                    <p class="text-sm text-slate-600 mb-2">ปรับโครงสร้าง HTML ใน Section 1:</p>
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span>HTML Section 1 Structure</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed"><code>&lt;section <span class="text-purple-400 font-bold">id="about"</span>&gt;
+    &lt;h2&gt;ประวัติส่วนตัว (About Me)&lt;/h2&gt;
+
+    &lt;div <span class="text-emerald-400 font-bold">class="profile-wrapper"</span>&gt;
+        &lt;img <span class="text-emerald-400 font-bold">class="profile-img"</span>
+            src="https://blockspot.io/wp-content/uploads/niu-lai-niulai-space-niu-lai-58050-coin-logo.png"
+            alt="รูปถ่ายโปรไฟล์นายณัฐดนัย คอมพิวเตอร์" 
+            width="150" height="150"&gt;
+    &lt;/div&gt;
+
+    &lt;p&gt;
+        สวัสดีครับ! ผมชื่อ &lt;strong&gt;นายณัฐดนัย คอมพิวเตอร์&lt;/strong&gt; ปัจจุบันกำลังศึกษาอยู่ชั้นปีที่ 3 สาขาวิชาวิทยาการคอมพิวเตอร์ คณะเทคโนโลยีสารสนเทศและนวัตกรรม 
+        &lt;a href="https://www.bu.ac.th" target="_blank" rel="noopener noreferrer"&gt;มหาวิทยาลัยกรุงเทพ&lt;/a&gt;
+    &lt;/p&gt;
+
+    &lt;div <span class="text-emerald-400 font-bold">class="callout-box"</span>&gt;
+        &lt;p&gt;
+            ผมมีความหลงใหลในการสร้างสรรค์เว็บแอปพลิเคชันที่ใช้งานง่าย และกำลังมุ่งมั่นเรียนรู้ในรายวิชา 
+            &lt;mark <span class="text-emerald-400 font-bold">class="highlight-mark"</span>&gt;CS319 Internet Programming I&lt;/mark&gt; 
+            เพื่อพัฒนาทักษะสู่การเป็น &lt;em&gt;Full-Stack Developer&lt;/em&gt; มืออาชีพในอนาคตครับ
+        &lt;/p&gt;
+    &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+                    </div>
+                </section>
+
+                <!-- Step 5: Section 2 (Education Table) -->
+                <section id="step-5"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8 scroll-mt-24">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg font-bold">
+                            5</div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-900">ขั้นตอนที่ 5: ปฏิรูปตารางและ
+                                Responsive Table (.table-container)</h2>
+                            <p class="text-sm text-slate-500">ลบ attribute เก่าออกจาก &lt;table&gt; แล้วใช้ CSS
+                                พร้อมรองรับการเลื่อนแนวนอนบนมือถือ</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span>CSS Table & Responsive Container</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed"><code><span class="text-pink-400 font-bold">table</span> {
+    <span class="text-cyan-300">width</span>: <span class="text-amber-300">100%</span>;
+    <span class="text-cyan-300">border-collapse</span>: collapse; <span class="text-slate-400">/* ยุบเส้นขอบคู่ซ้อน */</span>
+    <span class="text-cyan-300">margin-top</span>: <span class="text-amber-300">10px</span>;
+}
+
+<span class="text-pink-400 font-bold">table, th, td</span> {
+    <span class="text-cyan-300">border</span>: <span class="text-amber-300">1px solid #cbd5e1</span>;
+}
+
+<span class="text-pink-400 font-bold">th</span> {
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#e2e8f0</span>;
+    <span class="text-cyan-300">color</span>: <span class="text-amber-300">#0f172a</span>;
+    <span class="text-cyan-300">padding</span>: <span class="text-amber-300">10px</span>;
+    <span class="text-cyan-300">text-align</span>: left;
+}
+
+<span class="text-pink-400 font-bold">td</span> {
+    <span class="text-cyan-300">padding</span>: <span class="text-amber-300">10px</span>;
+}
+
+<span class="text-emerald-400 font-bold">.table-container</span> {
+    <span class="text-cyan-300">width</span>: <span class="text-amber-300">100%</span>;
+    <span class="text-cyan-300">overflow-x</span>: auto; <span class="text-slate-400">/* เลื่อนซ้ายขวาได้เมื่อหน้าจอแคบ */</span>
+    <span class="text-cyan-300">-webkit-overflow-scrolling</span>: touch;
+}
+
+<span class="text-emerald-400 font-bold">.row-highlight</span> {
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#7cb8f3</span>;
+}
+
+<span class="text-emerald-400 font-bold">.gpa-badge</span> {
+    <span class="text-cyan-300">color</span>: <span class="text-amber-300">#16a34a</span>;
+    <span class="text-cyan-300">font-weight</span>: bold;
+}</code></pre>
+                    </div>
+
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span>HTML Section 2 Structure</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed"><code>&lt;section <span class="text-purple-400 font-bold">id="education"</span>&gt;
+    &lt;h2&gt;ประวัติการศึกษาและผลงาน (Education &amp; Experience)&lt;/h2&gt;
+
+    &lt;div <span class="text-emerald-400 font-bold">class="table-container"</span>&gt;
+        &lt;table&gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;ปีการศึกษา&lt;/th&gt;
+                    &lt;th&gt;ระดับการศึกษา / สถาบัน&lt;/th&gt;
+                    &lt;th&gt;สาขาวิชา / เกรดเฉลี่ย&lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;2024 - ปัจจุบัน&lt;/td&gt;
+                    &lt;td&gt;ปริญญาตรี - มหาวิทยาลัยกรุงเทพ&lt;/td&gt;
+                    &lt;td&gt;วิทยาการคอมพิวเตอร์ (CS)&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr <span class="text-emerald-400 font-bold">class="row-highlight"</span>&gt;
+                    &lt;td&gt;2021 - 2023&lt;/td&gt;
+                    &lt;td&gt;มัธยมศึกษาตอนปลาย - โรงเรียนวิทยาศาสตร์&lt;/td&gt;
+                    &lt;td&gt;แผนการเรียน วิทย์-คณิต (&lt;span <span class="text-emerald-400 font-bold">class="gpa-badge"</span>&gt;GPA: 3.85&lt;/span&gt;)&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+                    </div>
+                </section>
+
+                <!-- Step 6: Section 3 (Skills) -->
+                <section id="step-6"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8 scroll-mt-24">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg font-bold">
+                            6</div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-900">ขั้นตอนที่ 6: Section 3
+                                (ทักษะและงานอดิเรก)</h2>
+                            <p class="text-sm text-slate-500">ปรับระยะห่างรายการด้วย Class .skill-list</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span>CSS & HTML for Skills</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed"><code><span class="text-slate-400">/* CSS */</span>
+<span class="text-emerald-400 font-bold">.skill-list</span> {
+    <span class="text-cyan-300">line-height</span>: <span class="text-amber-300">1.8</span>;
+    <span class="text-cyan-300">margin-left</span>: <span class="text-amber-300">20px</span>;
+}
+
+<span class="text-slate-400">&lt;!-- HTML --&gt;</span>
+&lt;section <span class="text-purple-400 font-bold">id="skills"</span>&gt;
+    &lt;h2&gt;ทักษะและความสนใจ (Skills &amp; Interests)&lt;/h2&gt;
+
+    &lt;h3&gt;ทักษะทางเทคนิค (Technical Skills)&lt;/h3&gt;
+    &lt;ol <span class="text-emerald-400 font-bold">class="skill-list"</span>&gt;
+        &lt;li&gt;&lt;strong&gt;HTML5 &amp; CSS3:&lt;/strong&gt; การจัดโครงสร้าง Semantic Web และการจัดวาง Layout&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Programming Languages:&lt;/strong&gt; C++, Java, และ JavaScript (ES6+)&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;Developer Tools:&lt;/strong&gt; VS Code, Git, GitHub, และ Chrome DevTools&lt;/li&gt;
+    &lt;/ol&gt;
+&lt;/section&gt;</code></pre>
+                    </div>
+                </section>
+
+                <!-- Step 7: Section 4 (Contact Form) -->
+                <section id="step-7"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8 scroll-mt-24">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg font-bold">
+                            7</div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-900">ขั้นตอนที่ 7: ออกแบบฟอร์ม Contact
+                                และปุ่ม Action Buttons</h2>
+                            <p class="text-sm text-slate-500">จัดการช่องกรอกข้อมูลให้พอดีกับกรอบ (box-sizing:
+                                border-box) และแบ่งสีปุ่ม</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span>CSS Forms & Buttons</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed"><code><span class="text-pink-400 font-bold">fieldset</span> {
+    <span class="text-cyan-300">border</span>: <span class="text-amber-300">1px solid #cbd5e1</span>;
+    <span class="text-cyan-300">padding</span>: <span class="text-amber-300">15px 20px</span>;
+    <span class="text-cyan-300">border-radius</span>: <span class="text-amber-300">6px</span>;
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#fafafa</span>;
+}
+
+<span class="text-pink-400 font-bold">legend</span> {
+    <span class="text-cyan-300">padding</span>: <span class="text-amber-300">0 8px</span>;
+    <span class="text-cyan-300">color</span>: <span class="text-amber-300">#1e3a8a</span>;
+    <span class="text-cyan-300">font-weight</span>: bold;
+}
+
+<span class="text-pink-400 font-bold">input[type="text"],
+input[type="email"],
+select,
+textarea</span> {
+    <span class="text-cyan-300">width</span>: <span class="text-amber-300">100%</span>;
+    <span class="text-cyan-300">padding</span>: <span class="text-amber-300">8px</span>;
+    <span class="text-cyan-300">margin-top</span>: <span class="text-amber-300">4px</span>;
+    <span class="text-cyan-300">border</span>: <span class="text-amber-300">1px solid #ccc</span>;
+    <span class="text-cyan-300">border-radius</span>: <span class="text-amber-300">4px</span>;
+    <span class="text-cyan-300">box-sizing</span>: border-box; <span class="text-slate-400">/* รวม padding ใน width 100% */</span>
+}
+
+<span class="text-emerald-400 font-bold">.form-group</span> {
+    <span class="text-cyan-300">margin-top</span>: <span class="text-amber-300">12px</span>;
+}
+
+<span class="text-emerald-400 font-bold">.btn-primary</span> {
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#2563eb</span>;
+    <span class="text-cyan-300">color</span>: <span class="text-amber-300">#ffffff</span>;
+}
+
+<span class="text-emerald-400 font-bold">.btn-secondary</span> {
+    <span class="text-cyan-300">background-color</span>: <span class="text-amber-300">#e2e8f0</span>;
+    <span class="text-cyan-300">color</span>: <span class="text-amber-300">#334155</span>;
+}</code></pre>
+                    </div>
+
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span>HTML Section 4 Structure</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed"><code>&lt;section <span class="text-purple-400 font-bold">id="contact"</span>&gt;
+    &lt;h2&gt;ติดต่อฉัน (Contact Me)&lt;/h2&gt;
+    &lt;p&gt;หากอาจารย์หรือผู้ที่สนใจต้องการสอบถามข้อมูลเพิ่มเติม สามารถส่งข้อความถึงผมได้ผ่านแบบฟอร์มนี้ครับ:&lt;/p&gt;
+
+    &lt;form <span class="text-purple-400 font-bold">id="contact-form"</span> action="https://postman-echo.com/get" method="GET"&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;แบบฟอร์มส่งข้อความติดต่อ&lt;/legend&gt;
+
+            &lt;div <span class="text-emerald-400 font-bold">class="form-group"</span>&gt;
+                &lt;label for="sender-name"&gt;&lt;strong&gt;ชื่อ-นามสกุล ผู้ติดต่อ:&lt;/strong&gt;&lt;/label&gt;&lt;br&gt;
+                &lt;input type="text" id="sender-name" name="sender_name" placeholder="กรุณากรอกชื่อของคุณ" required&gt;
+            &lt;/div&gt;
+
+            &lt;div <span class="text-emerald-400 font-bold">class="form-group"</span>&gt;
+                &lt;label for="sender-email"&gt;&lt;strong&gt;อีเมลตอบกลับ:&lt;/strong&gt;&lt;/label&gt;&lt;br&gt;
+                &lt;input type="email" id="sender-email" name="sender_email" placeholder="example@bu.ac.th" required&gt;
+            &lt;/div&gt;
+
+            &lt;div <span class="text-emerald-400 font-bold">class="form-group"</span>&gt;
+                &lt;label for="subject"&gt;&lt;strong&gt;หัวข้อการติดต่อ:&lt;/strong&gt;&lt;/label&gt;&lt;br&gt;
+                &lt;select id="subject" name="subject"&gt;
+                    &lt;option value="general"&gt;สอบถามข้อมูลทั่วไป&lt;/option&gt;
+                    &lt;option value="project"&gt;สอบถามเกี่ยวกับโปรเจกต์ CS319&lt;/option&gt;
+                    &lt;option value="recruitment"&gt;เสนองาน / ฝึกงาน&lt;/option&gt;
+                &lt;/select&gt;
+            &lt;/div&gt;
+
+            &lt;div <span class="text-emerald-400 font-bold">class="form-group"</span>&gt;
+                &lt;label for="message"&gt;&lt;strong&gt;ข้อความเพิ่มเติม:&lt;/strong&gt;&lt;/label&gt;&lt;br&gt;
+                &lt;textarea id="message" name="message" rows="5" placeholder="พิมพ์ข้อความของคุณที่นี่..." required&gt;&lt;/textarea&gt;
+            &lt;/div&gt;
+
+            &lt;div <span class="text-emerald-400 font-bold">class="form-group"</span> style="margin-top: 15px;"&gt;
+                &lt;button type="submit" <span class="text-emerald-400 font-bold">class="btn-primary"</span>&gt;ส่งข้อความ (Submit)&lt;/button&gt;
+                &lt;button type="reset" <span class="text-emerald-400 font-bold">class="btn-secondary"</span>&gt;ล้างข้อมูล (Reset)&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/fieldset&gt;
+    &lt;/form&gt;
+&lt;/section&gt;</code></pre>
+                    </div>
+                </section>
+
+                <!-- Step 8: Responsive Media Queries -->
+                <section id="step-8"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8 scroll-mt-24">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-lg font-bold">
+                            8</div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-900">ขั้นตอนที่ 8: ทำ Responsive Web
+                                Design ด้วย Media Query (@media)</h2>
+                            <p class="text-sm text-slate-500">ปรับแต่งหน้าเว็บให้ย่อขยายพอดีกับจอมือถือ (max-width:
+                                640px)</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span>CSS Media Query for Mobile</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition">Copy</button>
+                        </div>
+                        <pre class="p-4 text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed"><code><span class="text-slate-400">/* 4. RESPONSIVE DESIGN (Media Query) */</span>
+<span class="text-pink-400 font-bold">@media</span> (max-width: <span class="text-amber-300">640px</span>) {
+    <span class="text-pink-400 font-bold">body</span> {
+        <span class="text-cyan-300">margin</span>: <span class="text-amber-300">10px</span>;
+    }
+
+    <span class="text-emerald-400 font-bold">.container</span> {
+        <span class="text-cyan-300">padding</span>: <span class="text-amber-300">15px 12px</span>;
+        <span class="text-cyan-300">border-radius</span>: <span class="text-amber-300">6px</span>;
+    }
+
+    <span class="text-pink-400 font-bold">header</span> {
+        <span class="text-cyan-300">padding</span>: <span class="text-amber-300">15px 10px</span>;
+    }
+
+    <span class="text-pink-400 font-bold">header h1</span> {
+        <span class="text-cyan-300">font-size</span>: <span class="text-amber-300">1.4rem</span>;
+    }
+
+    <span class="text-pink-400 font-bold">nav ul li</span> {
+        <span class="text-cyan-300">display</span>: inline-block;
+        <span class="text-cyan-300">margin</span>: <span class="text-amber-300">4px 3px</span>;
+    }
+
+    <span class="text-pink-400 font-bold">nav ul li a</span> {
+        <span class="text-cyan-300">display</span>: inline-block;
+        <span class="text-cyan-300">font-size</span>: <span class="text-amber-300">0.85rem</span>;
+        <span class="text-cyan-300">padding</span>: <span class="text-amber-300">6px 8px</span>;
+    }
+
+    <span class="text-emerald-400 font-bold">.btn-primary</span>,
+    <span class="text-emerald-400 font-bold">.btn-secondary</span> {
+        <span class="text-cyan-300">width</span>: <span class="text-amber-300">100%</span>;
+        <span class="text-cyan-300">margin-bottom</span>: <span class="text-amber-300">8px</span>;
+        <span class="text-cyan-300">padding</span>: <span class="text-amber-300">10px</span>;
+    }
+}</code></pre>
+                    </div>
+                </section>
+
+                <!-- Step 9: Complete Full Code -->
+                <section id="step-9"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8 scroll-mt-24">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-lg font-bold">
+                            9</div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-900">ขั้นตอนที่ 9:
+                                โค้ดฉบับสมบูรณ์ทั้งไฟล์ (w3 - css_basic.html)</h2>
+                            <p class="text-sm text-slate-500">ตรวจสอบและคัดลอกไฟล์ฉบับเต็มที่มี Tag, Class, ID และ
+                                Responsive ครบถ้วน</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-md mb-4">
+                        <div
+                            class="bg-slate-950 px-4 py-2.5 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400 font-mono">
+                            <span class="text-emerald-400 font-semibold">📁 w3 - css_basic.html (Complete Source
+                                Code)</span>
+                            <button onclick="copySnippet(this)"
+                                class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium shadow-sm transition">คัดลอกโค้ดทั้งหมด
+                                (Copy All)</button>
+                        </div>
+                        <pre class="p-4 text-xs text-slate-200 overflow-x-auto leading-relaxed max-h-[480px]"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="th"&gt;
+
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;meta name="description" content="แฟ้มสะสมผลงานส่วนตัวและการเรียนรู้ HTML5 รายวิชา CS319 Internet Programming I มหาวิทยาลัยกรุงเทพ"&gt;
+    &lt;title&gt;Personal Portfolio - นายณัฐดนัย คอมพิวเตอร์ (CS319) - Basic CSS (Tag, ID, Class)&lt;/title&gt;
+    
+    &lt;style&gt;
+        /* 1. TAG (ELEMENT) SELECTORS */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333333;
+            margin: 20px;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        header h1 {
+            margin-bottom: 5px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            background-color: #2563eb;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav ul li a:hover {
+            background-color: #60a5fa;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #e5e7eb;
+            margin: 20px 0;
+        }
+
+        h2 {
+            color: #1e3a8a;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table, th, td {
+            border: 1px solid #cbd5e1;
+        }
+
+        th {
+            background-color: #e2e8f0;
+            color: #0f172a;
+            padding: 10px;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        fieldset {
+            border: 1px solid #cbd5e1;
+            padding: 15px 20px;
+            border-radius: 6px;
+            background-color: #fafafa;
+        }
+
+        legend {
+            padding: 0 8px;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            margin-top: 20px;
+        }
+
+        /* 2. CLASS SELECTORS (.) */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+        }
+
+        .profile-wrapper {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-img {
+            border: 3px solid #2563eb;
+            border-radius: 50%;
+            padding: 4px;
+            background-color: #ffffff;
+        }
+
+        .callout-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 4px;
+            color: #1e40af;
+        }
+
+        .callout-box p {
+            margin: 0;
+        }
+
+        .highlight-mark {
+            background-color: #fef08a;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .custom-link {
+            color: #2563eb;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .custom-link:hover {
+            text-decoration: underline;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .row-highlight {
+            background-color: #7cb8f3;
+        }
+
+        .gpa-badge {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .skill-list {
+            line-height: 1.8;
+            margin-left: 20px;
+        }
+
+        .form-group {
+            margin-top: 12px;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #334155;
+        }
+
+        /* 3. ID SELECTORS (#) */
+        #about { padding-top: 5px; }
+        #education { padding-top: 5px; }
+        #skills { padding-top: 5px; }
+        #contact { padding-top: 5px; }
+        #contact-form { margin-top: 10px; }
+        #main-content { margin-top: 10px; }
+
+        /* 4. RESPONSIVE DESIGN (Media Query) */
+        @media (max-width: 640px) {
+            body { margin: 10px; }
+            .container { padding: 15px 12px; border-radius: 6px; }
+            header { padding: 15px 10px; }
+            header h1 { font-size: 1.4rem; }
+            header p { font-size: 0.9rem; }
+            nav ul li { display: inline-block; margin: 4px 3px; }
+            nav ul li a { display: inline-block; font-size: 0.85rem; padding: 6px 8px; }
+            fieldset { padding: 12px 10px; }
+            .btn-primary, .btn-secondary { width: 100%; margin-bottom: 8px; padding: 10px; }
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;header&gt;
+            &lt;h1&gt;Natdanai Computer | Personal Portfolio&lt;/h1&gt;
+            &lt;p&gt;นักศึกษาวิทยาการคอมพิวเตอร์ ผู้สนใจในการพัฒนา &lt;strong&gt;Frontend Web Development&lt;/strong&gt; และ &lt;strong&gt;Software Engineering&lt;/strong&gt;&lt;/p&gt;
+            &lt;nav&gt;
+                &lt;ul&gt;
+                    &lt;li&gt;&lt;a href="#about"&gt;ประวัติส่วนตัว&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="#education"&gt;ประวัติการศึกษา&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="#skills"&gt;ทักษะและความสนใจ&lt;/a&gt;&lt;/li&gt;
+                    &lt;li&gt;&lt;a href="#contact"&gt;แบบฟอร์มติดต่อ&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/nav&gt;
+        &lt;/header&gt;
+
+        &lt;hr&gt;
+
+        &lt;main id="main-content"&gt;
+            &lt;section id="about"&gt;
+                &lt;h2&gt;ประวัติส่วนตัว (About Me)&lt;/h2&gt;
+                &lt;div class="profile-wrapper"&gt;
+                    &lt;img class="profile-img" src="https://blockspot.io/wp-content/uploads/niu-lai-niulai-space-niu-lai-58050-coin-logo.png" alt="รูปถ่ายโปรไฟล์นายณัฐดนัย คอมพิวเตอร์" width="150" height="150"&gt;
+                &lt;/div&gt;
+                &lt;p&gt;สวัสดีครับ! ผมชื่อ &lt;strong&gt;นายณัฐดนัย คอมพิวเตอร์&lt;/strong&gt; ปัจจุบันกำลังศึกษาอยู่ชั้นปีที่ 3 สาขาวิชาวิทยาการคอมพิวเตอร์ คณะเทคโนโลยีสารสนเทศและนวัตกรรม &lt;a class="custom-link" href="https://www.bu.ac.th" target="_blank" rel="noopener noreferrer"&gt;มหาวิทยาลัยกรุงเทพ&lt;/a&gt;&lt;/p&gt;
+                &lt;div class="callout-box"&gt;
+                    &lt;p&gt;ผมมีความหลงใหลในการสร้างสรรค์เว็บแอปพลิเคชันที่ใช้งานง่าย และกำลังมุ่งมั่นเรียนรู้ในรายวิชา &lt;mark class="highlight-mark"&gt;CS319 Internet Programming I&lt;/mark&gt; เพื่อพัฒนาทักษะสู่การเป็น &lt;em&gt;Full-Stack Developer&lt;/em&gt; มืออาชีพในอนาคตครับ&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/section&gt;
+
+            &lt;hr&gt;
+
+            &lt;section id="education"&gt;
+                &lt;h2&gt;ประวัติการศึกษาและผลงาน (Education &amp; Experience)&lt;/h2&gt;
+                &lt;div class="table-container"&gt;
+                    &lt;table&gt;
+                        &lt;thead&gt;
+                            &lt;tr&gt;
+                                &lt;th&gt;ปีการศึกษา&lt;/th&gt;
+                                &lt;th&gt;ระดับการศึกษา / สถาบัน&lt;/th&gt;
+                                &lt;th&gt;สาขาวิชา / เกรดเฉลี่ย&lt;/th&gt;
+                            &lt;/tr&gt;
+                        &lt;/thead&gt;
+                        &lt;tbody&gt;
+                            &lt;tr&gt;
+                                &lt;td&gt;2024 - ปัจจุบัน&lt;/td&gt;
+                                &lt;td&gt;ปริญญาตรี - มหาวิทยาลัยกรุงเทพ&lt;/td&gt;
+                                &lt;td&gt;วิทยาการคอมพิวเตอร์ (CS)&lt;/td&gt;
+                            &lt;/tr&gt;
+                            &lt;tr class="row-highlight"&gt;
+                                &lt;td&gt;2021 - 2023&lt;/td&gt;
+                                &lt;td&gt;มัธยมศึกษาตอนปลาย - โรงเรียนวิทยาศาสตร์&lt;/td&gt;
+                                &lt;td&gt;แผนการเรียน วิทย์-คณิต (&lt;span class="gpa-badge"&gt;GPA: 3.85&lt;/span&gt;)&lt;/td&gt;
+                            &lt;/tr&gt;
+                        &lt;/tbody&gt;
+                    &lt;/table&gt;
+                &lt;/div&gt;
+            &lt;/section&gt;
+
+            &lt;hr&gt;
+
+            &lt;section id="skills"&gt;
+                &lt;h2&gt;ทักษะและความสนใจ (Skills &amp; Interests)&lt;/h2&gt;
+                &lt;h3&gt;ทักษะทางเทคนิค (Technical Skills)&lt;/h3&gt;
+                &lt;ol class="skill-list"&gt;
+                    &lt;li&gt;&lt;strong&gt;HTML5 &amp; CSS3:&lt;/strong&gt; การจัดโครงสร้าง Semantic Web และการจัดวาง Layout&lt;/li&gt;
+                    &lt;li&gt;&lt;strong&gt;Programming Languages:&lt;/strong&gt; C++, Java, และ JavaScript (ES6+)&lt;/li&gt;
+                    &lt;li&gt;&lt;strong&gt;Developer Tools:&lt;/strong&gt; VS Code, Git, GitHub, และ Chrome DevTools&lt;/li&gt;
+                &lt;/ol&gt;
+                &lt;h3 style="margin-top: 15px;"&gt;งานอดิเรกและความสนใจ (Hobbies &amp; Interests)&lt;/h3&gt;
+                &lt;ul class="skill-list"&gt;
+                    &lt;li&gt;ติดตามข่าวสารเทคโนโลยีเว็บ และ AI Tools สมัยใหม่&lt;/li&gt;
+                    &lt;li&gt;ฝึกแก้ปัญหาโจทย์อัลกอริทึมบน LeetCode&lt;/li&gt;
+                    &lt;li&gt;เล่นดนตรี และฟังเพลงเพื่อผ่อนคลาย&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/section&gt;
+
+            &lt;hr&gt;
+
+            &lt;section id="contact"&gt;
+                &lt;h2&gt;ติดต่อฉัน (Contact Me)&lt;/h2&gt;
+                &lt;p&gt;หากอาจารย์หรือผู้ที่สนใจต้องการสอบถามข้อมูลเพิ่มเติม สามารถส่งข้อความถึงผมได้ผ่านแบบฟอร์มนี้ครับ:&lt;/p&gt;
+                &lt;form id="contact-form" action="https://postman-echo.com/get" method="GET"&gt;
+                    &lt;fieldset&gt;
+                        &lt;legend&gt;แบบฟอร์มส่งข้อความติดต่อ&lt;/legend&gt;
+                        &lt;div class="form-group"&gt;
+                            &lt;label for="sender-name"&gt;&lt;strong&gt;ชื่อ-นามสกุล ผู้ติดต่อ:&lt;/strong&gt;&lt;/label&gt;&lt;br&gt;
+                            &lt;input type="text" id="sender-name" name="sender_name" placeholder="กรุณากรอกชื่อของคุณ" required&gt;
+                        &lt;/div&gt;
+                        &lt;div class="form-group"&gt;
+                            &lt;label for="sender-email"&gt;&lt;strong&gt;อีเมลตอบกลับ:&lt;/strong&gt;&lt;/label&gt;&lt;br&gt;
+                            &lt;input type="email" id="sender-email" name="sender_email" placeholder="example@bu.ac.th" required&gt;
+                        &lt;/div&gt;
+                        &lt;div class="form-group"&gt;
+                            &lt;label for="subject"&gt;&lt;strong&gt;หัวข้อการติดต่อ:&lt;/strong&gt;&lt;/label&gt;&lt;br&gt;
+                            &lt;select id="subject" name="subject"&gt;
+                                &lt;option value="general"&gt;สอบถามข้อมูลทั่วไป&lt;/option&gt;
+                                &lt;option value="project"&gt;สอบถามเกี่ยวกับโปรเจกต์ CS319&lt;/option&gt;
+                                &lt;option value="recruitment"&gt;เสนองาน / ฝึกงาน&lt;/option&gt;
+                            &lt;/select&gt;
+                        &lt;/div&gt;
+                        &lt;div class="form-group"&gt;
+                            &lt;label for="message"&gt;&lt;strong&gt;ข้อความเพิ่มเติม:&lt;/strong&gt;&lt;/label&gt;&lt;br&gt;
+                            &lt;textarea id="message" name="message" rows="5" placeholder="พิมพ์ข้อความของคุณที่นี่..." required&gt;&lt;/textarea&gt;
+                        &lt;/div&gt;
+                        &lt;div class="form-group" style="margin-top: 15px;"&gt;
+                            &lt;button type="submit" class="btn-primary"&gt;ส่งข้อความ (Submit)&lt;/button&gt;
+                            &lt;button type="reset" class="btn-secondary"&gt;ล้างข้อมูล (Reset)&lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/fieldset&gt;
+                &lt;/form&gt;
+            &lt;/section&gt;
+        &lt;/main&gt;
+
+        &lt;footer&gt;
+            &lt;hr&gt;
+            &lt;p&gt;&lt;small&gt;&amp;copy; 2026 Natdanai Computer. All Rights Reserved. | พัฒนาขึ้นเพื่อประกอบการเรียนวิชา CS319 มหาวิทยาลัยกรุงเทพ&lt;/small&gt;&lt;/p&gt;
+        &lt;/footer&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+                </section>
+
+                <!-- Step 10: Checklist & Self-Evaluation -->
+                <section id="step-10"
+                    class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 md:p-8 scroll-mt-24">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-6">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg font-bold">
+                            10</div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-900">ขั้นตอนที่ 10:
+                                เช็คลิสต์ตรวจสอบผลงาน (Self-Checklist)</h2>
+                            <p class="text-sm text-slate-500">ตรวจสอบความถูกต้องทุกข้อก่อนบันทึกและส่งผลงาน</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 mb-6">
+                        <label
+                            class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition cursor-pointer">
+                            <input type="checkbox" class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-700">มีการใช้ <strong>Tag Selectors</strong> (เช่น <code
+                                    class="text-xs bg-slate-100 px-1 py-0.5 rounded">body</code>, <code
+                                    class="text-xs bg-slate-100 px-1 py-0.5 rounded">h2</code>, <code
+                                    class="text-xs bg-slate-100 px-1 py-0.5 rounded">table</code>, <code
+                                    class="text-xs bg-slate-100 px-1 py-0.5 rounded">button</code>)
+                                กำหนดรูปแบบรวม</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition cursor-pointer">
+                            <input type="checkbox" class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-700">มีการใช้ <strong>Class Selectors</strong> (เช่น <code
+                                    class="text-xs bg-slate-100 px-1 py-0.5 rounded">.container</code>, <code
+                                    class="text-xs bg-slate-100 px-1 py-0.5 rounded">.profile-img</code>, <code
+                                    class="text-xs bg-slate-100 px-1 py-0.5 rounded">.callout-box</code>, <code
+                                    class="text-xs bg-slate-100 px-1 py-0.5 rounded">.btn-primary</code>)
+                                สำหรับคอมโพเนนต์ที่ใช้ซ้ำ</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition cursor-pointer">
+                            <input type="checkbox" class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-700">มีการใช้ <strong>ID Selectors</strong> (เช่น <code
+                                    class="text-xs bg-slate-100 px-1 py-0.5 rounded">#about</code>, <code
+                                    class="text-xs bg-slate-100 px-1 py-0.5 rounded">#contact-form</code>, <code
+                                    class="text-xs bg-slate-100 px-1 py-0.5 rounded">#main-content</code>)
+                                ระบุจุดเฉพาะ</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition cursor-pointer">
+                            <input type="checkbox" class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-700">หน้าเว็บจัดอยู่กึ่งกลางหน้าจออย่างเป็นระเบียบ
+                                (Max-width 800px)</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition cursor-pointer">
+                            <input type="checkbox" class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-700">เมนูนำทางมี Interaction (Hover State
+                                เปลี่ยนสีเมื่อชี้เมาส์)</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition cursor-pointer">
+                            <input type="checkbox" class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-700">ตารางการศึกษาไม่มีขอบคู่ซ้อน และมี
+                                <code>.table-container</code> รองรับการเลื่อนแนวนอนบนจอมือถือ</span>
+                        </label>
+                        <label
+                            class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition cursor-pointer">
+                            <input type="checkbox" class="w-5 h-5 rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-slate-700">เมื่อทดสอบย่อหน้าจอ รูปภาพไม่ล้นจอ
+                                และปุ่มกดขยายเต็มแถวอัตโนมัติ (Responsive Media Queries)</span>
+                        </label>
+                    </div>
+
+                    <div
+                        class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 p-5 rounded-xl flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-2xl shrink-0 shadow">
+                            🎉</div>
+                        <div>
+                            <h4 class="font-bold text-emerald-900 text-base">ยินดีด้วย!
+                                คุณทำตามคู่มือการเรียนรู้สำเร็จแล้ว</h4>
+                            <p class="text-xs text-emerald-700 mt-0.5">ไฟล์ <code
+                                    class="font-mono bg-emerald-100 px-1 py-0.5 rounded text-emerald-900">w3 - css_basic.html</code>
+                                ของคุณมีความสวยงาม มีโครงสร้าง CSS Selectors ครบถ้วน และรองรับ Responsive Web Design
+                                อย่างสมบูรณ์</p>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-center text-xs mt-12">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="font-medium text-slate-300">CS319 Internet Programming I — คณะเทคโนโลยีสารสนเทศและนวัตกรรม
+                มหาวิทยาลัยกรุงเทพ</p>
+            <p class="text-slate-500">คู่มือปฏิบัติการการพัฒนาเว็บเพจด้วย HTML5, Basic CSS (Tag, ID, Class Selectors)
+                และ Responsive Web Design</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Script -->
+    <script>
+        // Toggle Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // One-Click Copy Code Function
+        function copySnippet(btn) {
+            const pre = btn.parentElement.nextElementSibling;
+            const code = pre.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = 'Copied! ✓';
+                btn.classList.remove('bg-slate-800', 'hover:bg-blue-600', 'text-slate-300', 'bg-blue-600');
+                btn.classList.add('bg-emerald-600', 'text-white');
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('bg-emerald-600', 'text-white');
+                    btn.classList.add('bg-slate-800', 'hover:bg-blue-600', 'text-slate-300');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>
