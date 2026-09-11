@@ -1,3 +1,10 @@
+// =========================================================
+// NotesHub - main.js
+// จัดการข้อมูลโน้ต/ข้อสอบเก่า, การกรองหมวดหมู่, การค้นหา
+// และการเปิด/ปิดเมนูและหน้าต่าง login/register
+// =========================================================
+
+// ข้อมูลตัวอย่างโน้ตและข้อสอบเก่า (จำลองฐานข้อมูล)
 const notesData = [
   { id: 1, title: "สรุปคณิตศาสตร์ ม.4", subject: "คณิตศาสตร์เพิ่มเติม", category: "math", grade: "m4", type: "note", author: "สมชาย ใจดี" },
   { id: 2, title: "ข้อสอบเก่า ฟิสิกส์ ม.5", subject: "ฟิสิกส์", category: "science", grade: "m5", type: "exam", author: "วิชัย ตั้งใจ" },
@@ -10,15 +17,16 @@ const notesData = [
   { id: 9, title: "สรุปวรรณคดีไทย ม.4", subject: "วรรณคดีไทย", category: "thai", grade: "m4", type: "note", author: "สมหญิง รักเรียน" },
   { id: 10, title: "ข้อสอบเก่า หน้าที่พลเมือง ม.5", subject: "หน้าที่พลเมือง", category: "social", grade: "m5", type: "exam", author: "วิชัย ตั้งใจ" },
   { id: 11, title: "สรุปการอ่านจับใจความภาษาอังกฤษ ม.6", subject: "ภาษาอังกฤษ", category: "english", grade: "m6", type: "note", author: "น้ำผึ้ง สดใส" },
-  { id: 12, title: "สรุปเซตและตรรกศาสตร์ ม.4", subject: "คณิตศาสตร์เพิ่มเติม", category: "math", grade: "m4", type: "note", author: "สมชาย ใจดี" }
+  { id: 12, title: "สรุปเซตและตรรกศาสตร์ ม.4", subject: "คณิตศาสตร์เพิ่มเติม", category: "math", grade: "m4", type: "note", author: "สมชาย ใจดี" },
 ];
 
+// ป้ายกำกับหมวดวิชา/ระดับชั้น ใช้แสดงเป็น tag บนการ์ด
 const categoryLabels = {
   math: "คณิตศาสตร์",
   science: "วิทยาศาสตร์",
   english: "ภาษาอังกฤษ",
   thai: "ภาษาไทย",
-  social: "สังคมศึกษา"
+  social: "สังคมศึกษา",
 };
 
 const gradeLabels = {
@@ -29,15 +37,20 @@ const gradeLabels = {
   m5: "ม.5",
   m6: "ม.6",
   junior: "ม.ต้น",
-  senior: "ม.ปลาย"
+  senior: "ม.ปลาย",
 };
 
+// สีของปกโน้ตแต่ละใบ ใช้วนซ้ำตามลำดับ เพื่อให้ดูเหมือนชั้นหนังสือ
 const coverColors = ["#3F49A5", "#AB3730", "#EDBD60"];
+
+// สถานะการกรองปัจจุบัน
 const activeFilter = { subject: "all", grade: "all", keyword: "" };
 
 const cardGrid = document.querySelector("#cardGrid");
+const resultTitle = document.querySelector("#resultTitle");
 const resultCount = document.querySelector("#resultCount");
 
+// สร้าง card หนึ่งใบจากข้อมูลโน้ต
 function createNoteCard(note, colorIndex) {
   const card = document.createElement("article");
   card.className = "note-card";
@@ -64,6 +77,7 @@ function createNoteCard(note, colorIndex) {
   return card;
 }
 
+// วาด card ทั้งหมดตามรายการที่กรองแล้วลงใน grid
 function renderNotes(list) {
   if (!cardGrid) return;
 
@@ -80,6 +94,7 @@ function renderNotes(list) {
   }
 }
 
+// กรองข้อมูลตามหมวดวิชา ระดับชั้น และคำค้นหาที่เลือกไว้ในปัจจุบัน
 function applyFilters() {
   const filtered = notesData.filter((note) => {
     const matchSubject = activeFilter.subject === "all" || note.category === activeFilter.subject;
@@ -95,12 +110,14 @@ function applyFilters() {
   renderNotes(filtered);
 }
 
+// ---------- การกดเลือกหมวดหมู่ใน sidebar ----------
 const filterButtons = document.querySelectorAll(".filter-btn");
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const group = button.dataset.filter;
 
+    // ลบ active ออกจากปุ่มอื่นในกลุ่มเดียวกัน แล้วตั้ง active ให้ปุ่มที่กด
     document
       .querySelectorAll(`.filter-btn[data-filter="${group}"]`)
       .forEach((btn) => btn.classList.remove("active"));
@@ -111,6 +128,7 @@ filterButtons.forEach((button) => {
   });
 });
 
+// ---------- ช่องค้นหา ----------
 const searchInput = document.querySelector("#searchInput");
 const searchBtn = document.querySelector("#searchBtn");
 
@@ -125,8 +143,10 @@ searchInput?.addEventListener("keyup", (event) => {
   if (event.key === "Enter") runSearch();
 });
 
+// วาดข้อมูลครั้งแรกเมื่อโหลดหน้า
 if (cardGrid) applyFilters();
 
+// ---------- เมนูมือถือ (sidebar toggle) ----------
 const menuToggle = document.querySelector("#menuToggle");
 const sidebar = document.querySelector("#sidebar");
 
@@ -134,6 +154,7 @@ menuToggle?.addEventListener("click", () => {
   sidebar?.classList.toggle("open");
 });
 
+// ---------- Modal: login / register ----------
 const modalOverlay = document.querySelector("#modalOverlay");
 const loginModal = document.querySelector("#loginModal");
 const registerModal = document.querySelector("#registerModal");
@@ -154,9 +175,11 @@ document.querySelector("#loginBtn")?.addEventListener("click", () => openModal(l
 document.querySelector("#registerBtn")?.addEventListener("click", () => openModal(registerModal));
 document.querySelectorAll(".modal-close").forEach((btn) => btn.addEventListener("click", closeModal));
 
+// ปิด modal เมื่อคลิกพื้นหลังสีดำนอกกล่อง
 modalOverlay?.addEventListener("click", (event) => {
   if (event.target === modalOverlay) closeModal();
 });
 
+// สลับไปมาระหว่างฟอร์ม login และ register
 document.querySelector("#showRegister")?.addEventListener("click", () => openModal(registerModal));
 document.querySelector("#showLogin")?.addEventListener("click", () => openModal(loginModal));

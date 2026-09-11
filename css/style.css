@@ -1,9 +1,14 @@
+/* =========================================================
+   NotesHub - Stylesheet หลักของเว็บไซต์
+   ใช้ CSS Variables เก็บโทนสีตามที่โปรเจกต์กำหนดไว้
+   ========================================================= */
+
 :root {
-  --color-bg: #FFF8EF;
-  --color-navy: #3F49A5;
-  --color-shell: #B6C8DF;
-  --color-strawberry: #AB3730;
-  --color-dandelion: #EDBD60;
+  --color-bg: #FFF8EF;       /* Ivory: พื้นหลังหลัก */
+  --color-navy: #3F49A5;     /* Navy: ตัวอักษร/Navbar */
+  --color-shell: #B6C8DF;    /* Pale Shell: sidebar/card */
+  --color-strawberry: #AB3730; /* ปุ่มเน้น */
+  --color-dandelion: #EDBD60;  /* ปุ่มเน้นรอง */
   --color-text: #2b2d33;
   --radius: 10px;
   --shadow: 0 2px 8px rgba(63, 73, 165, 0.15);
@@ -37,6 +42,7 @@ img {
   display: block;
 }
 
+/* ---------- ปุ่มทั่วไป ---------- */
 .btn {
   border: none;
   border-radius: var(--radius);
@@ -72,6 +78,7 @@ img {
   width: 100%;
 }
 
+/* ---------- Navbar ---------- */
 .navbar {
   background-color: var(--color-navy);
   color: #fff;
@@ -114,6 +121,12 @@ img {
   border-bottom-color: var(--color-dandelion);
 }
 
+@media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+  }
+}
+
 .menu-toggle {
   display: none;
   background: none;
@@ -123,6 +136,7 @@ img {
   cursor: pointer;
 }
 
+/* ---------- Layout: sidebar + content ---------- */
 .layout {
   display: flex;
   align-items: flex-start;
@@ -189,6 +203,7 @@ img {
   min-width: 0;
 }
 
+/* ---------- Hero ---------- */
 .hero {
   display: flex;
   align-items: center;
@@ -232,6 +247,7 @@ img {
   font-size: 0.95rem;
 }
 
+/* ---------- Content header ---------- */
 .content-header {
   display: flex;
   align-items: baseline;
@@ -249,6 +265,7 @@ img {
   font-size: 0.9rem;
 }
 
+/* ---------- Card grid (ปกหนังสือ) ---------- */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -320,6 +337,7 @@ img {
   text-align: center;
 }
 
+/* ---------- Footer ---------- */
 footer {
   background-color: var(--color-navy);
   color: #fff;
@@ -329,6 +347,7 @@ footer {
   font-size: 0.9rem;
 }
 
+/* ---------- Modal (login / register) ---------- */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -436,6 +455,7 @@ footer {
   color: var(--color-navy);
 }
 
+/* ---------- About page ---------- */
 .about-hero {
   background-color: var(--color-shell);
   padding: 40px 24px;
@@ -477,6 +497,7 @@ footer {
   margin-bottom: 4px;
 }
 
+/* ---------- Matcher page ---------- */
 .matcher-page {
   max-width: 900px;
   margin: 0 auto;
@@ -530,16 +551,17 @@ footer {
   padding: 8px 14px;
   font-size: 0.9rem;
   cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.chip:has(input:checked) {
+  background-color: var(--color-navy);
+  border-color: var(--color-navy);
+  color: #fff;
 }
 
 .chip input {
   accent-color: var(--color-strawberry);
-}
-
-.chip.selected {
-  background-color: var(--color-navy);
-  border-color: var(--color-navy);
-  color: #fff;
 }
 
 .btn-large {
@@ -558,6 +580,7 @@ footer {
   margin-top: 36px;
 }
 
+/* ---------- Post page ---------- */
 .post-hero {
   background-color: var(--color-shell);
   padding: 40px 24px;
@@ -584,11 +607,8 @@ footer {
   gap: 0 12px;
 }
 
+/* ---------- Responsive ---------- */
 @media (max-width: 768px) {
-  .navbar-links {
-    display: none;
-  }
-
   .menu-toggle {
     display: block;
   }

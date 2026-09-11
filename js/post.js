@@ -1,6 +1,12 @@
+// =========================================================
+// NotesHub - post.js
+// ตรวจสอบและจำลองการส่งฟอร์มสร้างโพสต์ (ยังไม่เชื่อมต่อฐานข้อมูลจริง)
+// =========================================================
+
 const postForm = document.querySelector("#postForm");
 const postStatus = document.querySelector("#postStatus");
 
+// ตรวจสอบ field หนึ่งช่อง แล้วแสดง/ซ่อนข้อความ error ที่คู่กันไว้
 function showPostFieldError(field) {
   const errorElement = document.querySelector(`#${field.id}-error`);
   if (!errorElement) return;
