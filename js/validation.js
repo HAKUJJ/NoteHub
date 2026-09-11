@@ -3,7 +3,8 @@
 // ตรวจสอบความถูกต้องของฟอร์ม login และ register แบบ vanilla JS
 // (ใช้ Constraint Validation API เช่นเดียวกับตัวอย่างในคลาส)
 // =========================================================
-
+const ADMIN_EMAILS = ["admin@notehub.com"];
+const ADMIN_PASSWORD = "12345678";
 // ตรวจสอบ field หนึ่งช่อง แล้วแสดง/ซ่อนข้อความ error ที่คู่กันไว้
 function showFieldError(field) {
   const errorElement = document.querySelector(`#${field.id}-error`);
@@ -48,6 +49,20 @@ function setupFormValidation(formId, statusId) {
       return;
     }
 
+    if (formId === "loginForm") {
+      const emailField = form.querySelector('input[name="email"]');
+      const passwordField = form.querySelector('input[name="password"]');
+      const email = emailField ? emailField.value.trim().toLowerCase() : "";
+      const passwordValue = passwordField ? passwordField.value : "";
+
+      if (ADMIN_EMAILS.includes(email) && passwordValue === ADMIN_PASSWORD) {
+        if (statusMessage) statusMessage.textContent = "เข้าสู่ระบบสำเร็จ กำลังเข้าสู่หน้าแอดมิน...";
+        form.reset();
+        fields.forEach((field) => field.removeAttribute("aria-invalid"));
+        window.location.href = "addmin.html";
+        return;
+      }
+    }
     if (statusMessage) {
       statusMessage.textContent =
         formId === "loginForm"

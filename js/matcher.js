@@ -82,7 +82,6 @@ matcherForm?.addEventListener("submit", (event) => {
 
   const selectedTags = getSelectedTags();
 
-  // ต้องเลือกอย่างน้อย 1 ตัวเลือกก่อนจึงจะคำนวณผลได้
   if (selectedTags.length === 0) {
     matcherError.textContent = "กรุณาเลือกอย่างน้อย 1 ตัวเลือกในแต่ละหมวด ก่อนกด Match";
     return;
