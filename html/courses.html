@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="รายการโน้ตและข้อสอบเก่าทั้งหมดใน NotesHub พร้อมตัวกรองตามคณะและชั้นปี" />
+  <title>วิชาทั้งหมด - NotesHub</title>
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- ========== Navbar ========== -->
+  <header class="navbar">
+    <div class="navbar-brand">
+      <img src="images/logo.svg" alt="โลโก้ NotesHub" width="36" height="36" />
+      <span>NotesHub</span>
+    </div>
+    <nav class="navbar-links">
+      <a href="index.html">หน้าแรก</a>
+      <a href="post.html">สร้างโพสต์</a>
+      <a href="matcher.html">Matcher</a>
+      <a href="about.html">เกี่ยวกับเรา</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="เปิดเมนูหมวดหมู่">&#9776;</button>
+    <div class="navbar-actions">
+      <button class="btn btn-outline" id="loginBtn">เข้าสู่ระบบ</button>
+      <button class="btn btn-primary" id="registerBtn">สมัครสมาชิก</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- ========== Sidebar: หมวดหมู่ ========== -->
+    <aside class="sidebar" id="sidebar">
+      <h2>หมวดหมู่</h2>
+
+      <div class="filter-group">
+        <h3>หมวดวิชา</h3>
+        <ul>
+          <li><button class="filter-btn active" data-filter="subject" data-value="all">ทั้งหมด</button></li>
+          <li><button class="filter-btn" data-filter="subject" data-value="math">คณิตศาสตร์</button></li>
+          <li><button class="filter-btn" data-filter="subject" data-value="science">วิทยาศาสตร์</button></li>
+          <li><button class="filter-btn" data-filter="subject" data-value="english">ภาษาอังกฤษ</button></li>
+          <li><button class="filter-btn" data-filter="subject" data-value="thai">ภาษาไทย</button></li>
+          <li><button class="filter-btn" data-filter="subject" data-value="social">สังคมศึกษา</button></li>
+        </ul>
+      </div>
+
+      <div class="filter-group">
+        <h3>ระดับชั้น</h3>
+        <ul>
+          <li><button class="filter-btn active" data-filter="grade" data-value="all">ทั้งหมด</button></li>
+          <li><button class="filter-btn" data-filter="grade" data-value="junior">มัธยมต้น (ม.1 - ม.3)</button></li>
+          <li><button class="filter-btn" data-filter="grade" data-value="senior">มัธยมปลาย (ม.4 - ม.6)</button></li>
+          <li><button class="filter-btn" data-filter="grade" data-value="m1">ม.1</button></li>
+          <li><button class="filter-btn" data-filter="grade" data-value="m2">ม.2</button></li>
+          <li><button class="filter-btn" data-filter="grade" data-value="m3">ม.3</button></li>
+          <li><button class="filter-btn" data-filter="grade" data-value="m4">ม.4</button></li>
+          <li><button class="filter-btn" data-filter="grade" data-value="m5">ม.5</button></li>
+          <li><button class="filter-btn" data-filter="grade" data-value="m6">ม.6</button></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ========== Main content ========== -->
+    <main class="content">
+      <div class="content-header">
+        <h2 id="resultTitle">วิชาทั้งหมด</h2>
+        <span id="resultCount"></span>
+      </div>
+
+      <div class="search-bar" style="margin-bottom: 20px;">
+        <input type="search" id="searchInput" placeholder="ค้นหาชื่อวิชาหรือหัวข้อโน้ต..." />
+        <button class="btn btn-primary" id="searchBtn">ค้นหา</button>
+      </div>
+
+      <div class="card-grid" id="cardGrid"></div>
+    </main>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 NotesHub.Mini Project</p>
+  </footer>
+
+  <!-- ========== Modal: Login / Register ========== -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal" id="loginModal">
+      <button class="modal-close" aria-label="ปิดหน้าต่าง">&times;</button>
+      <h2>เข้าสู่ระบบ</h2>
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginEmail">อีเมล</label>
+          <input type="email" id="loginEmail" name="email" required data-error-message="กรุณากรอกอีเมลให้ถูกต้อง" />
+          <p class="error-message" id="loginEmail-error"></p>
+        </div>
+        <div class="field">
+          <label for="loginPassword">รหัสผ่าน</label>
+          <input type="password" id="loginPassword" name="password" required minlength="8"
+            data-error-message="รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร" />
+          <p class="error-message" id="loginPassword-error"></p>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">เข้าสู่ระบบ</button>
+        <p class="form-status" id="loginStatus"></p>
+      </form>
+      <p class="modal-switch">ยังไม่มีบัญชี? <button type="button" id="showRegister">สมัครสมาชิก</button></p>
+    </div>
+
+    <div class="modal" id="registerModal" hidden>
+      <button class="modal-close" aria-label="ปิดหน้าต่าง">&times;</button>
+      <h2>สมัครสมาชิก</h2>
+      <form id="registerForm" novalidate>
+        <div class="field">
+          <label for="registerName">ชื่อ-นามสกุล</label>
+          <input type="text" id="registerName" name="fullName" required data-error-message="กรุณากรอกชื่อ-นามสกุล" />
+          <p class="error-message" id="registerName-error"></p>
+        </div>
+        <div class="field">
+          <label for="registerEmail">อีเมล</label>
+          <input type="email" id="registerEmail" name="email" required data-error-message="กรุณากรอกอีเมลให้ถูกต้อง" />
+          <p class="error-message" id="registerEmail-error"></p>
+        </div>
+        <div class="field">
+          <label for="registerPassword">รหัสผ่าน</label>
+          <input type="password" id="registerPassword" name="password" required minlength="8"
+            data-error-message="รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร" />
+          <p class="error-message" id="registerPassword-error"></p>
+        </div>
+        <div class="field">
+          <label for="registerConfirmPassword">ยืนยันรหัสผ่าน</label>
+          <input type="password" id="registerConfirmPassword" name="confirmPassword" required
+            data-error-message="กรุณายืนยันรหัสผ่านให้ตรงกัน" />
+          <p class="error-message" id="registerConfirmPassword-error"></p>
+        </div>
+        <button type="submit" class="btn btn-secondary btn-block">สมัครสมาชิก</button>
+        <p class="form-status" id="registerStatus"></p>
+      </form>
+      <p class="modal-switch">มีบัญชีอยู่แล้ว? <button type="button" id="showLogin">เข้าสู่ระบบ</button></p>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/validation.js"></script>
+</body>
+</html>

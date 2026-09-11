@@ -1,40 +1,34 @@
-// =========================================================
-// NotesHub - matcher.js
-// คำนวณสาขาวิชาที่เหมาะสมจากทักษะ ความสนใจ และงานอดิเรกที่เลือก
-// =========================================================
-
-// แต่ละสาขาวิชาผูกกับชุด "แท็ก" ที่ตรงกับ value ของ checkbox ในฟอร์ม
 const fields = [
   {
     name: "วิทยาการคอมพิวเตอร์",
     tags: ["programming", "technology", "problem_solving", "gaming"],
-    subjects: ["Computer Science", "Software Engineering", "Information Technology"],
+    subjects: ["Computer Science", "Software Engineering", "Information Technology"]
   },
   {
     name: "วิทยาศาสตร์ข้อมูล",
     tags: ["data_analysis", "math", "technology", "problem_solving"],
-    subjects: ["Data Science", "Data Analytics", "Business Intelligence"],
+    subjects: ["Data Science", "Data Analytics", "Business Intelligence"]
   },
   {
     name: "บริหารธุรกิจ",
     tags: ["communication", "business", "blogging"],
-    subjects: ["Business Administration", "Marketing", "Entrepreneurship"],
+    subjects: ["Business Administration", "Marketing", "Entrepreneurship"]
   },
   {
     name: "ศิลปะและการออกแบบ",
     tags: ["design", "art", "drawing", "photography"],
-    subjects: ["Visual Arts", "Graphic Design", "Digital Media"],
+    subjects: ["Visual Arts", "Graphic Design", "Digital Media"]
   },
   {
     name: "วิทยาศาสตร์สุขภาพ",
     tags: ["health", "problem_solving", "sports"],
-    subjects: ["Nursing", "Public Health", "Sports Science"],
+    subjects: ["Nursing", "Public Health", "Sports Science"]
   },
   {
     name: "นิติศาสตร์",
     tags: ["communication", "law", "reading"],
-    subjects: ["Law", "Political Science", "Public Administration"],
-  },
+    subjects: ["Law", "Political Science", "Public Administration"]
+  }
 ];
 
 const matcherForm = document.querySelector("#matcherForm");
@@ -42,12 +36,10 @@ const matcherError = document.querySelector("#matcher-error");
 const matcherResult = document.querySelector("#matcherResult");
 const resultGrid = document.querySelector("#resultGrid");
 
-// คืนค่า array ของ value ที่ถูกเลือกในฟอร์ม (ทุกหมวดรวมกัน)
 function getSelectedTags() {
   return [...matcherForm.querySelectorAll("input[type='checkbox']:checked")].map((input) => input.value);
 }
 
-// คำนวณคะแนนความเข้ากันของแต่ละสาขา จากจำนวนแท็กที่ตรงกับที่ผู้ใช้เลือก
 function calculateMatches(selectedTags) {
   return fields
     .map((field) => {
@@ -60,7 +52,6 @@ function calculateMatches(selectedTags) {
     .slice(0, 3);
 }
 
-// สร้างการ์ดแสดงผลลัพธ์หนึ่งสาขา
 function createResultCard(field) {
   const card = document.createElement("article");
   card.className = "note-card";
@@ -82,7 +73,6 @@ matcherForm?.addEventListener("submit", (event) => {
 
   const selectedTags = getSelectedTags();
 
-  // ต้องเลือกอย่างน้อย 1 ตัวเลือกก่อนจึงจะคำนวณผลได้
   if (selectedTags.length === 0) {
     matcherError.textContent = "กรุณาเลือกอย่างน้อย 1 ตัวเลือกในแต่ละหมวด ก่อนกด Match";
     return;
@@ -103,7 +93,6 @@ matcherForm?.addEventListener("submit", (event) => {
   matcherResult.scrollIntoView({ behavior: "smooth" });
 });
 
-// ปุ่มเริ่มใหม่: ล้างฟอร์มและซ่อนผลลัพธ์
 document.querySelector("#restartMatcher")?.addEventListener("click", () => {
   matcherForm.reset();
   matcherResult.hidden = true;

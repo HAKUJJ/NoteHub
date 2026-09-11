@@ -1,10 +1,3 @@
-// =========================================================
-// NotesHub - validation.js
-// ตรวจสอบความถูกต้องของฟอร์ม login และ register แบบ vanilla JS
-// (ใช้ Constraint Validation API เช่นเดียวกับตัวอย่างในคลาส)
-// =========================================================
-
-// ตรวจสอบ field หนึ่งช่อง แล้วแสดง/ซ่อนข้อความ error ที่คู่กันไว้
 function showFieldError(field) {
   const errorElement = document.querySelector(`#${field.id}-error`);
   if (!errorElement) return;
@@ -13,7 +6,6 @@ function showFieldError(field) {
   field.toggleAttribute("aria-invalid", !field.validity.valid);
 }
 
-// ผูก validation ให้กับฟอร์มหนึ่งฟอร์ม (เรียกใช้ซ้ำได้ทั้ง login และ register)
 function setupFormValidation(formId, statusId) {
   const form = document.querySelector(`#${formId}`);
   if (!form) return;
@@ -31,7 +23,6 @@ function setupFormValidation(formId, statusId) {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    // ตรวจรหัสผ่านซ้ำ (เฉพาะฟอร์มสมัครสมาชิกที่มี confirmPassword)
     const password = form.querySelector('input[name="password"]');
     const confirmPassword = form.querySelector('input[name="confirmPassword"]');
     if (password && confirmPassword) {
