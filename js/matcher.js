@@ -3,39 +3,7 @@
 // คำนวณสาขาวิชาที่เหมาะสมจากทักษะ ความสนใจ และงานอดิเรกที่เลือก
 // =========================================================
 
-// แต่ละสาขาวิชาผูกกับชุด "แท็ก" ที่ตรงกับ value ของ checkbox ในฟอร์ม
-const fields = [
-  {
-    name: "วิทยาการคอมพิวเตอร์",
-    tags: ["programming", "technology", "problem_solving", "gaming"],
-    subjects: ["Computer Science", "Software Engineering", "Information Technology"],
-  },
-  {
-    name: "วิทยาศาสตร์ข้อมูล",
-    tags: ["data_analysis", "math", "technology", "problem_solving"],
-    subjects: ["Data Science", "Data Analytics", "Business Intelligence"],
-  },
-  {
-    name: "บริหารธุรกิจ",
-    tags: ["communication", "business", "blogging"],
-    subjects: ["Business Administration", "Marketing", "Entrepreneurship"],
-  },
-  {
-    name: "ศิลปะและการออกแบบ",
-    tags: ["design", "art", "drawing", "photography"],
-    subjects: ["Visual Arts", "Graphic Design", "Digital Media"],
-  },
-  {
-    name: "วิทยาศาสตร์สุขภาพ",
-    tags: ["health", "problem_solving", "sports"],
-    subjects: ["Nursing", "Public Health", "Sports Science"],
-  },
-  {
-    name: "นิติศาสตร์",
-    tags: ["communication", "law", "reading"],
-    subjects: ["Law", "Political Science", "Public Administration"],
-  },
-];
+// ข้อมูลสาขาวิชา (fields) ย้ายไปอยู่ที่ js/fields-data.js แล้ว
 
 const matcherForm = document.querySelector("#matcherForm");
 const matcherError = document.querySelector("#matcher-error");
@@ -71,7 +39,7 @@ function createResultCard(field) {
       <div class="note-tags">
         ${field.subjects.map((subject) => `<span>${subject}</span>`).join("")}
       </div>
-      <button type="button" class="btn btn-primary">ดูวิชาที่เกี่ยวข้อง</button>
+      <a class="btn btn-primary" href="field.html?id=${field.id}">ดูวิชาที่เกี่ยวข้อง</a>
     </div>
   `;
   return card;

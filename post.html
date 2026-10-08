@@ -17,8 +17,10 @@
     </div>
     <nav class="navbar-links">
       <a href="index.html">หน้าแรก</a>
+      <a href="books.html">คลังหนังสือ</a>
       <a href="post.html" class="active">สร้างโพสต์</a>
       <a href="matcher.html">Matcher</a>
+      <a href="favorites.html">รายการโปรด <span class="fav-count" id="favCount" hidden>0</span></a>
       <a href="about.html">เกี่ยวกับเรา</a>
     </nav>
     <button class="menu-toggle" id="menuToggle" aria-label="เปิดเมนู">&#9776;</button>
@@ -113,6 +115,7 @@
 
   <footer>
     <p>&copy; 2026 NotesHub.Mini Project</p>
+    <p class="image-credit">ภาพประกอบจาก <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> · ข้อมูลหนังสือจาก <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a></p>
   </footer>
 
   <!-- ========== Modal: Login / Register ========== -->
@@ -170,6 +173,8 @@
       <p class="modal-switch">มีบัญชีอยู่แล้ว? <button type="button" id="showLogin">เข้าสู่ระบบ</button></p>
     </div>
   </div>
+
+  <script src="js/favorites.js"></script>
 
   <script src="js/main.js"></script>
   <script src="js/validation.js"></script>

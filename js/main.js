@@ -6,18 +6,42 @@
 
 // ข้อมูลตัวอย่างโน้ตและข้อสอบเก่า (จำลองฐานข้อมูล)
 const notesData = [
-  { id: 1, title: "สรุปคณิตศาสตร์ ม.4", subject: "คณิตศาสตร์เพิ่มเติม", category: "math", grade: "m4", type: "note", author: "สมชาย ใจดี" },
-  { id: 2, title: "ข้อสอบเก่า ฟิสิกส์ ม.5", subject: "ฟิสิกส์", category: "science", grade: "m5", type: "exam", author: "วิชัย ตั้งใจ" },
-  { id: 3, title: "สรุปชีววิทยา ม.ปลาย", subject: "ชีววิทยา", category: "science", grade: "senior", type: "note", author: "สมหญิง รักเรียน" },
-  { id: 4, title: "แกรมมาร์ภาษาอังกฤษ ม.3", subject: "ภาษาอังกฤษ", category: "english", grade: "m3", type: "note", author: "น้ำผึ้ง สดใส" },
-  { id: 5, title: "ข้อสอบเก่า เคมี ม.6", subject: "เคมี", category: "science", grade: "m6", type: "exam", author: "วิชัย ตั้งใจ" },
-  { id: 6, title: "สรุปหลักภาษาไทย ม.2", subject: "ภาษาไทย", category: "thai", grade: "m2", type: "note", author: "สมหญิง รักเรียน" },
-  { id: 7, title: "สรุปประวัติศาสตร์ไทย ม.1", subject: "ประวัติศาสตร์ไทย", category: "social", grade: "m1", type: "note", author: "สมชาย ใจดี" },
-  { id: 8, title: "ข้อสอบเก่า เรขาคณิต ม.ต้น", subject: "เรขาคณิต", category: "math", grade: "junior", type: "exam", author: "น้ำผึ้ง สดใส" },
-  { id: 9, title: "สรุปวรรณคดีไทย ม.4", subject: "วรรณคดีไทย", category: "thai", grade: "m4", type: "note", author: "สมหญิง รักเรียน" },
-  { id: 10, title: "ข้อสอบเก่า หน้าที่พลเมือง ม.5", subject: "หน้าที่พลเมือง", category: "social", grade: "m5", type: "exam", author: "วิชัย ตั้งใจ" },
-  { id: 11, title: "สรุปการอ่านจับใจความภาษาอังกฤษ ม.6", subject: "ภาษาอังกฤษ", category: "english", grade: "m6", type: "note", author: "น้ำผึ้ง สดใส" },
-  { id: 12, title: "สรุปเซตและตรรกศาสตร์ ม.4", subject: "คณิตศาสตร์เพิ่มเติม", category: "math", grade: "m4", type: "note", author: "สมชาย ใจดี" },
+  { id: 1, title: "สรุปคณิตศาสตร์ ม.4", subject: "คณิตศาสตร์เพิ่มเติม", category: "math", grade: "m4", type: "note", author: "สมชาย ใจดี", pages: 24, image: "photo-1453733190371-0a9bedd82893",
+    description: "สรุปเนื้อหาคณิตศาสตร์เพิ่มเติม ม.4 เทอม 1 ครบทุกบท มีสูตรสำคัญและตัวอย่างโจทย์พร้อมวิธีทำ",
+    topics: ["เซต", "ตรรกศาสตร์", "จำนวนจริง", "ทฤษฎีจำนวนเบื้องต้น"] },
+  { id: 2, title: "ข้อสอบเก่า ฟิสิกส์ ม.5", subject: "ฟิสิกส์", category: "science", grade: "m5", type: "exam", author: "วิชัย ตั้งใจ", pages: 32, image: "photo-1633493702341-4d04841df53b",
+    description: "รวมข้อสอบกลางภาคและปลายภาค ฟิสิกส์ ม.5 ย้อนหลัง 3 ปี พร้อมเฉลยละเอียด",
+    topics: ["การเคลื่อนที่แบบฮาร์มอนิก", "คลื่น", "เสียง", "ไฟฟ้าสถิต"] },
+  { id: 3, title: "สรุปชีววิทยา ม.ปลาย", subject: "ชีววิทยา", category: "science", grade: "senior", type: "note", author: "สมหญิง รักเรียน", pages: 40, image: "photo-1526930382372-67bf22c0fce2",
+    description: "สรุปชีววิทยา ม.ปลาย ฉบับย่อสำหรับทบทวนก่อนสอบ มีแผนภาพประกอบเข้าใจง่าย",
+    topics: ["เซลล์", "พันธุศาสตร์", "วิวัฒนาการ", "ระบบในร่างกายมนุษย์"] },
+  { id: 4, title: "แกรมมาร์ภาษาอังกฤษ ม.3", subject: "ภาษาอังกฤษ", category: "english", grade: "m3", type: "note", author: "น้ำผึ้ง สดใส", pages: 18, image: "photo-1543165796-5426273eaab3",
+    description: "สรุปแกรมมาร์ภาษาอังกฤษ ม.3 ที่ออกสอบบ่อย พร้อมแบบฝึกหัดท้ายบท",
+    topics: ["Tenses", "Passive Voice", "Conditional Sentences", "Relative Clauses"] },
+  { id: 5, title: "ข้อสอบเก่า เคมี ม.6", subject: "เคมี", category: "science", grade: "m6", type: "exam", author: "วิชัย ตั้งใจ", pages: 36, image: "photo-1532094349884-543bc11b234d",
+    description: "ข้อสอบเก่าเคมี ม.6 แนวข้อสอบเข้ามหาวิทยาลัย พร้อมเฉลยและเทคนิคทำโจทย์",
+    topics: ["ปริมาณสารสัมพันธ์", "กรด-เบส", "เคมีอินทรีย์", "ไฟฟ้าเคมี"] },
+  { id: 6, title: "สรุปหลักภาษาไทย ม.2", subject: "ภาษาไทย", category: "thai", grade: "m2", type: "note", author: "สมหญิง รักเรียน", pages: 16, image: "photo-1579017308347-e53e0d2fc5e9",
+    description: "สรุปหลักภาษาไทย ม.2 อ่านง่าย มีตารางสรุปและตัวอย่างประโยค",
+    topics: ["ชนิดของคำ", "ประโยค", "คำยืมภาษาต่างประเทศ", "การเขียนเรียงความ"] },
+  { id: 7, title: "สรุปประวัติศาสตร์ไทย ม.1", subject: "ประวัติศาสตร์ไทย", category: "social", grade: "m1", type: "note", author: "สมชาย ใจดี", pages: 20, image: "photo-1679430255152-d1b0fec90432",
+    description: "สรุปประวัติศาสตร์ไทย ม.1 เรียงตามยุคสมัย พร้อมไทม์ไลน์เหตุการณ์สำคัญ",
+    topics: ["สมัยก่อนประวัติศาสตร์", "สมัยสุโขทัย", "หลักฐานทางประวัติศาสตร์", "ศักราช"] },
+  { id: 8, title: "ข้อสอบเก่า เรขาคณิต ม.ต้น", subject: "เรขาคณิต", category: "math", grade: "junior", type: "exam", author: "น้ำผึ้ง สดใส", pages: 22, image: "photo-1764948620396-45f5b5fdd73e",
+    description: "รวมข้อสอบเก่าเรขาคณิต ม.ต้น เน้นโจทย์พิสูจน์และการคำนวณพื้นที่",
+    topics: ["ความเท่ากันทุกประการ", "ทฤษฎีบทพีทาโกรัส", "เส้นขนาน", "พื้นที่ผิวและปริมาตร"] },
+  { id: 9, title: "สรุปวรรณคดีไทย ม.4", subject: "วรรณคดีไทย", category: "thai", grade: "m4", type: "note", author: "สมหญิง รักเรียน", pages: 28, image: "photo-1702753390015-d4abffb87306",
+    description: "สรุปวรรณคดีไทย ม.4 ทุกเรื่องในหนังสือเรียน พร้อมคุณค่าและข้อคิด",
+    topics: ["นิราศนรินทร์", "หัวใจชายหนุ่ม", "มัทนะพาธา", "ไตรภูมิพระร่วง"] },
+  { id: 10, title: "ข้อสอบเก่า หน้าที่พลเมือง ม.5", subject: "หน้าที่พลเมือง", category: "social", grade: "m5", type: "exam", author: "วิชัย ตั้งใจ", pages: 18, image: "photo-1589391886645-d51941baf7fb",
+    description: "ข้อสอบเก่าหน้าที่พลเมือง ม.5 พร้อมเฉลย ครอบคลุมรัฐธรรมนูญและกฎหมายใกล้ตัว",
+    topics: ["รัฐธรรมนูญ", "สิทธิและหน้าที่", "กฎหมายแพ่ง", "กฎหมายอาญา"] },
+  { id: 11, title: "สรุปการอ่านจับใจความภาษาอังกฤษ ม.6", subject: "ภาษาอังกฤษ", category: "english", grade: "m6", type: "note", author: "น้ำผึ้ง สดใส", pages: 26, image: "photo-1514369118554-e20d93546b30",
+    description: "สรุปเทคนิคการอ่านจับใจความภาษาอังกฤษ ม.6 สำหรับเตรียมสอบ พร้อมบทความฝึกอ่าน",
+    topics: ["Main Idea", "Skimming & Scanning", "Inference", "Vocabulary in Context"] },
+  { id: 12, title: "สรุปเซตและตรรกศาสตร์ ม.4", subject: "คณิตศาสตร์เพิ่มเติม", category: "math", grade: "m4", type: "note", author: "สมชาย ใจดี", pages: 20, image: "photo-1635372722656-389f87a941b7",
+    description: "สรุปเซตและตรรกศาสตร์ ม.4 แบบละเอียด มีแผนภาพเวนน์และตารางค่าความจริง",
+    topics: ["เซตและสับเซต", "แผนภาพเวนน์-ออยเลอร์", "ตัวเชื่อมทางตรรกศาสตร์", "ตัวบ่งปริมาณ"] },
 ];
 
 // ป้ายกำกับหมวดวิชา/ระดับชั้น ใช้แสดงเป็น tag บนการ์ด
@@ -40,6 +64,14 @@ const gradeLabels = {
   senior: "ม.ปลาย",
 };
 
+// รูปปกโน้ตจาก Unsplash (ใช้ฟรีตาม Unsplash License: https://unsplash.com/license)
+// ใส่แค่รหัสรูปไว้ในช่อง image ของโน้ต แล้วฟังก์ชันนี้จะสร้างลิงก์รูปให้
+function noteImageUrl(note, width = 600, height = 330) {
+  return note.image
+    ? `https://images.unsplash.com/${note.image}?w=${width}&h=${height}&fit=crop&auto=format&q=70`
+    : "";
+}
+
 // สีของปกโน้ตแต่ละใบ ใช้วนซ้ำตามลำดับ เพื่อให้ดูเหมือนชั้นหนังสือ
 const coverColors = ["#3F49A5", "#AB3730", "#EDBD60"];
 
@@ -58,7 +90,16 @@ function createNoteCard(note, colorIndex) {
   const cover = document.createElement("div");
   cover.className = "note-card-cover";
   cover.style.backgroundColor = coverColors[colorIndex % coverColors.length];
-  cover.textContent = note.subject.charAt(0);
+
+  // มีรูป = แสดงรูป + ป้ายชื่อวิชา, ไม่มีรูป = แสดงตัวอักษรตัวแรกแบบเดิม
+  if (note.image) {
+    cover.classList.add("has-image");
+    cover.innerHTML = `
+      <img src="${noteImageUrl(note)}" alt="" loading="lazy" onerror="this.remove()" />
+      <span class="cover-subject">${note.subject}</span>`;
+  } else {
+    cover.textContent = note.subject.charAt(0);
+  }
 
   const body = document.createElement("div");
   body.className = "note-card-body";
@@ -70,8 +111,13 @@ function createNoteCard(note, colorIndex) {
       <span>${gradeLabels[note.grade] || note.grade}</span>
       <span>${note.type === "exam" ? "ข้อสอบเก่า" : "สรุปเนื้อหา"}</span>
     </div>
-    <button class="btn btn-primary">ดูรายละเอียด</button>
+    <a class="btn btn-primary" href="note.html?id=${note.id}">ดูรายละเอียด</a>
   `;
+
+  // ปุ่มหัวใจ (รายการโปรด) มุมขวาบนของปก - ใช้ฟังก์ชันจาก js/favorites.js
+  if (typeof createFavoriteButton === "function") {
+    cover.append(createFavoriteButton({ kind: "note", id: String(note.id), title: note.title, subtitle: note.subject }));
+  }
 
   card.append(cover, body);
   return card;
