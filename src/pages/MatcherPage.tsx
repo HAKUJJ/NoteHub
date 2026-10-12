@@ -84,12 +84,12 @@ export default function MatcherPage() {
             <CardGrid>
               {results.map((r, i) => (
                 <CoverCard
-                  key={r.name}
+                  key={r.id}
                   coverText={`${r.percent}%`}
                   colorIndex={i}
                   title={r.name}
                   tags={r.subjects}
-                  action={<Link to="/courses" className="btn btn-primary btn-sm">ดูวิชาที่เกี่ยวข้อง</Link>}
+                  action={<Link to={`/fields/${r.id}`} className="btn btn-primary btn-sm">ดูรายละเอียดสาขา</Link>}
                 />
               ))}
             </CardGrid>

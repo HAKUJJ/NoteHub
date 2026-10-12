@@ -11,6 +11,10 @@ export interface Note {
   type: NoteType
   author: string
   description?: string
+  pages?: number
+  image?: string
+  topics?: string[]
+  relatedBookSubject?: string
 }
 
 export type NewNote = Omit<Note, 'id'>

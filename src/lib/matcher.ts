@@ -1,3 +1,5 @@
+import { fieldProfiles, type FieldId } from '../data/fields'
+
 interface Option {
   value: string
   label: string
@@ -39,48 +41,17 @@ export const matcherGroups: { title: string; options: Option[] }[] = [
   },
 ]
 
-const fields = [
-  {
-    name: 'วิทยาการคอมพิวเตอร์',
-    tags: ['programming', 'technology', 'problem_solving', 'gaming'],
-    subjects: ['Computer Science', 'Software Engineering', 'Information Technology'],
-  },
-  {
-    name: 'วิทยาศาสตร์ข้อมูล',
-    tags: ['data_analysis', 'math', 'technology', 'problem_solving'],
-    subjects: ['Data Science', 'Data Analytics', 'Business Intelligence'],
-  },
-  {
-    name: 'บริหารธุรกิจ',
-    tags: ['communication', 'business', 'blogging'],
-    subjects: ['Business Administration', 'Marketing', 'Entrepreneurship'],
-  },
-  {
-    name: 'ศิลปะและการออกแบบ',
-    tags: ['design', 'art', 'drawing', 'photography'],
-    subjects: ['Visual Arts', 'Graphic Design', 'Digital Media'],
-  },
-  {
-    name: 'วิทยาศาสตร์สุขภาพ',
-    tags: ['health', 'problem_solving', 'sports'],
-    subjects: ['Nursing', 'Public Health', 'Sports Science'],
-  },
-  {
-    name: 'นิติศาสตร์',
-    tags: ['communication', 'law', 'reading'],
-    subjects: ['Law', 'Political Science', 'Public Administration'],
-  },
-]
-
 export interface MatchResult {
+  id: FieldId
   name: string
   subjects: string[]
   percent: number
 }
 
 export function calculateMatches(selected: string[]): MatchResult[] {
-  return fields
+  return fieldProfiles
     .map((f) => ({
+      id: f.id,
       name: f.name,
       subjects: f.subjects,
       percent: Math.round((f.tags.filter((t) => selected.includes(t)).length / f.tags.length) * 100),
