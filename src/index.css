@@ -1,0 +1,36 @@
+﻿@import "tailwindcss";
+@plugin "daisyui" {
+  themes: false;
+}
+
+@plugin "daisyui/theme" {
+  name: "notehub";
+  default: true;
+  color-scheme: light;
+  --color-base-100: #FFF8EF;
+  --color-base-200: #B6C8DF;
+  --color-base-300: #9fb3cc;
+  --color-base-content: #2b2d33;
+  --color-primary: #3F49A5;
+  --color-primary-content: #ffffff;
+  --color-secondary: #AB3730;
+  --color-secondary-content: #ffffff;
+  --color-accent: #EDBD60;
+  --color-accent-content: #2b2d33;
+  --color-neutral: #3F49A5;
+  --color-neutral-content: #ffffff;
+  --color-info: #3F49A5;
+  --color-info-content: #ffffff;
+  --color-success: #2e7d32;
+  --color-success-content: #ffffff;
+  --color-warning: #EDBD60;
+  --color-warning-content: #2b2d33;
+  --color-error: #AB3730;
+  --color-error-content: #ffffff;
+  --radius-box: 10px;
+}
+
+body {
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+}
