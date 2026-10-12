@@ -1,0 +1,126 @@
+import { useRef, type FormEvent } from 'react'
+import { Link } from 'react-router'
+import FormField from '../components/ui/FormField'
+import { subjectLabels } from '../data/labels'
+import { useCreateNote } from '../hooks/useNotes'
+import { useValidatedForm } from '../hooks/useValidatedForm'
+import { required } from '../lib/validators'
+import type { Grade, NoteType, Subject } from '../types'
+
+const cls = (error?: string) => `w-full border bg-white ${error ? 'border-error' : 'border-gray-300'}`
+const years: Grade[] = ['m1', 'm2', 'm3', 'm4', 'm5', 'm6']
+
+export default function CreatePostPage() {
+  const createNote = useCreateNote()
+  const fileRef = useRef<HTMLInputElement>(null)
+  const { values, errors, handleChange, handleBlur, validateAll, reset } = useValidatedForm(
+    { title: '', subject: '', faculty: '', year: '', type: '', author: '', description: '' },
+    {
+      title: required('กรุณากรอกชื่อโน้ต'),
+      subject: required('กรุณากรอกชื่อวิชา'),
+      faculty: required('กรุณาเลือกหมวดวิชา'),
+      year: required('กรุณาเลือกระดับชั้น'),
+      type: required('กรุณาเลือกประเภท'),
+      author: required('กรุณากรอกชื่อผู้โพสต์'),
+    },
+  )
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    if (!validateAll()) return
+    createNote.mutate(
+      {
+        title: values.title.trim(),
+        subject: values.subject.trim(),
+        category: values.faculty as Subject,
+        grade: values.year as Grade,
+        type: values.type as NoteType,
+        author: values.author.trim(),
+        description: values.description.trim() || undefined,
+      },
+      {
+        onSuccess: () => {
+          reset()
+          if (fileRef.current) fileRef.current.value = ''
+        },
+      },
+    )
+  }
+
+  const common = (name: keyof typeof values) => ({
+    id: name,
+    name,
+    value: values[name],
+    onChange: handleChange,
+    onBlur: handleBlur,
+    'aria-invalid': !!errors[name],
+  })
+
+  return (
+    <div className="p-4 md:p-6">
+    <div className="card mx-auto max-w-3xl bg-white p-8 shadow-xl">
+      <section className="mb-6">
+        <h1 className="text-3xl font-bold text-primary">สร้างโพสต์ใหม่</h1>
+        <p className="mt-1 opacity-70">แบ่งปันสรุปเนื้อหาหรือข้อสอบเก่าของคุณให้เพื่อน ๆ ได้ใช้ประโยชน์</p>
+      </section>
+
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+        <FormField label="ชื่อโน้ต" name="title" error={errors.title}>
+          <input {...common('title')} placeholder="เช่น สรุปคณิตศาสตร์ ม.4" className={`input input-bordered ${cls(errors.title)}`} />
+        </FormField>
+        <FormField label="รายวิชา" name="subject" error={errors.subject}>
+          <input {...common('subject')} placeholder="เช่น คณิตศาสตร์เพิ่มเติม" className={`input input-bordered ${cls(errors.subject)}`} />
+        </FormField>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <FormField label="หมวดวิชา" name="faculty" error={errors.faculty}>
+            <select {...common('faculty')} className={`select select-bordered ${cls(errors.faculty)}`}>
+              <option value="">-- เลือกหมวดวิชา --</option>
+              {(Object.entries(subjectLabels) as [Subject, string][]).map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          </FormField>
+          <FormField label="ระดับชั้น" name="year" error={errors.year}>
+            <select {...common('year')} className={`select select-bordered ${cls(errors.year)}`}>
+              <option value="">-- เลือกระดับชั้น --</option>
+              {years.map((y) => (
+                <option key={y} value={y}>ม.{y.slice(1)}</option>
+              ))}
+            </select>
+          </FormField>
+          <FormField label="ประเภท" name="type" error={errors.type}>
+            <select {...common('type')} className={`select select-bordered ${cls(errors.type)}`}>
+              <option value="">-- เลือกประเภท --</option>
+              <option value="note">สรุปเนื้อหา</option>
+              <option value="exam">ข้อสอบเก่า</option>
+            </select>
+          </FormField>
+        </div>
+
+        <FormField label="โพสต์โดย" name="author" error={errors.author}>
+          <input {...common('author')} placeholder="ชื่อ-นามสกุล หรือชื่อเล่น" className={`input input-bordered ${cls(errors.author)}`} />
+        </FormField>
+        <FormField label="รายละเอียดเพิ่มเติม" name="description">
+          <textarea {...common('description')} rows={4} placeholder="อธิบายเนื้อหาโดยสังเขป (ไม่บังคับ)" className={`textarea textarea-bordered ${cls(errors.description)}`} />
+        </FormField>
+        <FormField label="แนบไฟล์เอกสาร" name="file">
+          <input ref={fileRef} id="file" name="file" type="file" accept=".pdf,.doc,.docx,.png,.jpg" className="file-input file-input-bordered w-full border border-gray-300 bg-white" />
+        </FormField>
+
+        <button type="submit" className="btn btn-primary btn-block" disabled={createNote.isPending}>
+          {createNote.isPending ? 'กำลังเผยแพร่...' : 'เผยแพร่โพสต์'}
+        </button>
+
+        {createNote.isSuccess && (
+          <div className="alert alert-success" role="status">
+            <span>เผยแพร่โพสต์สำเร็จ (ตัวอย่างสาธิต ยังไม่เชื่อมต่อฐานข้อมูลจริง)</span>
+            <Link to={`/post/${createNote.data.id}`} className="link">ดูโพสต์</Link>
+          </div>
+        )}
+        {createNote.isError && <div className="alert alert-error" role="alert">เผยแพร่โพสต์ไม่สำเร็จ</div>}
+      </form>
+    </div>
+    </div>
+  )
+}
