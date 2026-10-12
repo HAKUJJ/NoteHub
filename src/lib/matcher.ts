@@ -5,9 +5,17 @@ interface Option {
   label: string
 }
 
-export const matcherGroups: { title: string; options: Option[] }[] = [
+export interface MatcherGroup {
+  title: string
+  /** true = เลือกได้หลายข้อ, false = เลือกได้ข้อเดียว */
+  multi: boolean
+  options: Option[]
+}
+
+export const matcherGroups: MatcherGroup[] = [
   {
-    title: 'Your Skills',
+    title: 'ทักษะของคุณ',
+    multi: true,
     options: [
       { value: 'programming', label: 'การเขียนโปรแกรม' },
       { value: 'data_analysis', label: 'การวิเคราะห์ข้อมูล' },
@@ -18,7 +26,8 @@ export const matcherGroups: { title: string; options: Option[] }[] = [
     ],
   },
   {
-    title: 'Interests',
+    title: 'สิ่งที่คุณสนใจ',
+    multi: true,
     options: [
       { value: 'technology', label: 'เทคโนโลยี' },
       { value: 'business', label: 'ธุรกิจ' },
@@ -29,7 +38,8 @@ export const matcherGroups: { title: string; options: Option[] }[] = [
     ],
   },
   {
-    title: 'Hobbies',
+    title: 'งานอดิเรก',
+    multi: true,
     options: [
       { value: 'gaming', label: 'เล่นเกม' },
       { value: 'reading', label: 'อ่านหนังสือ' },
@@ -41,6 +51,7 @@ export const matcherGroups: { title: string; options: Option[] }[] = [
   },
   {
     title: 'วิชาที่คุณชอบที่สุดในโรงเรียน',
+    multi: false,
     options: [
       { value: 'subj_computer', label: 'วิทยาการคำนวณ' },
       { value: 'subj_math', label: 'คณิตศาสตร์ / สถิติ' },
@@ -52,6 +63,7 @@ export const matcherGroups: { title: string; options: Option[] }[] = [
   },
   {
     title: 'อยากทำงานลักษณะไหน',
+    multi: false,
     options: [
       { value: 'work_build', label: 'สร้างแอปหรือระบบ' },
       { value: 'work_insight', label: 'หาคำตอบจากตัวเลข' },
@@ -63,6 +75,7 @@ export const matcherGroups: { title: string; options: Option[] }[] = [
   },
   {
     title: 'ข้อไหนตรงกับนิสัยของคุณ',
+    multi: false,
     options: [
       { value: 'trait_logical', label: 'คิดเป็นขั้นเป็นตอน' },
       { value: 'trait_detail', label: 'ช่างสังเกตรายละเอียด' },
@@ -74,6 +87,7 @@ export const matcherGroups: { title: string; options: Option[] }[] = [
   },
   {
     title: 'ถ้ามีวันว่าง 1 วัน อยากทำอะไร',
+    multi: false,
     options: [
       { value: 'free_project', label: 'ลองเขียนโค้ดทำเว็บ' },
       { value: 'free_puzzle', label: 'เล่นเกมปริศนา / ซูโดกุ' },
@@ -85,6 +99,7 @@ export const matcherGroups: { title: string; options: Option[] }[] = [
   },
   {
     title: 'เป้าหมายในอนาคตของคุณ',
+    multi: false,
     options: [
       { value: 'goal_tech', label: 'สร้างเทคโนโลยีที่คนใช้ทั่วโลก' },
       { value: 'goal_predict', label: 'ใช้ข้อมูลทำนายอนาคต' },

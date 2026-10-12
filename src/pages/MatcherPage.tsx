@@ -15,8 +15,17 @@ export default function MatcherPage() {
     if (results) resultRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [results])
 
-  const toggle = (value: string) =>
-    setSelected((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
+  const toggle = (groupIndex: number, value: string) =>
+    setSelected((prev) => {
+      if (prev.includes(value)) return prev.filter((v) => v !== value)
+      const group = matcherGroups[groupIndex]
+      if (group.multi) return [...prev, value]
+      // คำถามแบบเลือกข้อเดียว: เอาคำตอบเดิมของข้อนี้ออกก่อน
+      const groupValues = group.options.map((o) => o.value)
+      return [...prev.filter((v) => !groupValues.includes(v)), value]
+    })
+
+  const answeredCount = matcherGroups.filter((g) => g.options.some((o) => selected.includes(o.value))).length
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -45,7 +54,10 @@ export default function MatcherPage() {
       <form onSubmit={handleSubmit} className="mx-auto flex max-w-4xl flex-col gap-8 rounded-box bg-white p-6 shadow-md">
         {matcherGroups.map((group, gi) => (
           <div key={group.title} role="group" aria-labelledby={`matcher-group-${gi}`}>
-            <h2 id={`matcher-group-${gi}`} className="mb-4 text-lg font-bold text-primary">{group.title}</h2>
+            <h2 id={`matcher-group-${gi}`} className="mb-4 text-lg font-bold text-primary">
+              {gi + 1}. {group.title}
+              <span className="ml-2 text-sm font-normal text-gray-500">{group.multi ? '(เลือกได้หลายข้อ)' : '(เลือก 1 ข้อ)'}</span>
+            </h2>
             <div className="flex flex-wrap gap-3">
               {group.options.map((o) => {
                 const active = selected.includes(o.value)
@@ -54,7 +66,7 @@ export default function MatcherPage() {
                     key={o.value}
                     type="button"
                     aria-pressed={active}
-                    onClick={() => toggle(o.value)}
+                    onClick={() => toggle(gi, o.value)}
                     className={`badge badge-lg cursor-pointer px-4 py-4 text-sm md:text-base ${
                       active
                         ? 'border-primary bg-primary text-white'
@@ -69,7 +81,10 @@ export default function MatcherPage() {
           </div>
         ))}
         {error && <p className="text-sm text-error" role="alert">{error}</p>}
-        <button type="submit" className="btn btn-primary btn-lg mt-8 self-center rounded-full px-12">Match</button>
+        <p className="mt-4 self-center text-sm text-gray-600" aria-live="polite">
+          ตอบแล้ว <span className="font-semibold text-primary">{answeredCount}</span>/{matcherGroups.length} ข้อ
+        </p>
+        <button type="submit" className="btn btn-primary btn-lg -mt-4 self-center rounded-full px-12">Match</button>
       </form>
 
       {results && (

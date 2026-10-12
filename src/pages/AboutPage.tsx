@@ -1,23 +1,29 @@
 const team = [
   {
-    name: 'นางสาว อภัคสรา บุพบุตร',
-    initial: 'อ',
-    studentId: '1660707488',
-    role: 'Document Coordinator และ เขียนโค้ด ออกแบบ UX/UI',
+    name: 'นาย ณัฐพงษ์ จำจด',
+    initial: 'ณ',
+    number: 21,
+    photo: '/images/team/nattapong.jpg',
+    studentId: '1660703206',
+    role: 'จัดเตรียม Asset เชื่อมต่อ Public APIs จัดการข้อมูลที่ได้รับให้พร้อมสำหรับใช้งานในระบบ',
   },
   {
     name: 'นาย ธิติวุฒิ ทางธนกุล',
     initial: 'ธ',
+    number: 27,
+    photo: '/images/team/thitiwut.jpg',
     studentId: '1660704642',
     role: 'Main Developer โครงสร้าง Routing และ พัฒนาฟังก์ชัน',
   },
   {
-    name: 'นาย ณัฐพงษ์ จำจด',
-    initial: 'ณ',
-    studentId: '1660703206',
-    role: 'จัดเตรียม Asset เชื่อมต่อ Public APIs จัดการข้อมูลที่ได้รับให้พร้อมสำหรับใช้งานในระบบ',
+    name: 'นางสาว อภัคสรา บุพบุตร',
+    initial: 'อ',
+    number: 40,
+    photo: '/images/team/apaksara.jpg',
+    studentId: '1660707488',
+    role: 'Document Coordinator และ เขียนโค้ด ออกแบบ UX/UI',
   },
-]
+].sort((a, b) => a.number - b.number)
 
 export default function AboutPage() {
   return (
@@ -53,13 +59,13 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {team.map((m) => (
               <div key={m.studentId} className="flex flex-col items-center gap-3 rounded-box border border-gray-200 bg-white p-6 text-center shadow-md transition-transform hover:-translate-y-1 hover:shadow-lg">
-                <div className="avatar avatar-placeholder">
-                  <div className="w-24 rounded-full bg-primary text-3xl text-primary-content ring-4 ring-accent ring-offset-2 ring-offset-white">
-                    <span>{m.initial}</span>
+                <div className="avatar">
+                  <div className="w-28 rounded-full bg-primary ring-4 ring-accent ring-offset-2 ring-offset-white">
+                    <img src={m.photo} alt={`รูปของ${m.name}`} loading="lazy" />
                   </div>
                 </div>
                 <h3 className="text-lg font-bold">{m.name}</h3>
-                <p className="text-sm opacity-70">รหัสนักศึกษา {m.studentId}</p>
+                <p className="text-sm opacity-70">รหัสนักศึกษา {m.studentId} · เลขที่ {m.number}</p>
                 <p className="mt-1 border-t border-gray-200 pt-3 text-sm leading-relaxed text-primary">{m.role}</p>
               </div>
             ))}
