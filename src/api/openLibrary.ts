@@ -56,7 +56,7 @@ export function getBookCoverUrl(coverId: number, size: 'S' | 'M' | 'L' = 'M') {
 export async function searchBooks({
   subject = '',
   query = '',
-  limit = 24,
+  limit = 25,
   signal,
 }: {
   subject?: string
@@ -83,7 +83,7 @@ export async function searchBooks({
       firstPublished: doc.first_publish_year,
     }]
   })
-  return { total: data.numFound ?? books.length, books }
+  return { total: books.length, books }
 }
 
 interface WorkResponse {

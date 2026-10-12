@@ -59,7 +59,7 @@ export default function BooksPage() {
       <section aria-live="polite">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="text-xl font-bold">{query ? `ผลการค้นหา “${query}”` : `หนังสือ${subjectLabel}`}</h2>
-          {data && <span className="text-sm text-gray-500">พบ {data.total.toLocaleString()} รายการ</span>}
+          {data && <span className="text-sm text-gray-500">แสดง {data.books.length} รายการ</span>}
         </div>
 
         {(isLoading || (isFetching && !data)) && (

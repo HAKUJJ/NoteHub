@@ -23,7 +23,7 @@ export const fieldProfiles: FieldProfile[] = [
   {
     id: 'cs',
     name: 'วิทยาการคอมพิวเตอร์',
-    tags: ['programming', 'technology', 'problem_solving', 'gaming'],
+    tags: ['programming', 'technology', 'problem_solving', 'gaming', 'subj_computer', 'work_build', 'trait_logical', 'free_project', 'goal_tech'],
     subjects: ['Computer Science', 'Software Engineering', 'Information Technology'],
     description: 'เรียนรู้หลักการทำงานของคอมพิวเตอร์ การเขียนโปรแกรม และการออกแบบระบบซอฟต์แวร์ เหมาะกับคนที่ชอบแก้ปัญหาด้วยตรรกะและสนใจเทคโนโลยี',
     courses: [
@@ -41,7 +41,7 @@ export const fieldProfiles: FieldProfile[] = [
   {
     id: 'data',
     name: 'วิทยาศาสตร์ข้อมูล',
-    tags: ['data_analysis', 'math', 'technology', 'problem_solving'],
+    tags: ['data_analysis', 'math', 'technology', 'problem_solving', 'subj_math', 'work_insight', 'trait_detail', 'free_puzzle', 'goal_predict'],
     subjects: ['Data Science', 'Data Analytics', 'Business Intelligence'],
     description: 'นำข้อมูลจำนวนมากมาวิเคราะห์ด้วยสถิติและการเขียนโปรแกรม เพื่อหาข้อมูลเชิงลึกที่ช่วยในการตัดสินใจ',
     courses: [
@@ -58,7 +58,7 @@ export const fieldProfiles: FieldProfile[] = [
   {
     id: 'business',
     name: 'บริหารธุรกิจ',
-    tags: ['communication', 'business', 'blogging'],
+    tags: ['communication', 'business', 'blogging', 'subj_social', 'work_lead', 'trait_social', 'free_sell', 'goal_owner'],
     subjects: ['Business Administration', 'Marketing', 'Entrepreneurship'],
     description: 'เรียนรู้การบริหารองค์กร การตลาด การเงิน และการสร้างธุรกิจของตัวเอง เหมาะกับคนที่ชอบสื่อสารและวางแผน',
     courses: [
@@ -75,7 +75,7 @@ export const fieldProfiles: FieldProfile[] = [
   {
     id: 'art',
     name: 'ศิลปะและการออกแบบ',
-    tags: ['design', 'art', 'drawing', 'photography'],
+    tags: ['design', 'art', 'drawing', 'photography', 'subj_art', 'work_create', 'trait_creative', 'free_exhibit', 'goal_portfolio'],
     subjects: ['Visual Arts', 'Graphic Design', 'Digital Media'],
     description: 'พัฒนาทักษะการออกแบบและสื่อสารด้วยภาพ ทั้งงานกราฟิก ภาพถ่าย และสื่อดิจิทัล',
     courses: [
@@ -92,7 +92,7 @@ export const fieldProfiles: FieldProfile[] = [
   {
     id: 'health',
     name: 'วิทยาศาสตร์สุขภาพ',
-    tags: ['health', 'problem_solving', 'sports'],
+    tags: ['health', 'problem_solving', 'sports', 'subj_biology', 'work_care', 'trait_empathy', 'free_volunteer', 'goal_heal'],
     subjects: ['Nursing', 'Public Health', 'Sports Science'],
     description: 'ศึกษาร่างกายมนุษย์ การดูแลสุขภาพ และการป้องกันโรค เพื่อทำงานด้านการแพทย์และสาธารณสุข',
     courses: [
@@ -109,7 +109,7 @@ export const fieldProfiles: FieldProfile[] = [
   {
     id: 'law',
     name: 'นิติศาสตร์',
-    tags: ['communication', 'law', 'reading'],
+    tags: ['communication', 'law', 'reading', 'subj_thai', 'work_debate', 'trait_justice', 'free_news', 'goal_fair'],
     subjects: ['Law', 'Political Science', 'Public Administration'],
     description: 'เรียนรู้กฎหมายและการใช้เหตุผลทางกฎหมาย เพื่อปกป้องสิทธิและความยุติธรรมในสังคม',
     courses: [

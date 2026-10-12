@@ -43,9 +43,9 @@ export default function MatcherPage() {
       </section>
 
       <form onSubmit={handleSubmit} className="mx-auto flex max-w-4xl flex-col gap-8 rounded-box bg-white p-6 shadow-md">
-        {matcherGroups.map((group) => (
-          <div key={group.title} role="group" aria-labelledby={group.title}>
-            <h2 id={group.title} className="mb-4 text-lg font-bold text-primary">{group.title}</h2>
+        {matcherGroups.map((group, gi) => (
+          <div key={group.title} role="group" aria-labelledby={`matcher-group-${gi}`}>
+            <h2 id={`matcher-group-${gi}`} className="mb-4 text-lg font-bold text-primary">{group.title}</h2>
             <div className="flex flex-wrap gap-3">
               {group.options.map((o) => {
                 const active = selected.includes(o.value)
