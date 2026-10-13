@@ -10,6 +10,8 @@ export interface Note {
   grade: Grade
   type: NoteType
   author: string
+  /** อีเมลของคนโพสต์ ใช้เช็กว่าเป็นเจ้าของโพสต์ (โน้ตตัวอย่างไม่มี) */
+  authorEmail?: string
   description?: string
   pages?: number
   image?: string

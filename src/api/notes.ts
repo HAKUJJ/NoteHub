@@ -47,3 +47,16 @@ export async function createNote(input: NewNote): Promise<Note> {
   notes = [note, ...notes]
   return note
 }
+
+/** โน้ตที่ผู้ใช้สร้างเอง (ลบได้) ไม่ใช่โน้ตตัวอย่าง */
+export function isUserNote(id: number): boolean {
+  return userNotes.some((n) => n.id === id)
+}
+
+export async function deleteNote(id: number): Promise<void> {
+  await delay()
+  if (!isUserNote(id)) throw new Error('ลบได้เฉพาะโพสต์ที่ผู้ใช้สร้างเอง')
+  userNotes = userNotes.filter((n) => n.id !== id)
+  saveUserNotes(userNotes)
+  notes = notes.filter((n) => n.id !== id)
+}

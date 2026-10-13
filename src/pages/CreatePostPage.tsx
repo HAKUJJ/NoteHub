@@ -60,6 +60,7 @@ function CreatePostForm({ user }: { user: AuthUser }) {
         grade: values.year as Grade,
         type: values.type as NoteType,
         author: user.name, // ใช้ชื่อคนที่ล็อกอินอยู่
+        authorEmail: user.email,
         description: values.description.trim() || undefined,
       },
       {

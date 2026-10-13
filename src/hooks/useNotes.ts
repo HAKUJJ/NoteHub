@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createNote, fetchNote, fetchNotes } from '../api/notes'
+import { createNote, deleteNote, fetchNote, fetchNotes } from '../api/notes'
 import { useFilterStore, type GradeFilter } from '../store/filterStore'
 import type { Grade, Note } from '../types'
 
@@ -44,6 +44,17 @@ export function useCreateNote() {
   return useMutation({
     mutationFn: createNote,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notes'] }),
+  })
+}
+
+export function useDeleteNote() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: deleteNote,
+    onSuccess: (_data, id) => {
+      queryClient.removeQueries({ queryKey: ['notes', id] })
+      return queryClient.invalidateQueries({ queryKey: ['notes'] })
+    },
   })
 }
 

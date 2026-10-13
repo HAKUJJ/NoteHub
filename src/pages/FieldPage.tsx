@@ -1,10 +1,12 @@
 import { Link, useParams } from 'react-router'
 import { fieldProfiles } from '../data/fields'
 import { subjectLabels } from '../data/labels'
+import { useFilterStore } from '../store/filterStore'
 
 export default function FieldPage() {
   const { id } = useParams()
   const field = fieldProfiles.find((profile) => profile.id === id)
+  const { resetFilters, setSubject } = useFilterStore()
 
   if (!field) {
     return (
@@ -54,10 +56,18 @@ export default function FieldPage() {
       <div className="grid gap-6 md:grid-cols-2">
         <section className="rounded-box bg-white p-6 shadow-sm">
           <h2 className="text-xl font-bold text-primary">แนวทางเตรียมตัว</h2>
-          <p className="mt-1 text-sm text-gray-600">หมวดวิชาที่ควรทบทวนจากคลัง NotesHub</p>
+          <p className="mt-1 text-sm text-gray-600">หมวดวิชาที่ควรทบทวน กดเพื่อดูโน้ตในคลัง NotesHub</p>
           <div className="mt-4 flex flex-wrap gap-2">
             {field.prepare.map((subject) => (
-              <span key={subject} className="badge badge-primary badge-lg">{subjectLabels[subject]}</span>
+              <Link
+                key={subject}
+                to="/"
+                // ไปหน้าแรกพร้อมกรองโน้ตวิชานี้ให้เลย
+                onClick={() => { resetFilters(); setSubject(subject) }}
+                className="badge badge-primary badge-lg hover:opacity-80"
+              >
+                {subjectLabels[subject]} →
+              </Link>
             ))}
           </div>
         </section>

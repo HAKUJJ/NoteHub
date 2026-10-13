@@ -1,6 +1,10 @@
-import { Link, useParams } from 'react-router'
+import { Link, useNavigate, useParams } from 'react-router'
 import { gradeLabels, subjectLabels, typeLabels } from '../data/labels'
-import { useNote } from '../hooks/useNotes'
+import { useDeleteNote, useNote } from '../hooks/useNotes'
+import { isUserNote } from '../api/notes'
+import { useAuthStore } from '../store/authStore'
+import { useFavoriteStore } from '../store/useFavoriteStore'
+import FavoriteButton from '../components/ui/FavoriteButton'
 
 function noteImageUrl(image: string, width = 1200, height = 600) {
   return `https://images.unsplash.com/${image}?w=${width}&h=${height}&fit=crop&auto=format&q=80`
@@ -9,6 +13,10 @@ function noteImageUrl(image: string, width = 1200, height = 600) {
 export default function PostPage() {
   const { id } = useParams()
   const { data: note, isLoading } = useNote(Number(id))
+  const navigate = useNavigate()
+  const user = useAuthStore((s) => s.user)
+  const removeFavorite = useFavoriteStore((s) => s.removeFavorite)
+  const deleteNote = useDeleteNote()
 
   if (isLoading) {
     return <div className="p-6"><span className="loading loading-spinner loading-lg" aria-label="กำลังโหลด" /></div>
@@ -21,6 +29,20 @@ export default function PostPage() {
         <Link to="/" className="btn btn-primary">กลับหน้าแรก</Link>
       </div>
     )
+  }
+
+  // เป็นเจ้าของโพสต์ = โพสต์ที่สร้างเอง และอีเมล (หรือชื่อ สำหรับโพสต์เก่า) ตรงกับคนที่ล็อกอิน
+  const isOwner = !!user && isUserNote(note.id) &&
+    (note.authorEmail ? note.authorEmail === user.email : note.author === user.name)
+
+  const handleDelete = () => {
+    if (!window.confirm(`ลบโพสต์ "${note.title}" ใช่ไหม? ลบแล้วกู้คืนไม่ได้`)) return
+    deleteNote.mutate(note.id, {
+      onSuccess: () => {
+        removeFavorite('note', String(note.id))
+        navigate('/', { replace: true })
+      },
+    })
   }
 
   return (
@@ -41,7 +63,10 @@ export default function PostPage() {
             <span className="badge badge-outline">{gradeLabels[note.grade]}</span>
             <span className="badge badge-secondary">{typeLabels[note.type]}</span>
           </div>
-          <h1 className="mt-4 text-3xl font-extrabold text-primary">{note.title}</h1>
+          <div className="mt-4 flex items-start justify-between gap-3">
+            <h1 className="text-3xl font-extrabold text-primary">{note.title}</h1>
+            <FavoriteButton kind="note" id={String(note.id)} title={note.title} subtitle={`โพสต์โดย: ${note.author}`} note={note} className="btn-md shrink-0" />
+          </div>
           <p className="mt-2 text-gray-600">โพสต์โดย: {note.author}</p>
           {note.pages && (
             <div className="mt-5 inline-flex items-center gap-2 rounded-box bg-base-200/60 px-4 py-3">
@@ -86,6 +111,12 @@ export default function PostPage() {
             </Link>
           )}
           <button className="btn btn-primary" disabled>ดาวน์โหลด (เร็ว ๆ นี้)</button>
+          {isOwner && (
+            <button className="btn btn-outline btn-error" onClick={handleDelete} disabled={deleteNote.isPending}>
+              {deleteNote.isPending ? 'กำลังลบ...' : 'ลบโพสต์นี้'}
+            </button>
+          )}
+          {deleteNote.isError && <p className="text-sm text-error" role="alert">ลบโพสต์ไม่สำเร็จ</p>}
         </aside>
       </section>
     </article>

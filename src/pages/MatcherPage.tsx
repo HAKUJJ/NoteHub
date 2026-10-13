@@ -2,17 +2,22 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import CoverCard from '../components/ui/CoverCard'
 import CardGrid from '../components/ui/CardGrid'
-import { calculateMatches, matcherGroups, type MatchResult } from '../lib/matcher'
+import { calculateMatches, matcherGroups } from '../lib/matcher'
+import { useMatcherStore } from '../store/matcherStore'
 
 export default function MatcherPage() {
-  const [selected, setSelected] = useState<string[]>([])
+  const { selected, setSelected, results, setResults, reset } = useMatcherStore()
   const [error, setError] = useState('')
-  const [results, setResults] = useState<MatchResult[] | null>(null)
+  // เลื่อนลงไปที่ผลเฉพาะตอนเพิ่งกด Match (ไม่เลื่อนเองตอนกลับมาที่หน้านี้)
+  const scrollToResults = useRef(false)
   const resultRef = useRef<HTMLElement>(null)
   const topRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    if (results) resultRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (results && scrollToResults.current) {
+      scrollToResults.current = false
+      resultRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
   }, [results])
 
   const toggle = (groupIndex: number, value: string) =>
@@ -34,12 +39,12 @@ export default function MatcherPage() {
       return
     }
     setError('')
+    scrollToResults.current = true
     setResults(calculateMatches(selected))
   }
 
   const restart = () => {
-    setSelected([])
-    setResults(null)
+    reset()
     setError('')
     topRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
