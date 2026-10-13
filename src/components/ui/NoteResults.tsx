@@ -17,7 +17,7 @@ export default function NoteResults({ title }: { title: string }) {
   const heading = keyword
     ? `ผลการค้นหา “${keyword}”${filterParts.length ? ` (${filterParts.join(' · ')})` : ''}`
     : filterParts.length
-      ? `โน้ต${filterParts.join(' · ')}`
+      ? `โน้ต ${filterParts.join(' · ')}`
       : title
 
   const clearButton = (
