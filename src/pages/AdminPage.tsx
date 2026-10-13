@@ -62,6 +62,10 @@ function AdminDashboard() {
         ))}
       </div>
 
+      <div className="alert alert-warning mb-6" role="note">
+        <span><strong>โหมดสาธิต (Demo):</strong> ข้อมูลในหน้านี้เป็นข้อมูลตัวอย่าง ยังไม่ได้เชื่อมต่อฐานข้อมูลจริง รีเฟรชแล้วการแก้ไขจะกลับเป็นค่าเดิม</span>
+      </div>
+
       {tab === 'dashboard' && <DashboardPanel />}
       {tab === 'sheets' && <SheetsPanel />}
       {tab === 'users' && <EmptyPanel title="จัดการผู้ใช้งาน" text="ยังไม่มีข้อมูลผู้ใช้งาน" />}
@@ -76,8 +80,8 @@ function DashboardPanel() {
   const stats = [
     { title: 'ชีททั้งหมด', value: sheets.length, desc: 'ชีทในระบบ' },
     { title: 'รออนุมัติ', value: pending, desc: 'รอการตรวจสอบ' },
-    { title: 'ผู้ใช้งาน', value: TOTAL_USERS, desc: 'สมาชิกทั้งหมด' },
-    { title: 'รายงานปัญหา', value: TOTAL_REPORTS, desc: 'รายการที่ต้องตรวจสอบ' },
+    { title: 'ผู้ใช้งาน', value: TOTAL_USERS, desc: 'สมาชิกทั้งหมด (ตัวอย่าง)' },
+    { title: 'รายงานปัญหา', value: TOTAL_REPORTS, desc: 'รายการที่ต้องตรวจสอบ (ตัวอย่าง)' },
   ]
 
   return (

@@ -15,6 +15,7 @@ export default function PostPage() {
   const { data: note, isLoading } = useNote(Number(id))
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
+  const isAdmin = useAuthStore((s) => s.isAdmin)
   const removeFavorite = useFavoriteStore((s) => s.removeFavorite)
   const deleteNote = useDeleteNote()
 
@@ -34,6 +35,8 @@ export default function PostPage() {
   // เป็นเจ้าของโพสต์ = โพสต์ที่สร้างเอง และอีเมล (หรือชื่อ สำหรับโพสต์เก่า) ตรงกับคนที่ล็อกอิน
   const isOwner = !!user && isUserNote(note.id) &&
     (note.authorEmail ? note.authorEmail === user.email : note.author === user.name)
+  // Admin ลบโพสต์ที่ผู้ใช้สร้างได้ทุกโพสต์ (เช่นโพสต์ไม่เหมาะสม) ส่วนโน้ตตัวอย่างยังลบไม่ได้
+  const canDelete = isOwner || (isAdmin && isUserNote(note.id))
 
   const handleDelete = () => {
     if (!window.confirm(`ลบโพสต์ "${note.title}" ใช่ไหม? ลบแล้วกู้คืนไม่ได้`)) return
@@ -111,9 +114,9 @@ export default function PostPage() {
             </Link>
           )}
           <button className="btn btn-primary" disabled>ดาวน์โหลด (เร็ว ๆ นี้)</button>
-          {isOwner && (
+          {canDelete && (
             <button className="btn btn-outline btn-error" onClick={handleDelete} disabled={deleteNote.isPending}>
-              {deleteNote.isPending ? 'กำลังลบ...' : 'ลบโพสต์นี้'}
+              {deleteNote.isPending ? 'กำลังลบ...' : isOwner ? 'ลบโพสต์นี้' : 'ลบโพสต์นี้ (Admin)'}
             </button>
           )}
           {deleteNote.isError && <p className="text-sm text-error" role="alert">ลบโพสต์ไม่สำเร็จ</p>}
