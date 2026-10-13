@@ -3,8 +3,29 @@ import type { NewNote, Note } from '../types'
 
 const delay = (ms = 250) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
-// In-memory stand-in for a backend; swap these functions for fetch() calls later.
-let notes: Note[] = [...notesSeed]
+// ยังไม่มี backend: โพสต์ที่ผู้ใช้สร้างจะเก็บใน localStorage รีเฟรชแล้วไม่หาย
+// (เห็นเฉพาะในเบราว์เซอร์เครื่องนี้) ภายหลังเปลี่ยนเป็น fetch() ไปที่ server ได้
+const STORAGE_KEY = 'noteshub-user-notes'
+
+function loadUserNotes(): Note[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return raw ? (JSON.parse(raw) as Note[]) : []
+  } catch {
+    return []
+  }
+}
+
+function saveUserNotes(userNotes: Note[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(userNotes))
+  } catch {
+    // localStorage ใช้ไม่ได้ (เช่นโหมดไม่ระบุตัวตน) ก็ยังใช้งานต่อได้ แค่รีเฟรชแล้วหาย
+  }
+}
+
+let userNotes: Note[] = loadUserNotes()
+let notes: Note[] = [...userNotes, ...notesSeed]
 
 export async function fetchNotes(): Promise<Note[]> {
   await delay()
@@ -21,6 +42,8 @@ export async function fetchNote(id: number): Promise<Note> {
 export async function createNote(input: NewNote): Promise<Note> {
   await delay()
   const note: Note = { ...input, id: Math.max(0, ...notes.map((n) => n.id)) + 1 }
+  userNotes = [note, ...userNotes]
+  saveUserNotes(userNotes)
   notes = [note, ...notes]
   return note
 }

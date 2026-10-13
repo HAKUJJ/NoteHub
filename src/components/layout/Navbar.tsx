@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router'
 import { useUiStore } from '../../store/uiStore'
 import { useFavoriteStore } from '../../store/useFavoriteStore'
+import { useAuthStore } from '../../store/authStore'
 
 const links = [
   { to: '/', label: 'หน้าแรก' },
@@ -16,6 +17,9 @@ const linkClass = ({ isActive }: { isActive: boolean }) => (isActive ? 'menu-act
 export default function Navbar() {
   const openAuthModal = useUiStore((s) => s.openAuthModal)
   const favoriteCount = useFavoriteStore((s) => s.items.length)
+  const user = useAuthStore((s) => s.user)
+  const isAdmin = useAuthStore((s) => s.isAdmin)
+  const logout = useAuthStore((s) => s.logout)
 
   const renderLinkLabel = (to: string, label: string) => (
     <>
@@ -51,10 +55,23 @@ export default function Navbar() {
           ))}
         </ul>
       </nav>
-      <div className="flex-none gap-2">
-        <button className="btn btn-outline btn-sm md:btn-md" onClick={() => openAuthModal('login')}>เข้าสู่ระบบ</button>
-        <button className="btn btn-primary btn-sm md:btn-md" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
-      </div>
+      {user ? (
+        <div className="flex flex-none items-center gap-2">
+          {isAdmin && <NavLink to="/admin" className="btn btn-ghost btn-sm">Admin</NavLink>}
+          <span className="flex items-center gap-2 text-sm font-semibold" title={user.email}>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-content">
+              {user.name.charAt(0).toUpperCase()}
+            </span>
+            <span className="hidden max-w-32 truncate sm:inline">{user.name}</span>
+          </span>
+          <button className="btn btn-outline btn-sm md:btn-md" onClick={logout}>ออกจากระบบ</button>
+        </div>
+      ) : (
+        <div className="flex-none gap-2">
+          <button className="btn btn-outline btn-sm md:btn-md" onClick={() => openAuthModal('login')}>เข้าสู่ระบบ</button>
+          <button className="btn btn-primary btn-sm md:btn-md" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
+        </div>
+      )}
     </header>
   )
 }

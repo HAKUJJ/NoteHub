@@ -6,22 +6,46 @@ import { useCreateNote } from '../hooks/useNotes'
 import { useValidatedForm } from '../hooks/useValidatedForm'
 import { required } from '../lib/validators'
 import type { Grade, NoteType, Subject } from '../types'
+import { useAuthStore, type AuthUser } from '../store/authStore'
+import { useUiStore } from '../store/uiStore'
 
 const cls = (error?: string) => `w-full border bg-white ${error ? 'border-error' : 'border-gray-300'}`
 const years: Grade[] = ['m1', 'm2', 'm3', 'm4', 'm5', 'm6']
 
 export default function CreatePostPage() {
+  const user = useAuthStore((s) => s.user)
+  // ยังไม่ล็อกอิน → ไม่แสดงฟอร์ม ให้ล็อกอินก่อน
+  if (!user) return <LoginRequired />
+  return <CreatePostForm user={user} />
+}
+
+function LoginRequired() {
+  const openAuthModal = useUiStore((s) => s.openAuthModal)
+  return (
+    <div className="p-4 md:p-6">
+      <div className="card mx-auto max-w-xl items-center gap-4 bg-white p-10 text-center shadow-xl">
+        <h1 className="text-2xl font-bold text-primary">กรุณาเข้าสู่ระบบก่อนโพสต์</h1>
+        <p className="opacity-70">ต้องเป็นสมาชิกถึงจะแบ่งปันสรุปเนื้อหาหรือข้อสอบเก่าได้</p>
+        <div className="flex gap-2">
+          <button className="btn btn-primary" onClick={() => openAuthModal('login')}>เข้าสู่ระบบ</button>
+          <button className="btn btn-outline" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CreatePostForm({ user }: { user: AuthUser }) {
   const createNote = useCreateNote()
   const fileRef = useRef<HTMLInputElement>(null)
   const { values, errors, handleChange, handleBlur, validateAll, reset } = useValidatedForm(
-    { title: '', subject: '', faculty: '', year: '', type: '', author: '', description: '' },
+    { title: '', subject: '', faculty: '', year: '', type: '', description: '' },
     {
       title: required('กรุณากรอกชื่อโน้ต'),
       subject: required('กรุณากรอกชื่อวิชา'),
       faculty: required('กรุณาเลือกหมวดวิชา'),
       year: required('กรุณาเลือกระดับชั้น'),
       type: required('กรุณาเลือกประเภท'),
-      author: required('กรุณากรอกชื่อผู้โพสต์'),
     },
   )
 
@@ -35,7 +59,7 @@ export default function CreatePostPage() {
         category: values.faculty as Subject,
         grade: values.year as Grade,
         type: values.type as NoteType,
-        author: values.author.trim(),
+        author: user.name, // ใช้ชื่อคนที่ล็อกอินอยู่
         description: values.description.trim() || undefined,
       },
       {
@@ -98,8 +122,8 @@ export default function CreatePostPage() {
           </FormField>
         </div>
 
-        <FormField label="โพสต์โดย" name="author" error={errors.author}>
-          <input {...common('author')} placeholder="ชื่อ-นามสกุล หรือชื่อเล่น" className={`input input-bordered ${cls(errors.author)}`} />
+        <FormField label="โพสต์โดย" name="author">
+          <input id="author" name="author" value={user.name} readOnly className={`input input-bordered ${cls()} bg-gray-100`} />
         </FormField>
         <FormField label="รายละเอียดเพิ่มเติม" name="description">
           <textarea {...common('description')} rows={4} placeholder="อธิบายเนื้อหาโดยสังเขป (ไม่บังคับ)" className={`textarea textarea-bordered ${cls(errors.description)}`} />
@@ -114,7 +138,7 @@ export default function CreatePostPage() {
 
         {createNote.isSuccess && (
           <div className="alert alert-success" role="status">
-            <span>เผยแพร่โพสต์สำเร็จ (ตัวอย่างสาธิต ยังไม่เชื่อมต่อฐานข้อมูลจริง)</span>
+            <span>เผยแพร่โพสต์สำเร็จ (บันทึกไว้ในเบราว์เซอร์นี้)</span>
             <Link to={`/post/${createNote.data.id}`} className="link">ดูโพสต์</Link>
           </div>
         )}

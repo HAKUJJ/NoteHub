@@ -11,6 +11,7 @@ interface FilterState {
   setSubject: (subject: SubjectFilter) => void
   setGrade: (grade: GradeFilter) => void
   setKeyword: (keyword: string) => void
+  resetFilters: () => void
 }
 
 export const useFilterStore = create<FilterState>((set) => ({
@@ -20,4 +21,5 @@ export const useFilterStore = create<FilterState>((set) => ({
   setSubject: (subject) => set({ subject }),
   setGrade: (grade) => set({ grade }),
   setKeyword: (keyword) => set({ keyword }),
+  resetFilters: () => set({ subject: 'all', grade: 'all', keyword: '' }),
 }))

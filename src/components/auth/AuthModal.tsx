@@ -6,7 +6,6 @@ import { useAuthStore } from '../../store/authStore'
 import { useValidatedForm } from '../../hooks/useValidatedForm'
 import { email, minLength, required } from '../../lib/validators'
 
-const DEMO_NOTE = '(ตัวอย่างสาธิต ยังไม่เชื่อมต่อฐานข้อมูลจริง)'
 const inputClass = (error?: string) =>
   `input input-bordered w-full bg-white border ${error ? 'border-error' : 'border-gray-300'}`
 const emailRule = email('กรุณากรอกอีเมลให้ถูกต้อง')
@@ -28,13 +27,10 @@ function LoginForm() {
       setStatus('กรุณาแก้ไขข้อมูลในช่องที่มีข้อผิดพลาด')
       return
     }
-    if (login(values.email, values.password) === 'admin') {
-      closeAuthModal()
-      navigate('/admin')
-      return
-    }
-    setStatus(`เข้าสู่ระบบสำเร็จ ${DEMO_NOTE}`)
+    const role = login(values.email, values.password)
     reset()
+    closeAuthModal()
+    if (role === 'admin') navigate('/admin')
   }
 
   return (
@@ -54,6 +50,8 @@ function LoginForm() {
 }
 
 function RegisterForm() {
+  const closeAuthModal = useUiStore((s) => s.closeAuthModal)
+  const register = useAuthStore((s) => s.register)
   const [status, setStatus] = useState('')
   const { values, errors, handleChange, handleBlur, validateAll, reset } = useValidatedForm(
     { fullName: '', email: '', password: '', confirmPassword: '' },
@@ -74,8 +72,10 @@ function RegisterForm() {
       setStatus('กรุณาแก้ไขข้อมูลในช่องที่มีข้อผิดพลาด')
       return
     }
-    setStatus(`สมัครสมาชิกสำเร็จ ${DEMO_NOTE}`)
+    // สมัครเสร็จให้ล็อกอินอัตโนมัติ
+    register(values.fullName, values.email)
     reset()
+    closeAuthModal()
   }
 
   const field = (name: 'fullName' | 'email' | 'password' | 'confirmPassword', label: string, type = 'text') => (
