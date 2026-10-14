@@ -1,5 +1,6 @@
 import { notesSeed } from '../data/seed'
 import type { NewNote, Note } from '../types'
+import { deleteFile } from '../lib/fileStore'
 
 const delay = (ms = 250) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
@@ -59,4 +60,6 @@ export async function deleteNote(id: number): Promise<void> {
   userNotes = userNotes.filter((n) => n.id !== id)
   saveUserNotes(userNotes)
   notes = notes.filter((n) => n.id !== id)
+  // ลบไฟล์แนบด้วย (ถ้าไม่มีหรือลบไม่ได้ก็ไม่เป็นไร)
+  await deleteFile(id).catch(() => undefined)
 }

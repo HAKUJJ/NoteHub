@@ -5,6 +5,7 @@ import { isUserNote } from '../api/notes'
 import { useAuthStore } from '../store/authStore'
 import { useFavoriteStore } from '../store/useFavoriteStore'
 import FavoriteButton from '../components/ui/FavoriteButton'
+import Attachment from '../components/ui/Attachment'
 
 function noteImageUrl(image: string, width = 1200, height = 600) {
   return `https://images.unsplash.com/${image}?w=${width}&h=${height}&fit=crop&auto=format&q=80`
@@ -113,7 +114,9 @@ export default function PostPage() {
               ค้นหาหนังสือที่เกี่ยวข้อง
             </Link>
           )}
-          <button className="btn btn-primary" disabled>ดาวน์โหลด (เร็ว ๆ นี้)</button>
+          {note.attachment
+            ? <Attachment noteId={note.id} info={note.attachment} />
+            : <p className="rounded-box bg-base-200/60 p-3 text-center text-sm opacity-70">โพสต์นี้ไม่มีไฟล์แนบ</p>}
           {canDelete && (
             <button className="btn btn-outline btn-error" onClick={handleDelete} disabled={deleteNote.isPending}>
               {deleteNote.isPending ? 'กำลังลบ...' : isOwner ? 'ลบโพสต์นี้' : 'ลบโพสต์นี้ (Admin)'}

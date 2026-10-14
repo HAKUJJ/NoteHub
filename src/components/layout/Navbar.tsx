@@ -25,7 +25,7 @@ export default function Navbar() {
     <>
       {label}
       {to === '/favorites' && favoriteCount > 0 && (
-        <span className="badge badge-primary badge-sm ml-1" aria-label={`${favoriteCount} รายการโปรด`}>
+        <span className="badge badge-primary badge-sm ml-1 h-5 min-w-5 shrink-0 px-1.5" aria-label={`${favoriteCount} รายการโปรด`}>
           {favoriteCount}
         </span>
       )}
