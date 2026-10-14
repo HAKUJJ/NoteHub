@@ -3,12 +3,17 @@ import { persist } from 'zustand/middleware'
 
 // Demo-only credentials carried over from the old validation.js. Client-side checks are not real
 // authentication: replace with a backend login before shipping.
-const ADMIN_EMAILS = ['admin@notehub.com']
-const ADMIN_PASSWORD = '12345678'
+export type Role = 'admin' | 'user'
+
+const DEMO_ACCOUNTS: { email: string; password: string; name: string; role: Role }[] = [
+  { email: 'admin@notehub.com', password: '12345678', name: 'Administrator', role: 'admin' },
+  { email: 'user@notehub.com', password: '12345678', name: 'User', role: 'user' },
+]
 
 export interface AuthUser {
   name: string
   email: string
+  role?: Role
 }
 
 interface AuthState {
@@ -28,11 +33,13 @@ export const useAuthStore = create<AuthState>()(
       isAdmin: false,
       login: (email, password) => {
         const cleanEmail = email.trim().toLowerCase()
-        const isAdmin = ADMIN_EMAILS.includes(cleanEmail) && password === ADMIN_PASSWORD
+        const account = DEMO_ACCOUNTS.find((a) => a.email === cleanEmail && a.password === password)
+        const role: Role = account?.role ?? 'user'
+        const isAdmin = role === 'admin'
         // ยังไม่มีฐานข้อมูลผู้ใช้ จึงใช้ส่วนหน้าของอีเมลเป็นชื่อที่แสดง
-        const name = isAdmin ? 'Administrator' : cleanEmail.split('@')[0]
-        set({ user: { name, email: cleanEmail }, isAdmin })
-        return isAdmin ? 'admin' : 'user'
+        const name = account?.name ?? cleanEmail.split('@')[0]
+        set({ user: { name, email: cleanEmail, role }, isAdmin })
+        return role
       },
       register: (name, email) => set({ user: { name: name.trim(), email: email.trim().toLowerCase() }, isAdmin: false }),
       logout: () => set({ user: null, isAdmin: false }),

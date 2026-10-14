@@ -1,11 +1,35 @@
 import { Link } from 'react-router'
 import { gradeLabels, subjectLabels, typeLabels } from '../data/labels'
 import { useFavoriteStore } from '../store/useFavoriteStore'
+import { useAuthStore } from '../store/authStore'
+import { useUiStore } from '../store/uiStore'
 import CoverCard from '../components/ui/CoverCard'
 import FavoriteButton from '../components/ui/FavoriteButton'
 import { getBookCoverUrl } from '../api/openLibrary'
 
 export default function FavoritesPage() {
+  const user = useAuthStore((s) => s.user)
+  if (!user) return <LoginRequired />
+  return <FavoritesList />
+}
+
+function LoginRequired() {
+  const openAuthModal = useUiStore((s) => s.openAuthModal)
+  return (
+    <div className="p-4 md:p-6">
+      <div className="card mx-auto max-w-xl items-center gap-4 bg-white p-10 text-center shadow-xl">
+        <h1 className="text-2xl font-bold text-primary">กรุณาเข้าสู่ระบบเพื่อดูรายการโปรด</h1>
+        <p className="opacity-70">ต้องเป็นสมาชิกถึงจะบันทึกและดูรายการโปรดได้</p>
+        <div className="flex gap-2">
+          <button className="btn btn-primary" onClick={() => openAuthModal('login')}>เข้าสู่ระบบ</button>
+          <button className="btn btn-outline" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function FavoritesList() {
   const items = useFavoriteStore((state) => state.items)
 
   return (

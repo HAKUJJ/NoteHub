@@ -33,7 +33,8 @@ export default function Navbar() {
   )
 
   return (
-    <header className="navbar sticky top-0 z-50 border-b border-gray-200 bg-white shadow-md">
+    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-md">
+      <div className="navbar container mx-auto max-w-7xl px-4">
       <div className="dropdown md:hidden">
         <button tabIndex={0} className="btn btn-ghost" aria-label="เปิดเมนู">☰</button>
         <ul tabIndex={0} className="menu dropdown-content z-10 mt-2 w-48 rounded-box bg-base-100 p-2 shadow">
@@ -72,6 +73,7 @@ export default function Navbar() {
           <button className="btn btn-primary btn-sm md:btn-md" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
         </div>
       )}
+      </div>
     </header>
   )
 }

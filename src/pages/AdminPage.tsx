@@ -19,7 +19,7 @@ const TOTAL_USERS = 128
 const TOTAL_REPORTS = 5
 
 export default function AdminPage() {
-  const isAdmin = useAuthStore((s) => s.isAdmin)
+  const isAdmin = useAuthStore((s) => s.isAdmin && s.user?.role === 'admin')
   if (!isAdmin) return <Navigate to="/" replace />
   return <AdminDashboard />
 }
