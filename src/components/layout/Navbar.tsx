@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router'
 import { useUiStore } from '../../store/uiStore'
-import { useFavoriteStore } from '../../store/useFavoriteStore'
+import { useMyFavorites } from '../../store/useFavoriteStore'
 import { useAuthStore } from '../../store/authStore'
 
 const links = [
@@ -16,7 +16,7 @@ const linkClass = ({ isActive }: { isActive: boolean }) => (isActive ? 'menu-act
 
 export default function Navbar() {
   const openAuthModal = useUiStore((s) => s.openAuthModal)
-  const favoriteCount = useFavoriteStore((s) => s.items.length)
+  const favoriteCount = useMyFavorites().length
   const user = useAuthStore((s) => s.user)
   const isAdmin = useAuthStore((s) => s.isAdmin)
   const logout = useAuthStore((s) => s.logout)

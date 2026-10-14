@@ -16,7 +16,7 @@ export default function PostPage() {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const isAdmin = useAuthStore((s) => s.isAdmin)
-  const removeFavorite = useFavoriteStore((s) => s.removeFavorite)
+  const removeEverywhere = useFavoriteStore((s) => s.removeEverywhere)
   const deleteNote = useDeleteNote()
 
   if (isLoading) {
@@ -42,7 +42,7 @@ export default function PostPage() {
     if (!window.confirm(`ลบโพสต์ "${note.title}" ใช่ไหม? ลบแล้วกู้คืนไม่ได้`)) return
     deleteNote.mutate(note.id, {
       onSuccess: () => {
-        removeFavorite('note', String(note.id))
+        removeEverywhere('note', String(note.id))
         navigate('/', { replace: true })
       },
     })

@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 import { gradeLabels, subjectLabels, typeLabels } from '../data/labels'
-import { useFavoriteStore } from '../store/useFavoriteStore'
+import { useMyFavorites } from '../store/useFavoriteStore'
 import { useAuthStore } from '../store/authStore'
 import { useUiStore } from '../store/uiStore'
 import CoverCard from '../components/ui/CoverCard'
@@ -30,7 +30,7 @@ function LoginRequired() {
 }
 
 function FavoritesList() {
-  const items = useFavoriteStore((state) => state.items)
+  const items = useMyFavorites()
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-4 md:p-6">
