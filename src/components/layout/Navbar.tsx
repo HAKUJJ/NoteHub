@@ -41,12 +41,15 @@ export default function Navbar() {
           {links.map(({ to, label }) => (
             <li key={to}><NavLink to={to} end className={linkClass}>{renderLinkLabel(to, label)}</NavLink></li>
           ))}
+          {/* จอมือถือ: ย้ายปุ่ม Admin มาไว้ในเมนู ☰ */}
+          {isAdmin && <li><NavLink to="/admin" className={linkClass}>Admin</NavLink></li>}
         </ul>
       </div>
-      <div className="flex-1">
-        <NavLink to="/" className="flex items-center gap-2 text-xl font-bold text-primary">
-          <img src="/images/logo.svg" alt="โลโก้ NotesHub" width={36} height={36} />
-          <span>NotesHub</span>
+      <div className="min-w-0 flex-1">
+        <NavLink to="/" className="flex items-center gap-2 text-lg font-bold text-primary sm:text-xl">
+          <img src="/images/logo.svg" alt="โลโก้ NotesHub" width={36} height={36} className="h-7 w-7 shrink-0 sm:h-9 sm:w-9" />
+          {/* จอมือถือ: โลโก้กับตัวอักษรเล็กลง ปุ่มด้านขวาจะได้ไม่ทับ */}
+          <span className="truncate">NotesHub</span>
         </NavLink>
       </div>
       <nav className="hidden flex-none md:block">
@@ -58,7 +61,7 @@ export default function Navbar() {
       </nav>
       {user ? (
         <div className="flex flex-none items-center gap-2">
-          {isAdmin && <NavLink to="/admin" className="btn btn-ghost btn-sm">Admin</NavLink>}
+          {isAdmin && <NavLink to="/admin" className="btn btn-ghost btn-sm hidden md:inline-flex">Admin</NavLink>}
           <span className="flex items-center gap-2 text-sm font-semibold" title={user.email}>
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-content">
               {user.name.charAt(0).toUpperCase()}
@@ -68,9 +71,10 @@ export default function Navbar() {
           <button className="btn btn-outline btn-sm md:btn-md" onClick={logout}>ออกจากระบบ</button>
         </div>
       ) : (
-        <div className="flex-none gap-2">
+        <div className="flex flex-none items-center gap-2">
           <button className="btn btn-outline btn-sm md:btn-md" onClick={() => openAuthModal('login')}>เข้าสู่ระบบ</button>
-          <button className="btn btn-primary btn-sm md:btn-md" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
+          {/* จอมือถือซ่อนปุ่มสมัคร (สมัครได้จากลิงก์ในหน้าต่างเข้าสู่ระบบ) */}
+          <button className="btn btn-primary btn-sm md:btn-md hidden sm:inline-flex" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
         </div>
       )}
       </div>
