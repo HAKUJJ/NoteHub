@@ -21,8 +21,8 @@ function LoginRequired() {
         <h1 className="text-2xl font-bold text-primary">กรุณาเข้าสู่ระบบเพื่อดูรายการโปรด</h1>
         <p className="opacity-70">ต้องเป็นสมาชิกถึงจะบันทึกและดูรายการโปรดได้</p>
         <div className="flex gap-2">
-          <button className="btn btn-primary" onClick={() => openAuthModal('login')}>เข้าสู่ระบบ</button>
-          <button className="btn btn-outline" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
+          <button className="btn btn-primary rounded-box" onClick={() => openAuthModal('login')}>เข้าสู่ระบบ</button>
+          <button className="btn btn-outline rounded-box border-none shadow" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
         </div>
       </div>
     </div>
@@ -46,8 +46,12 @@ function FavoritesList() {
           <h2 className="text-xl font-bold">ยังไม่มีรายการโปรด</h2>
           <p className="mt-2 text-gray-500">กดสัญลักษณ์หัวใจบนการ์ดโน้ตหรือหนังสือเพื่อบันทึกไว้ที่นี่</p>
           <div className="mt-5 flex justify-center gap-2">
-            <Link to="/" className="btn btn-primary">ดูโน้ต</Link>
-            <Link to="/books" className="btn btn-outline">ค้นหาหนังสือ</Link>
+            <Link to="/" className="btn btn-primary rounded-box border-none shadow hover:text-black hover:bg-accent">
+              ดูโน้ต
+            </Link>
+            <Link to="/books" className="btn btn-outline rounded-box border-none shadow hover:text-black hover:bg-accent">
+              ค้นหาหนังสือ
+            </Link>
           </div>
         </section>
       ) : (

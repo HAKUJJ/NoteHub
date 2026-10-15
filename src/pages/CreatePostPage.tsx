@@ -27,8 +27,8 @@ function LoginRequired() {
         <h1 className="text-2xl font-bold text-primary">กรุณาเข้าสู่ระบบก่อนโพสต์</h1>
         <p className="opacity-70">ต้องเป็นสมาชิกถึงจะแบ่งปันสรุปเนื้อหาหรือข้อสอบเก่าได้</p>
         <div className="flex gap-2">
-          <button className="btn btn-primary" onClick={() => openAuthModal('login')}>เข้าสู่ระบบ</button>
-          <button className="btn btn-outline" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
+          <button className="btn btn-primary rounded-box border-none shadow hover:text-black hover:bg-accent" onClick={() => openAuthModal('login')}>เข้าสู่ระบบ</button>
+          <button className="btn btn-outline rounded-box border-none shadow hover:text-black hover:bg-accent" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
         </div>
       </div>
     </div>
@@ -127,7 +127,7 @@ function CreatePostForm({ user }: { user: AuthUser }) {
           <input id="author" name="author" value={user.name} readOnly className={`input input-bordered ${cls()} bg-gray-100`} />
         </FormField>
         <FormField label="รายละเอียดเพิ่มเติม" name="description">
-          <textarea {...common('description')} rows={4} placeholder="อธิบายเนื้อหาโดยสังเขป (ไม่บังคับ)" className={`textarea textarea-bordered ${cls(errors.description)}`} />
+          <textarea {...common('description')} rows={4} placeholder="อธิบายเนื้อหาโดยสังเขป (ไม่บังคับ)" className={`textarea textarea-bordered  ${cls(errors.description)}`} />
         </FormField>
         <FormField label="แนบไฟล์เอกสาร" name="file">
           <input ref={fileRef} id="file" name="file" type="file" accept=".pdf,.doc,.docx,.png,.jpg" className="file-input file-input-bordered w-full border border-gray-300 bg-white" />

@@ -21,7 +21,9 @@ export default function NoteCard({ note, colorIndex }: { note: Note; colorIndex:
             subtitle={`โพสต์โดย: ${note.author}`}
             note={note}
           />
-          <Link to={`/post/${note.id}`} className="btn btn-primary btn-sm">ดูรายละเอียด</Link>
+          <Link to={`/post/${note.id}`} className="btn btn-primary btn-sm rounded-box border-none shadow hover:text-black hover:bg-accent">
+            ดูรายละเอียด
+          </Link>
         </>
       }
     />

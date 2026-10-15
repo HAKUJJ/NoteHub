@@ -5,7 +5,7 @@ const team = [
     number: 21,
     photo: '/images/team/nattapong.jpg',
     studentId: '1660703206',
-    role: 'จัดเตรียม Asset เชื่อมต่อ Public APIs จัดการข้อมูลที่ได้รับให้พร้อมสำหรับใช้งานในระบบ',
+    role: ' Backend Developer & ETL Developer',
   },
   {
     name: 'นาย ธิติวุฒิ ทางธนกุล',
@@ -13,7 +13,7 @@ const team = [
     number: 27,
     photo: '/images/team/thitiwut.jpg',
     studentId: '1660704642',
-    role: 'Main Developer โครงสร้าง Routing และ พัฒนาฟังก์ชัน',
+    role: 'Lead Backend Developer / Core Backend Developer',
   },
   {
     name: 'นางสาว อภัคสรา บุพบุตร',
@@ -21,7 +21,7 @@ const team = [
     number: 40,
     photo: '/images/team/apaksara.jpg',
     studentId: '1660707488',
-    role: 'Document Coordinator และ เขียนโค้ด ออกแบบ UX/UI',
+    role: 'UX/UI Developer & Technical Coordinator',
   },
 ].sort((a, b) => a.number - b.number)
 

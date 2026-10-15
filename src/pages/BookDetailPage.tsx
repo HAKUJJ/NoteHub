@@ -48,7 +48,7 @@ export default function BookDetailPage() {
           <p className="text-gray-600">ผู้เขียน: {authors}</p>
           {book.firstPublished && <p className="text-sm text-gray-500">พิมพ์ครั้งแรก: {book.firstPublished}</p>}
           <div>
-            <h2 className="mb-2 text-lg font-bold">รายละเอียด</h2>
+            <h2 className="mb-2 text-lg font-bold border-none rounded-box hover:bg-accent ">รายละเอียด</h2>
             <p className="whitespace-pre-line leading-relaxed text-gray-700">{book.description || 'ไม่มีรายละเอียดเพิ่มเติมจาก Open Library'}</p>
           </div>
           {book.subjects.length > 0 && (

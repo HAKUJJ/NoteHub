@@ -25,7 +25,7 @@ export default function Navbar() {
     <>
       {label}
       {to === '/favorites' && favoriteCount > 0 && (
-        <span className="badge badge-primary badge-sm ml-1" aria-label={`${favoriteCount} รายการโปรด`}>
+        <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary/10 px-1.5 text-xs font-bold text-primary " aria-label={`${favoriteCount} รายการโปรด`}>
           {favoriteCount}
         </span>
       )}
@@ -36,7 +36,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-md">
       <div className="navbar container mx-auto max-w-7xl px-4">
       <div className="dropdown md:hidden">
-        <button tabIndex={0} className="btn btn-ghost" aria-label="เปิดเมนู">☰</button>
+        <button tabIndex={0} className="btn btn-ghost focus:outline-none border-none rounded-2xl hover:text-white hover:bg-accent " aria-label="เปิดเมนู">☰</button>
         <ul tabIndex={0} className="menu dropdown-content z-10 mt-2 w-48 rounded-box bg-base-100 p-2 shadow">
           {links.map(({ to, label }) => (
             <li key={to}><NavLink to={to} end className={linkClass}>{renderLinkLabel(to, label)}</NavLink></li>
@@ -49,7 +49,7 @@ export default function Navbar() {
           <span>NotesHub</span>
         </NavLink>
       </div>
-      <nav className="hidden flex-none md:block">
+      <nav className="navbar-center hidden flex-none md:block">
         <ul className="menu menu-horizontal gap-1">
           {links.map(({ to, label }) => (
             <li key={to}><NavLink to={to} end className={linkClass}>{renderLinkLabel(to, label)}</NavLink></li>
@@ -58,19 +58,19 @@ export default function Navbar() {
       </nav>
       {user ? (
         <div className="flex flex-none items-center gap-2">
-          {isAdmin && <NavLink to="/admin" className="btn btn-ghost btn-sm">Admin</NavLink>}
+          {isAdmin && <NavLink to="/admin" className="btn btn-ghost btn-sm border-none rounded-2xl hover:bg-accent">Admin</NavLink>}
           <span className="flex items-center gap-2 text-sm font-semibold" title={user.email}>
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-content">
               {user.name.charAt(0).toUpperCase()}
             </span>
             <span className="hidden max-w-32 truncate sm:inline">{user.name}</span>
           </span>
-          <button className="btn btn-outline btn-sm md:btn-md" onClick={logout}>ออกจากระบบ</button>
+          <button className="btn btn-outline btn-sm md:btn-md border-none rounded-2xl shadow hover:text-black hover:bg-accent" onClick={logout}>ออกจากระบบ</button>
         </div>
       ) : (
         <div className="flex-none gap-2">
-          <button className="btn btn-outline btn-sm md:btn-md" onClick={() => openAuthModal('login')}>เข้าสู่ระบบ</button>
-          <button className="btn btn-primary btn-sm md:btn-md" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
+          <button className="btn btn-outline btn-sm md:btn-md rounded-box  border-none shadow mr-2  hover:bg-accent " onClick={() => openAuthModal('login')}>เข้าสู่ระบบ</button>
+          <button className="btn btn-primary btn-sm md:btn-md rounded-box border-none shadow hover:text-black hover:bg-accent" onClick={() => openAuthModal('register')}>สมัครสมาชิก</button>
         </div>
       )}
       </div>

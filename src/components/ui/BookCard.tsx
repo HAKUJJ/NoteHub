@@ -32,7 +32,9 @@ export default function BookCard({ book }: { book: BookSearchResult }) {
         <p className="line-clamp-1 text-sm text-gray-600">{author}</p>
         {book.firstPublished && <p className="text-xs text-gray-500">พิมพ์ครั้งแรก {book.firstPublished}</p>}
         <div className="card-actions mt-2 justify-end">
-          <Link to={`/books/${book.id}`} className="btn btn-primary btn-sm">รายละเอียด</Link>
+          <Link to={`/books/${book.id}`} className="btn btn-primary btn-sm rounded-box border-none shadow hover:text-black hover:bg-accent">
+            รายละเอียด
+          </Link>
         </div>
       </div>
     </article>

@@ -40,12 +40,9 @@ function AdminDashboard() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <span className="avatar avatar-placeholder">
-            <span className="w-8 rounded-full bg-primary text-primary-content">A</span>
-          </span>
-          <span>Administrator</span>
-          <Link to="/" className="btn btn-ghost btn-sm">← กลับหน้าเว็บไซต์</Link>
-          <button className="btn btn-outline btn-sm" onClick={() => { logout(); navigate('/') }}>ออกจากระบบ</button>
+          <span className="font-bold mr-1">Administrator</span>
+          <Link to="/" className="btn btn-ghost btn-sm rounded-2xl border-none shadow hover:text-black hover:bg-accent">← กลับหน้าเว็บไซต์</Link>
+          <button className="btn btn-outline btn-sm border-none rounded-2xl shadow hover:text-black hover:bg-accent" onClick={() => { logout(); navigate('/') }}>ออกจากระบบ</button>
         </div>
       </header>
 
@@ -90,7 +87,7 @@ function DashboardPanel() {
       <p className="mb-6 opacity-70">จัดการข้อมูลต่าง ๆ ของ NoteHub</p>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
         {stats.map((s) => (
-          <div key={s.title} className="flex flex-col items-center justify-center rounded-box bg-white p-6 text-center shadow-md">
+          <div key={s.title} className="flex flex-col items-center justify-center rounded-box bg-white p-6 text-center shadow-md shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-lg">
             <div className="mb-2 text-5xl font-extrabold text-primary">{s.value}</div>
             <div className="font-semibold">{s.title}</div>
             <div className="text-sm text-gray-500">{s.desc}</div>
@@ -164,10 +161,10 @@ function SheetsPanel() {
                 <td>
                   <div className="flex gap-1">
                     {s.status === 'pending' && (
-                      <button className="btn btn-success btn-xs" disabled={approve.isPending} onClick={() => handleApprove(s)}>Approve</button>
+                      <button className="btn btn-success btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" disabled={approve.isPending} onClick={() => handleApprove(s)}>Approve</button>
                     )}
-                    <button className="btn btn-info btn-xs" onClick={() => setEditing(s)}>Edit</button>
-                    <button className="btn btn-error btn-xs" onClick={() => setDeleteId(s.id)}>Delete</button>
+                    <button className="btn btn-info btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => setEditing(s)}>Edit</button>
+                    <button className="btn btn-error btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => setDeleteId(s.id)}>Delete</button>
                   </div>
                 </td>
               </tr>
@@ -193,8 +190,8 @@ function SheetsPanel() {
             <h3 className="text-lg font-bold">ยืนยันการลบ</h3>
             <p className="py-4">คุณต้องการลบชีทนี้ใช่หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
             <div className="modal-action">
-              <button className="btn btn-error" disabled={remove.isPending} onClick={confirmDelete}>ลบข้อมูล</button>
-              <button className="btn" onClick={() => setDeleteId(null)}>ยกเลิก</button>
+              <button className="btn btn-error rounded-2xl border-none shadow hover:text-black hover:bg-accent" disabled={remove.isPending} onClick={confirmDelete}>ลบข้อมูล</button>
+              <button className="btn bg-white rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => setDeleteId(null)}>ยกเลิก</button>
             </div>
           </div>
         </dialog>
@@ -236,8 +233,8 @@ function EditSheetForm({ sheet, onDone }: { sheet: Sheet; onDone: (message?: str
         </select>
       </FormField>
       <div className="flex gap-2">
-        <button type="submit" className="btn btn-primary" disabled={update.isPending}>บันทึกการแก้ไข</button>
-        <button type="button" className="btn" onClick={() => onDone()}>ยกเลิก</button>
+        <button type="submit" className="btn btn-primary rounded-2xl border-none shadow hover:text-black hover:bg-accent" disabled={update.isPending}>บันทึกการแก้ไข</button>
+        <button type="button" className="btn bg-white rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => onDone()}>ยกเลิก</button>
       </div>
     </form>
   )

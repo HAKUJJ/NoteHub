@@ -34,11 +34,13 @@ export default function BooksPage() {
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           placeholder="ค้นหาชื่อหนังสือหรือผู้เขียน..."
-          className="input input-bordered w-full border border-gray-300 bg-white sm:max-w-xl"
+          className="input input-bordered w-full shadow focus:outline-none focus:ring-0 bg-white sm:max-w-xl"
           aria-label="ค้นหาหนังสือ"
         />
-        <button type="submit" className="btn btn-primary">ค้นหา</button>
-        {query && <button type="button" className="btn btn-ghost" onClick={() => { setDraft(''); setQuery('') }}>ล้างคำค้น</button>}
+        <button type="submit" className="btn btn-primary rounded-box border-none shadow hover:text-black hover:bg-accent">
+          ค้นหา
+        </button>
+        {query && <button type="button" className="btn btn-ghost rounded-box border-none shadow hover:text-black hover:bg-accent" onClick={() => { setDraft(''); setQuery('') }}>ล้างคำค้น</button>}
       </form>
 
       <div role="tablist" className="tabs tabs-boxed flex-wrap bg-base-200/70">
@@ -58,7 +60,7 @@ export default function BooksPage() {
 
       <section aria-live="polite">
         <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="text-xl font-bold">{query ? `ผลการค้นหา “${query}”` : `หนังสือ${subjectLabel}`}</h2>
+          <h2 className="text-xl font-bold">{query ? `ผลการค้นหา “${query}”` : `${subjectLabel}`}</h2>
           {data && <span className="text-sm text-gray-500">แสดง {data.books.length} รายการ</span>}
         </div>
 
