@@ -21,7 +21,7 @@ export default function NoteResults({ title }: { title: string }) {
       : title
 
   const clearButton = (
-    <button type="button" className="btn btn-outline btn-sm" onClick={resetFilters}>
+    <button type="button" className="btn btn-outline btn-sm border-none focus:ring-0 focus:outline-none hover:bg-accent rounded-2xl" onClick={resetFilters}>
       ล้างตัวกรอง
     </button>
   )
