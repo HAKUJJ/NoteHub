@@ -1,27 +1,40 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router'
-import FormField from '../components/ui/FormField'
-import { useApproveSheet, useDeleteSheet, useSheets, useUpdateSheet } from '../hooks/useSheets'
-import { useDeleteNote, useNotes } from '../hooks/useNotes'
+import { useApproveSheet, useDeleteSheet, useSheets } from '../hooks/useSheets'
+import { useNotes } from '../hooks/useNotes'
 import { isUserNote } from '../api/notes'
-import { gradeLabels, subjectLabels, typeLabels } from '../data/labels'
 import { useAuthStore } from '../store/authStore'
-import { useFavoriteStore } from '../store/useFavoriteStore'
-import type { Note, Sheet } from '../types'
+import type { Sheet } from '../types'
 
-type Tab = 'dashboard' | 'posts' | 'sheets' | 'users' | 'reports'
+type Tab = 'dashboard' | 'sheets' | 'users' | 'reports'
 
 const tabs: { id: Tab; label: string }[] = [
   { id: 'dashboard', label: 'Dashboard' },
-  { id: 'posts', label: 'จัดการโพสต์' },
-  { id: 'sheets', label: 'จัดการชีทสรุป' },
+  { id: 'sheets', label: 'จัดการโพสต์' },
   { id: 'users', label: 'จัดการผู้ใช้งาน' },
   { id: 'reports', label: 'รายงานปัญหา' },
 ]
 
-// Placeholder counts until users/reports have a real source.
-const TOTAL_USERS = 128
-const TOTAL_REPORTS = 5
+type UserStatus = 'Active' | 'Inactive'
+type ReportStatus = 'Pending' | 'Resolved'
+type AdminUser = { id: number; name: string; email: string; role: string; status: UserStatus }
+type AdminReport = { id: number; topic: string; reportedBy: string; date: string; status: ReportStatus }
+
+const initialUsers: AdminUser[] = [
+  { id: 1, name: 'สมชาย ใจดี', email: 'somchai@example.com', role: 'Admin', status: 'Active' },
+  { id: 2, name: 'วิภา สุขสันต์', email: 'wipa@example.com', role: 'Student', status: 'Active' },
+  { id: 3, name: 'ณัฐพล รักเรียน', email: 'nattaphon@example.com', role: 'Student', status: 'Inactive' },
+  { id: 4, name: 'กานต์ มั่นคง', email: 'kan@example.com', role: 'Student', status: 'Active' },
+  { id: 5, name: 'ปรียา ศรีสุข', email: 'preeya@example.com', role: 'Student', status: 'Inactive' },
+]
+
+const initialReports: AdminReport[] = [
+  { id: 1, topic: 'เนื้อหาไม่ถูกต้อง', reportedBy: 'วิภา สุขสันต์', date: '2026-10-10', status: 'Pending' },
+  { id: 2, topic: 'ลิงก์เสีย', reportedBy: 'กานต์ มั่นคง', date: '2026-10-11', status: 'Resolved' },
+  { id: 3, topic: 'ไฟล์แนบเปิดไม่ได้', reportedBy: 'ณัฐพล รักเรียน', date: '2026-10-12', status: 'Pending' },
+  { id: 4, topic: 'มีเนื้อหาซ้ำกัน', reportedBy: 'ปรียา ศรีสุข', date: '2026-10-13', status: 'Resolved' },
+  { id: 5, topic: 'ข้อมูลผู้จัดทำผิดพลาด', reportedBy: 'สมชาย ใจดี', date: '2026-10-14', status: 'Pending' },
+]
 
 export default function AdminPage() {
   const isAdmin = useAuthStore((s) => s.isAdmin && s.user?.role === 'admin')
@@ -31,27 +44,61 @@ export default function AdminPage() {
 
 function AdminDashboard() {
   const [tab, setTab] = useState<Tab>('dashboard')
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const [users, setUsers] = useState<AdminUser[]>(initialUsers)
+  const [reports, setReports] = useState<AdminReport[]>(initialReports)
   const logout = useAuthStore((s) => s.logout)
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (!toastMessage) return
+    const timer = setTimeout(() => setToastMessage(null), 3000)
+    return () => clearTimeout(timer)
+  }, [toastMessage])
+
+  const toggleUserStatus = (id: number) => {
+    const user = users.find((u) => u.id === id)
+    if (!user) return
+    const next: UserStatus = user.status === 'Active' ? 'Inactive' : 'Active'
+    setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, status: next } : u)))
+    setToastMessage(next === 'Inactive' ? `ระงับสิทธิ์ผู้ใช้: ${user.name} เรียบร้อยแล้ว` : `ปลดระงับผู้ใช้: ${user.name} เรียบร้อยแล้ว`)
+  }
+
+  const resolveReport = (id: number) => {
+    const report = reports.find((r) => r.id === id)
+    if (!report || report.status === 'Resolved') return
+    setReports((prev) => prev.map((r) => (r.id === id ? { ...r, status: 'Resolved' } : r)))
+    setToastMessage(`ตรวจสอบปัญหา: ${report.topic} เรียบร้อยแล้ว`)
+  }
+
+  const deleteReport = (id: number) => {
+    const report = reports.find((r) => r.id === id)
+    if (!report) return
+    setReports((prev) => prev.filter((r) => r.id !== id))
+    setToastMessage(`ลบรายงานปัญหา: ${report.topic} เรียบร้อยแล้ว`)
+  }
+
   return (
-    <div className="mx-auto min-h-screen max-w-6xl p-6">
-      <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <img src="/images/logo.svg" alt="โลโก้ NotesHub" width={40} height={40} />
-          <div>
-            <p className="text-xs tracking-widest opacity-60">ADMIN PANEL</p>
-            <h1 className="text-2xl font-bold">NotesHub</h1>
+    <div className="min-h-screen">
+      <header className="border-b border-gray-200 bg-white shadow-sm">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <img src="/images/logo.svg" alt="โลโก้ NotesHub" width={40} height={40} />
+            <div>
+              <p className="text-xs tracking-widest opacity-60">ADMIN PANEL</p>
+              <h1 className="text-2xl font-bold">NotesHub</h1>
+            </div>
           </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-semibold text-primary-content">A</span>
-          <span className="font-bold mr-1">Administrator</span>
-          <Link to="/" className="btn btn-ghost btn-sm rounded-2xl border-none shadow hover:text-black hover:bg-accent">← กลับหน้าเว็บไซต์</Link>
-          <button className="btn btn-outline btn-sm border-none rounded-2xl shadow hover:text-black hover:bg-accent" onClick={() => { logout(); navigate('/') }}>ออกจากระบบ</button>
+          <div className="flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-semibold text-primary-content">A</span>
+            <span className="font-bold mr-1">Administrator</span>
+            <Link to="/" className="btn btn-ghost btn-sm rounded-2xl border-none shadow hover:text-black hover:bg-accent">← กลับหน้าเว็บไซต์</Link>
+            <button className="btn btn-outline btn-sm border-none rounded-2xl shadow hover:text-black hover:bg-accent" onClick={() => { logout(); navigate('/') }}>ออกจากระบบ</button>
+          </div>
         </div>
       </header>
 
+      <main className="mx-auto max-w-6xl p-6">
       <div role="tablist" className="tabs tabs-border tabs-lg mb-8 flex-nowrap overflow-x-auto">
         {tabs.map((t) => (
           <button
@@ -65,20 +112,24 @@ function AdminDashboard() {
         ))}
       </div>
 
-      <div className="alert alert-warning mb-6" role="note">
-        <span><strong>โหมดสาธิต (Demo):</strong> ชีทสรุป ผู้ใช้งาน และรายงานปัญหาเป็นข้อมูลตัวอย่าง (รีเฟรชแล้วกลับเป็นค่าเดิม) ส่วนแท็บจัดการโพสต์ใช้โพสต์จริงที่เก็บในเบราว์เซอร์นี้</span>
-      </div>
+      {tab === 'dashboard' && <DashboardPanel userCount={users.length} pendingReports={reports.filter((r) => r.status === 'Pending').length} />}
+      {tab === 'sheets' && <SheetsPanel setToastMessage={setToastMessage} />}
+      {tab === 'users' && <UsersPanel users={users} onToggleStatus={toggleUserStatus} />}
+      {tab === 'reports' && <ReportsPanel reports={reports} onResolve={resolveReport} onDelete={deleteReport} />}
 
-      {tab === 'dashboard' && <DashboardPanel />}
-      {tab === 'posts' && <PostsPanel />}
-      {tab === 'sheets' && <SheetsPanel />}
-      {tab === 'users' && <EmptyPanel title="จัดการผู้ใช้งาน" text="ยังไม่มีข้อมูลผู้ใช้งาน" />}
-      {tab === 'reports' && <EmptyPanel title="รายงานปัญหา" text="ยังไม่มีรายงานปัญหา" />}
+      {toastMessage && (
+        <div className="toast toast-bottom toast-end z-50">
+          <div className="alert alert-success text-white shadow-lg" role="status">
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+      </main>
     </div>
   )
 }
 
-function DashboardPanel() {
+function DashboardPanel({ userCount, pendingReports }: { userCount: number; pendingReports: number }) {
   const { data: sheets = [] } = useSheets()
   const pending = sheets.filter((s) => s.status === 'pending').length
   const { data: notes = [] } = useNotes()
@@ -87,8 +138,8 @@ function DashboardPanel() {
     { title: 'โพสต์ทั้งหมด', value: notes.length, desc: `ผู้ใช้สร้าง ${userPosts} โพสต์` },
     { title: 'ชีททั้งหมด', value: sheets.length, desc: 'ชีทในระบบ' },
     { title: 'รออนุมัติ', value: pending, desc: 'รอการตรวจสอบ' },
-    { title: 'ผู้ใช้งาน', value: TOTAL_USERS, desc: 'สมาชิกทั้งหมด (ตัวอย่าง)' },
-    { title: 'รายงานปัญหา', value: TOTAL_REPORTS, desc: 'รายการที่ต้องตรวจสอบ (ตัวอย่าง)' },
+    { title: 'ผู้ใช้งาน', value: userCount, desc: 'สมาชิกทั้งหมด' },
+    { title: 'รายงานปัญหา', value: pendingReports, desc: 'รอการตรวจสอบ' },
   ]
 
   return (
@@ -108,24 +159,23 @@ function DashboardPanel() {
   )
 }
 
-function SheetsPanel() {
+type SetToast = (message: string | null) => void
+
+function SheetsPanel({ setToastMessage }: { setToastMessage: SetToast }) {
   const { data: sheets = [], isLoading } = useSheets()
   const approve = useApproveSheet()
   const remove = useDeleteSheet()
-  const [editing, setEditing] = useState<Sheet | null>(null)
   const [deleteId, setDeleteId] = useState<number | null>(null)
-  const [notice, setNotice] = useState('')
 
   const handleApprove = (sheet: Sheet) =>
-    approve.mutate(sheet.id, { onSuccess: () => setNotice(`อนุมัติชีท "${sheet.title}" เรียบร้อยแล้ว`) })
+    approve.mutate(sheet.id, { onSuccess: () => setToastMessage(`อนุมัติชีท "${sheet.title}" เรียบร้อยแล้ว`) })
 
   const confirmDelete = () => {
     if (deleteId === null) return
     remove.mutate(deleteId, {
       onSuccess: () => {
-        if (editing?.id === deleteId) setEditing(null)
         setDeleteId(null)
-        setNotice('ลบข้อมูลเรียบร้อยแล้ว')
+        setToastMessage('ลบข้อมูลเรียบร้อยแล้ว')
       },
     })
   }
@@ -133,16 +183,9 @@ function SheetsPanel() {
   return (
     <section className="flex flex-col gap-6">
       <div>
-        <h2 className="text-xl font-bold">ชีทสรุปที่รอการอนุมัติ</h2>
-        <p className="opacity-70">ตรวจสอบและจัดการชีทที่ผู้ใช้งานส่งเข้ามา</p>
+        <h2 className="text-xl font-bold">โพสต์ที่รอการอนุมัติ</h2>
+        <p className="opacity-70">ตรวจสอบและจัดการโพสต์ที่ผู้ใช้งานส่งเข้ามา</p>
       </div>
-
-      {notice && (
-        <div className="alert alert-success" role="status">
-          <span>{notice}</span>
-          <button className="btn btn-ghost btn-xs" onClick={() => setNotice('')}>ปิด</button>
-        </div>
-      )}
 
       <div className="overflow-x-auto rounded-box bg-white p-4 shadow-md">
         <table className="table table-zebra w-full">
@@ -164,17 +207,17 @@ function SheetsPanel() {
                 <td>{s.author}</td>
                 <td>{s.grade}</td>
                 <td>
-                  <span className={`badge ${s.status === 'pending' ? 'badge-warning' : 'badge-success'}`}>
+                  <span className={`badge badge-sm ${s.status === 'pending' ? 'badge-warning text-gray-900' : 'badge-success text-white'}`}>
                     {s.status === 'pending' ? 'รออนุมัติ' : 'อนุมัติแล้ว'}
                   </span>
                 </td>
                 <td>
                   <div className="flex gap-1">
+                    <Link to={`/post/${s.id}`} className="btn btn-info btn-xs text-white rounded-full">ดูเนื้อหาโพสต์</Link>
                     {s.status === 'pending' && (
-                      <button className="btn btn-success btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" disabled={approve.isPending} onClick={() => handleApprove(s)}>อนุมัติ</button>
+                      <button className="btn btn-success btn-xs text-white rounded-full" disabled={approve.isPending} onClick={() => handleApprove(s)}>อนุมัติ</button>
                     )}
-                    <button className="btn btn-info btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => setEditing(s)}>แก้ไข</button>
-                    <button className="btn btn-error btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => setDeleteId(s.id)}>ลบ</button>
+                    <button className="btn btn-error btn-xs text-white rounded-full" onClick={() => setDeleteId(s.id)}>ลบ</button>
                   </div>
                 </td>
               </tr>
@@ -182,17 +225,6 @@ function SheetsPanel() {
           </tbody>
         </table>
       </div>
-
-      {editing && (
-        <EditSheetForm
-          key={editing.id}
-          sheet={editing}
-          onDone={(message) => {
-            setEditing(null)
-            if (message) setNotice(message)
-          }}
-        />
-      )}
 
       {deleteId !== null && (
         <dialog className="modal modal-open">
@@ -210,157 +242,86 @@ function SheetsPanel() {
   )
 }
 
-function PostsPanel() {
-  const { data: notes = [], isLoading } = useNotes()
-  const deleteNote = useDeleteNote()
-  const removeEverywhere = useFavoriteStore((s) => s.removeEverywhere)
-  const [deleting, setDeleting] = useState<Note | null>(null)
-  const [notice, setNotice] = useState('')
-  const [showOnlyUser, setShowOnlyUser] = useState(false)
-
-  const rows = showOnlyUser ? notes.filter((n) => isUserNote(n.id)) : notes
-
-  const confirmDelete = () => {
-    if (!deleting) return
-    const target = deleting
-    deleteNote.mutate(target.id, {
-      onSuccess: () => {
-        removeEverywhere('note', String(target.id))
-        setDeleting(null)
-        setNotice(`ลบโพสต์ "${target.title}" เรียบร้อยแล้ว`)
-      },
-    })
-  }
-
+function UsersPanel({ users, onToggleStatus }: { users: AdminUser[]; onToggleStatus: (id: number) => void }) {
   return (
     <section className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h2 className="text-xl font-bold">โพสต์ทั้งหมดในระบบ</h2>
-          <p className="opacity-70">โพสต์ที่แสดงในหน้าแรก ลบได้เฉพาะโพสต์ที่ผู้ใช้สร้าง (โน้ตตัวอย่างลบไม่ได้)</p>
-        </div>
-        <label className="label cursor-pointer gap-2">
-          <input type="checkbox" className="checkbox checkbox-primary checkbox-sm" checked={showOnlyUser}
-            onChange={(e) => setShowOnlyUser(e.target.checked)} />
-          <span className="text-sm">แสดงเฉพาะโพสต์ที่ผู้ใช้สร้าง</span>
-        </label>
-      </div>
-
-      {notice && (
-        <div className="alert alert-success" role="status">
-          <span>{notice}</span>
-          <button className="btn btn-ghost btn-xs" onClick={() => setNotice('')}>ปิด</button>
-        </div>
-      )}
-
+      <h2 className="text-xl font-bold">จัดการผู้ใช้งาน</h2>
       <div className="overflow-x-auto rounded-box bg-white p-4 shadow-md">
         <table className="table table-zebra w-full">
           <thead>
             <tr className="bg-primary/10 text-primary">
-              <th>ชื่อโพสต์</th>
-              <th>หมวด / ระดับชั้น</th>
-              <th>ประเภท</th>
-              <th>ผู้โพสต์</th>
-              <th>ที่มา</th>
+              <th>ชื่อผู้ใช้งาน</th>
+              <th>อีเมล</th>
+              <th>บทบาท</th>
+              <th>สถานะ</th>
               <th>จัดการ</th>
             </tr>
           </thead>
           <tbody>
-            {isLoading && <tr><td colSpan={6} className="text-center"><span className="loading loading-spinner" /></td></tr>}
-            {!isLoading && rows.length === 0 && (
-              <tr><td colSpan={6} className="text-center opacity-70">{showOnlyUser ? 'ยังไม่มีโพสต์ที่ผู้ใช้สร้าง' : 'ไม่มีโพสต์'}</td></tr>
-            )}
-            {rows.map((n) => {
-              const userMade = isUserNote(n.id)
-              return (
-                <tr key={n.id}>
-                  <td className="font-medium">{n.title}</td>
-                  <td className="whitespace-nowrap">{subjectLabels[n.category]} · {gradeLabels[n.grade]}</td>
-                  <td>{typeLabels[n.type]}</td>
-                  <td>{n.author}</td>
-                  <td>
-                    <span className={`badge whitespace-nowrap ${userMade ? 'badge-info' : 'badge-ghost'}`}>
-                      {userMade ? 'ผู้ใช้สร้าง' : 'ตัวอย่าง'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="flex gap-1">
-                      <Link to={`/post/${n.id}`} className="btn btn-outline btn-xs">ดู</Link>
-                      <button className="btn btn-error btn-xs" disabled={!userMade}
-                        title={userMade ? 'ลบโพสต์นี้' : 'โน้ตตัวอย่างลบไม่ได้'} onClick={() => setDeleting(n)}>
-                        ลบ
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              )
-            })}
+            {users.map((u) => (
+              <tr key={u.id}>
+                <td className="font-medium">{u.name}</td>
+                <td>{u.email}</td>
+                <td>{u.role}</td>
+                <td>
+                  <span className={`badge badge-sm text-white ${u.status === 'Active' ? 'badge-success' : 'badge-error'}`}>{u.status}</span>
+                </td>
+                <td>
+                  <div className="flex gap-1">
+                    {u.status === 'Active' ? (
+                      <button className="btn btn-error btn-xs text-white rounded-full" onClick={() => onToggleStatus(u.id)}>ระงับสิทธิ์</button>
+                    ) : (
+                      <button className="btn btn-success btn-xs text-white rounded-full" onClick={() => onToggleStatus(u.id)}>ปลดระงับ</button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-
-      {deleting && (
-        <dialog className="modal modal-open">
-          <div className="modal-box bg-white">
-            <h3 className="text-lg font-bold">ยืนยันการลบโพสต์</h3>
-            <p className="py-4">ลบโพสต์ "{deleting.title}" ของ {deleting.author} ใช่หรือไม่? ลบแล้วกู้คืนไม่ได้</p>
-            {deleteNote.isError && <p className="text-sm text-error">ลบไม่สำเร็จ ลองอีกครั้ง</p>}
-            <div className="modal-action">
-              <button className="btn btn-error" disabled={deleteNote.isPending} onClick={confirmDelete}>
-                {deleteNote.isPending ? 'กำลังลบ...' : 'ลบโพสต์'}
-              </button>
-              <button className="btn" onClick={() => setDeleting(null)}>ยกเลิก</button>
-            </div>
-          </div>
-        </dialog>
-      )}
     </section>
   )
 }
 
-function EditSheetForm({ sheet, onDone }: { sheet: Sheet; onDone: (message?: string) => void }) {
-  const update = useUpdateSheet()
-  const [draft, setDraft] = useState({ title: sheet.title, author: sheet.author, grade: sheet.grade })
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    update.mutate({ id: sheet.id, patch: draft }, { onSuccess: () => onDone('แก้ไขข้อมูลเรียบร้อยแล้ว') })
-  }
-
+function ReportsPanel({ reports, onResolve, onDelete }: { reports: AdminReport[]; onResolve: (id: number) => void; onDelete: (id: number) => void }) {
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-box bg-white p-6 shadow-md">
-      <div>
-        <h2 className="text-xl font-bold">แก้ไขข้อมูลชีท</h2>
-        <p className="opacity-70">แก้ไขรายละเอียดก่อนเผยแพร่ในระบบ</p>
+    <section className="flex flex-col gap-6">
+      <h2 className="text-xl font-bold">รายงานปัญหา</h2>
+      <div className="overflow-x-auto rounded-box bg-white p-4 shadow-md">
+        <table className="table table-zebra w-full">
+          <thead>
+            <tr className="bg-primary/10 text-primary">
+              <th>หัวข้อปัญหา</th>
+              <th>ผู้รายงาน</th>
+              <th>วันที่</th>
+              <th>สถานะ</th>
+              <th>จัดการ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reports.length === 0 && <tr><td colSpan={5} className="text-center opacity-70">ไม่มีรายงานปัญหา</td></tr>}
+            {reports.map((r) => (
+              <tr key={r.id}>
+                <td className="font-medium">{r.topic}</td>
+                <td>{r.reportedBy}</td>
+                <td className="whitespace-nowrap">{r.date}</td>
+                <td>
+                  <span className={`badge badge-sm ${r.status === 'Resolved' ? 'badge-success text-white' : 'badge-warning text-gray-900'}`}>{r.status}</span>
+                </td>
+                <td>
+                  <div className="flex gap-1">
+                    {r.status === 'Pending' && (
+                      <button className="btn btn-info btn-xs text-white rounded-full" onClick={() => onResolve(r.id)}>ตรวจสอบ</button>
+                    )}
+                    <button className="btn btn-error btn-xs text-white rounded-full" onClick={() => onDelete(r.id)}>ลบ</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      <FormField label="ชื่อชีท" name="editTitle">
-        <input id="editTitle" required className="input input-bordered w-full border border-gray-300 bg-white" value={draft.title}
-          onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
-      </FormField>
-      <FormField label="ผู้จัดทำ" name="editAuthor">
-        <input id="editAuthor" required className="input input-bordered w-full border border-gray-300 bg-white" value={draft.author}
-          onChange={(e) => setDraft({ ...draft, author: e.target.value })} />
-      </FormField>
-      <FormField label="ระดับชั้น" name="editGrade">
-        <select id="editGrade" required className="select select-bordered w-full border border-gray-300 bg-white" value={draft.grade}
-          onChange={(e) => setDraft({ ...draft, grade: e.target.value })}>
-          <option value="">เลือกระดับชั้น</option>
-          {['ม.1', 'ม.2', 'ม.3', 'ม.4', 'ม.5', 'ม.6'].map((g) => <option key={g} value={g}>{g}</option>)}
-        </select>
-      </FormField>
-      <div className="flex gap-2">
-        <button type="submit" className="btn btn-primary rounded-2xl border-none shadow hover:text-black hover:bg-accent" disabled={update.isPending}>บันทึกการแก้ไข</button>
-        <button type="button" className="btn bg-white rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => onDone()}>ยกเลิก</button>
-      </div>
-    </form>
-  )
-}
-
-function EmptyPanel({ title, text }: { title: string; text: string }) {
-  return (
-    <section>
-      <h2 className="text-xl font-bold">{title}</h2>
-      <p className="mt-4 rounded-box bg-white p-12 text-center text-gray-500 shadow-sm">{text}</p>
     </section>
   )
 }
