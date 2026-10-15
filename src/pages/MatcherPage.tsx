@@ -96,7 +96,7 @@ export default function MatcherPage() {
         <section ref={resultRef} className="mt-10">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-bold">ผลการจับคู่ของคุณ</h2>
-            <button type="button" className="btn btn-outline btn-sm" onClick={restart}>เริ่มใหม่</button>
+            <button type="button" className="btn btn-outline btn-sm border-none focus:ring-0 focus:outline-none hover:bg-accent rounded-2xl" onClick={restart}>เริ่มใหม่</button>
           </div>
           {results.length === 0 ? (
             <p className="py-6 text-center opacity-70">ยังไม่พบสาขาที่ตรงกับตัวเลือกของคุณ ลองเลือกเพิ่มเติมดูนะ</p>
