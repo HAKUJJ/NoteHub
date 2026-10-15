@@ -17,6 +17,8 @@ export interface Note {
   image?: string
   topics?: string[]
   relatedBookSubject?: string
+  /** ข้อมูลไฟล์แนบ (ตัวไฟล์เก็บใน IndexedDB ผ่าน lib/fileStore) */
+  attachment?: { name: string; size: number; type: string }
 }
 
 export type NewNote = Omit<Note, 'id'>

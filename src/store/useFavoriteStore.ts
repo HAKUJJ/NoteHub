@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Note } from '../types'
+import { useAuthStore } from './authStore'
 
 export interface FavoriteItem {
   kind: 'note' | 'book'
@@ -14,29 +15,55 @@ export interface FavoriteItem {
 
 type NewFavorite = Omit<FavoriteItem, 'savedAt'>
 
+const same = (a: Pick<FavoriteItem, 'kind' | 'id'>, kind: FavoriteItem['kind'], id: string) => a.kind === kind && a.id === id
+
 interface FavoriteState {
-  items: FavoriteItem[]
-  toggleFavorite: (item: NewFavorite) => void
-  removeFavorite: (kind: FavoriteItem['kind'], id: string) => void
-  isFavorite: (kind: FavoriteItem['kind'], id: string) => boolean
+  /** รายการโปรดแยกตามบัญชี: key = อีเมลของผู้ใช้ */
+  byUser: Record<string, FavoriteItem[]>
+  toggleFavorite: (email: string, item: NewFavorite) => void
+  removeFavorite: (email: string, kind: FavoriteItem['kind'], id: string) => void
+  /** ลบออกจากรายการโปรดของทุกบัญชี (ใช้ตอนโพสต์ถูกลบ) */
+  removeEverywhere: (kind: FavoriteItem['kind'], id: string) => void
 }
 
 export const useFavoriteStore = create<FavoriteState>()(
   persist(
-    (set, get) => ({
-      items: [],
-      toggleFavorite: (item) => {
-        const exists = get().items.some((favorite) => favorite.kind === item.kind && favorite.id === item.id)
+    (set) => ({
+      byUser: {},
+      toggleFavorite: (email, item) =>
+        set((state) => {
+          const current = state.byUser[email] ?? []
+          const exists = current.some((f) => same(f, item.kind, item.id))
+          const next = exists
+            ? current.filter((f) => !same(f, item.kind, item.id))
+            : [{ ...item, savedAt: Date.now() }, ...current]
+          return { byUser: { ...state.byUser, [email]: next } }
+        }),
+      removeFavorite: (email, kind, id) =>
         set((state) => ({
-          items: exists
-            ? state.items.filter((favorite) => !(favorite.kind === item.kind && favorite.id === item.id))
-            : [{ ...item, savedAt: Date.now() }, ...state.items],
-        }))
-      },
-      removeFavorite: (kind, id) =>
-        set((state) => ({ items: state.items.filter((favorite) => !(favorite.kind === kind && favorite.id === id)) })),
-      isFavorite: (kind, id) => get().items.some((favorite) => favorite.kind === kind && favorite.id === id),
+          byUser: { ...state.byUser, [email]: (state.byUser[email] ?? []).filter((f) => !same(f, kind, id)) },
+        })),
+      removeEverywhere: (kind, id) =>
+        set((state) => ({
+          byUser: Object.fromEntries(
+            Object.entries(state.byUser).map(([email, items]) => [email, items.filter((f) => !same(f, kind, id))]),
+          ),
+        })),
     }),
-    { name: 'noteshub-favorites' },
+    {
+      name: 'noteshub-favorites',
+      // เวอร์ชัน 1: เปลี่ยนจากรายการรวมทั้งเบราว์เซอร์ เป็นแยกตามบัญชี
+      // ข้อมูลแบบเก่าไม่รู้ว่าเป็นของใคร จึงเริ่มใหม่
+      version: 1,
+      migrate: () => ({ byUser: {} }),
+    },
   ),
 )
+
+const EMPTY: FavoriteItem[] = []
+
+/** รายการโปรดของคนที่ล็อกอินอยู่ (ยังไม่ล็อกอิน = ว่าง) */
+export function useMyFavorites(): FavoriteItem[] {
+  const email = useAuthStore((s) => s.user?.email)
+  return useFavoriteStore((s) => (email ? s.byUser[email] ?? EMPTY : EMPTY))
+}

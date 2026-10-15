@@ -14,7 +14,7 @@ export default function HomePage() {
             <p className="mb-4 mt-2 text-base opacity-80">ค้นหา แชร์ และดาวน์โหลดสรุปเนื้อหาจากรุ่นพี่ ครบทุกวิชา อัปเดตทุกภาคการศึกษา</p>
             <SearchBar large />
           </div>
-          <img src="/images/banner.png" alt="ภาพประกอบกองหนังสือและสมุดโน้ต" className="w-36 drop-shadow-lg md:w-44 lg:w-52" />
+          <img src="/images/banner.png" alt="ภาพประกอบกองหนังสือและสมุดโน้ต" className="w-24 drop-shadow-lg sm:w-36 md:w-44 lg:w-52" />
         </div>
       </section>
       <NoteResults title="โน้ตแนะนำ" />

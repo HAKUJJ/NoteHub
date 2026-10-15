@@ -51,7 +51,7 @@ export default function MatcherPage() {
 
   return (
     <div className="mx-auto max-w-4xl p-6">
-      <section ref={topRef} className="mb-6 text-center">
+      <section ref={topRef} className="mb-6 scroll-mt-24 text-center">
         <h1 className="text-3xl font-bold">ค้นหาสาขาที่ใช่สำหรับคุณ</h1>
         <p className="mt-2">เลือกทักษะ ความสนใจ และงานอดิเรกของคุณ แล้วให้ NotesHub ช่วยแนะนำสาขาวิชาที่เหมาะกับคุณที่สุด</p>
       </section>
@@ -93,7 +93,7 @@ export default function MatcherPage() {
       </form>
 
       {results && (
-        <section ref={resultRef} className="mt-10">
+        <section ref={resultRef} className="mt-10 scroll-mt-24">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-bold">ผลการจับคู่ของคุณ</h2>
             <button type="button" className="btn btn-outline btn-sm border-none focus:ring-0 focus:outline-none hover:bg-accent rounded-2xl" onClick={restart}>เริ่มใหม่</button>

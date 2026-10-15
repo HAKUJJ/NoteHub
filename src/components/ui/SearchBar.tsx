@@ -25,9 +25,9 @@ export default function SearchBar({ className = '', large = false }: { className
           if (e.target.value === '') setKeyword('')
         }}
         placeholder="ค้นหาชื่อวิชาหรือหัวข้อโน้ต..."
-        className={`input input-bordered w-full max-w-xl bg-white border-none focus:outline-none focus:ring-0"   ${large ? 'input-lg' : ''}`}
+        className={`input input-bordered w-full max-w-xl bg-white border-none focus:outline-none focus:ring-0 ${large ? 'md:input-lg' : ''}`}
       />
-      <button type="submit" className={`btn btn-primary border-none shadow hover:text-black hover:bg-accent rounded-2xl  ${large ? 'btn-lg' : ''}`}>ค้นหา</button>
+      <button type="submit" className={`btn btn-primary border-none shadow hover:text-black hover:bg-accent rounded-2xl ${large ? 'md:btn-lg' : ''}`}>ค้นหา</button>
     </form>
   )
 }

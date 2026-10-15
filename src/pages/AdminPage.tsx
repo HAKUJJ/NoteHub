@@ -2,13 +2,18 @@ import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router'
 import FormField from '../components/ui/FormField'
 import { useApproveSheet, useDeleteSheet, useSheets, useUpdateSheet } from '../hooks/useSheets'
+import { useDeleteNote, useNotes } from '../hooks/useNotes'
+import { isUserNote } from '../api/notes'
+import { gradeLabels, subjectLabels, typeLabels } from '../data/labels'
 import { useAuthStore } from '../store/authStore'
-import type { Sheet } from '../types'
+import { useFavoriteStore } from '../store/useFavoriteStore'
+import type { Note, Sheet } from '../types'
 
-type Tab = 'dashboard' | 'sheets' | 'users' | 'reports'
+type Tab = 'dashboard' | 'posts' | 'sheets' | 'users' | 'reports'
 
 const tabs: { id: Tab; label: string }[] = [
   { id: 'dashboard', label: 'Dashboard' },
+  { id: 'posts', label: 'จัดการโพสต์' },
   { id: 'sheets', label: 'จัดการชีทสรุป' },
   { id: 'users', label: 'จัดการผู้ใช้งาน' },
   { id: 'reports', label: 'รายงานปัญหา' },
@@ -33,25 +38,26 @@ function AdminDashboard() {
     <div className="mx-auto min-h-screen max-w-6xl p-6">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <img src="/images/logo.svg" alt="NoteHub Logo" width={40} height={40} />
+          <img src="/images/logo.svg" alt="โลโก้ NotesHub" width={40} height={40} />
           <div>
             <p className="text-xs tracking-widest opacity-60">ADMIN PANEL</p>
-            <h1 className="text-2xl font-bold">NoteHub</h1>
+            <h1 className="text-2xl font-bold">NotesHub</h1>
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-semibold text-primary-content">A</span>
           <span className="font-bold mr-1">Administrator</span>
           <Link to="/" className="btn btn-ghost btn-sm rounded-2xl border-none shadow hover:text-black hover:bg-accent">← กลับหน้าเว็บไซต์</Link>
           <button className="btn btn-outline btn-sm border-none rounded-2xl shadow hover:text-black hover:bg-accent" onClick={() => { logout(); navigate('/') }}>ออกจากระบบ</button>
         </div>
       </header>
 
-      <div role="tablist" className="tabs tabs-border tabs-lg mb-8">
+      <div role="tablist" className="tabs tabs-border tabs-lg mb-8 flex-nowrap overflow-x-auto">
         {tabs.map((t) => (
           <button
             key={t.id}
             role="tab"
-            className={`tab px-6 ${tab === t.id ? 'tab-active font-bold text-primary' : 'opacity-70 hover:opacity-100'}`}
+            className={`tab whitespace-nowrap px-6 ${tab === t.id ? 'tab-active font-bold text-primary' : 'opacity-70 hover:opacity-100'}`}
             onClick={() => setTab(t.id)}
           >
             {t.label}
@@ -60,10 +66,11 @@ function AdminDashboard() {
       </div>
 
       <div className="alert alert-warning mb-6" role="note">
-        <span><strong>โหมดสาธิต (Demo):</strong> ข้อมูลในหน้านี้เป็นข้อมูลตัวอย่าง ยังไม่ได้เชื่อมต่อฐานข้อมูลจริง รีเฟรชแล้วการแก้ไขจะกลับเป็นค่าเดิม</span>
+        <span><strong>โหมดสาธิต (Demo):</strong> ชีทสรุป ผู้ใช้งาน และรายงานปัญหาเป็นข้อมูลตัวอย่าง (รีเฟรชแล้วกลับเป็นค่าเดิม) ส่วนแท็บจัดการโพสต์ใช้โพสต์จริงที่เก็บในเบราว์เซอร์นี้</span>
       </div>
 
       {tab === 'dashboard' && <DashboardPanel />}
+      {tab === 'posts' && <PostsPanel />}
       {tab === 'sheets' && <SheetsPanel />}
       {tab === 'users' && <EmptyPanel title="จัดการผู้ใช้งาน" text="ยังไม่มีข้อมูลผู้ใช้งาน" />}
       {tab === 'reports' && <EmptyPanel title="รายงานปัญหา" text="ยังไม่มีรายงานปัญหา" />}
@@ -74,7 +81,10 @@ function AdminDashboard() {
 function DashboardPanel() {
   const { data: sheets = [] } = useSheets()
   const pending = sheets.filter((s) => s.status === 'pending').length
+  const { data: notes = [] } = useNotes()
+  const userPosts = notes.filter((n) => isUserNote(n.id)).length
   const stats = [
+    { title: 'โพสต์ทั้งหมด', value: notes.length, desc: `ผู้ใช้สร้าง ${userPosts} โพสต์` },
     { title: 'ชีททั้งหมด', value: sheets.length, desc: 'ชีทในระบบ' },
     { title: 'รออนุมัติ', value: pending, desc: 'รอการตรวจสอบ' },
     { title: 'ผู้ใช้งาน', value: TOTAL_USERS, desc: 'สมาชิกทั้งหมด (ตัวอย่าง)' },
@@ -84,8 +94,8 @@ function DashboardPanel() {
   return (
     <section>
       <h2 className="text-xl font-bold">ภาพรวมระบบ</h2>
-      <p className="mb-6 opacity-70">จัดการข้อมูลต่าง ๆ ของ NoteHub</p>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
+      <p className="mb-6 opacity-70">จัดการข้อมูลต่าง ๆ ของ NotesHub</p>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map((s) => (
           <div key={s.title} className="flex flex-col items-center justify-center rounded-box bg-white p-6 text-center shadow-md shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-lg">
             <div className="mb-2 text-5xl font-extrabold text-primary">{s.value}</div>
@@ -142,7 +152,7 @@ function SheetsPanel() {
               <th>ผู้จัดทำ</th>
               <th>ระดับชั้น</th>
               <th>สถานะ</th>
-              <th>Action</th>
+              <th>จัดการ</th>
             </tr>
           </thead>
           <tbody>
@@ -161,10 +171,10 @@ function SheetsPanel() {
                 <td>
                   <div className="flex gap-1">
                     {s.status === 'pending' && (
-                      <button className="btn btn-success btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" disabled={approve.isPending} onClick={() => handleApprove(s)}>Approve</button>
+                      <button className="btn btn-success btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" disabled={approve.isPending} onClick={() => handleApprove(s)}>อนุมัติ</button>
                     )}
-                    <button className="btn btn-info btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => setEditing(s)}>Edit</button>
-                    <button className="btn btn-error btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => setDeleteId(s.id)}>Delete</button>
+                    <button className="btn btn-info btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => setEditing(s)}>แก้ไข</button>
+                    <button className="btn btn-error btn-xs rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => setDeleteId(s.id)}>ลบ</button>
                   </div>
                 </td>
               </tr>
@@ -200,6 +210,114 @@ function SheetsPanel() {
   )
 }
 
+function PostsPanel() {
+  const { data: notes = [], isLoading } = useNotes()
+  const deleteNote = useDeleteNote()
+  const removeEverywhere = useFavoriteStore((s) => s.removeEverywhere)
+  const [deleting, setDeleting] = useState<Note | null>(null)
+  const [notice, setNotice] = useState('')
+  const [showOnlyUser, setShowOnlyUser] = useState(false)
+
+  const rows = showOnlyUser ? notes.filter((n) => isUserNote(n.id)) : notes
+
+  const confirmDelete = () => {
+    if (!deleting) return
+    const target = deleting
+    deleteNote.mutate(target.id, {
+      onSuccess: () => {
+        removeEverywhere('note', String(target.id))
+        setDeleting(null)
+        setNotice(`ลบโพสต์ "${target.title}" เรียบร้อยแล้ว`)
+      },
+    })
+  }
+
+  return (
+    <section className="flex flex-col gap-6">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-bold">โพสต์ทั้งหมดในระบบ</h2>
+          <p className="opacity-70">โพสต์ที่แสดงในหน้าแรก ลบได้เฉพาะโพสต์ที่ผู้ใช้สร้าง (โน้ตตัวอย่างลบไม่ได้)</p>
+        </div>
+        <label className="label cursor-pointer gap-2">
+          <input type="checkbox" className="checkbox checkbox-primary checkbox-sm" checked={showOnlyUser}
+            onChange={(e) => setShowOnlyUser(e.target.checked)} />
+          <span className="text-sm">แสดงเฉพาะโพสต์ที่ผู้ใช้สร้าง</span>
+        </label>
+      </div>
+
+      {notice && (
+        <div className="alert alert-success" role="status">
+          <span>{notice}</span>
+          <button className="btn btn-ghost btn-xs" onClick={() => setNotice('')}>ปิด</button>
+        </div>
+      )}
+
+      <div className="overflow-x-auto rounded-box bg-white p-4 shadow-md">
+        <table className="table table-zebra w-full">
+          <thead>
+            <tr className="bg-primary/10 text-primary">
+              <th>ชื่อโพสต์</th>
+              <th>หมวด / ระดับชั้น</th>
+              <th>ประเภท</th>
+              <th>ผู้โพสต์</th>
+              <th>ที่มา</th>
+              <th>จัดการ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {isLoading && <tr><td colSpan={6} className="text-center"><span className="loading loading-spinner" /></td></tr>}
+            {!isLoading && rows.length === 0 && (
+              <tr><td colSpan={6} className="text-center opacity-70">{showOnlyUser ? 'ยังไม่มีโพสต์ที่ผู้ใช้สร้าง' : 'ไม่มีโพสต์'}</td></tr>
+            )}
+            {rows.map((n) => {
+              const userMade = isUserNote(n.id)
+              return (
+                <tr key={n.id}>
+                  <td className="font-medium">{n.title}</td>
+                  <td className="whitespace-nowrap">{subjectLabels[n.category]} · {gradeLabels[n.grade]}</td>
+                  <td>{typeLabels[n.type]}</td>
+                  <td>{n.author}</td>
+                  <td>
+                    <span className={`badge whitespace-nowrap ${userMade ? 'badge-info' : 'badge-ghost'}`}>
+                      {userMade ? 'ผู้ใช้สร้าง' : 'ตัวอย่าง'}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="flex gap-1">
+                      <Link to={`/post/${n.id}`} className="btn btn-outline btn-xs">ดู</Link>
+                      <button className="btn btn-error btn-xs" disabled={!userMade}
+                        title={userMade ? 'ลบโพสต์นี้' : 'โน้ตตัวอย่างลบไม่ได้'} onClick={() => setDeleting(n)}>
+                        ลบ
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {deleting && (
+        <dialog className="modal modal-open">
+          <div className="modal-box bg-white">
+            <h3 className="text-lg font-bold">ยืนยันการลบโพสต์</h3>
+            <p className="py-4">ลบโพสต์ "{deleting.title}" ของ {deleting.author} ใช่หรือไม่? ลบแล้วกู้คืนไม่ได้</p>
+            {deleteNote.isError && <p className="text-sm text-error">ลบไม่สำเร็จ ลองอีกครั้ง</p>}
+            <div className="modal-action">
+              <button className="btn btn-error" disabled={deleteNote.isPending} onClick={confirmDelete}>
+                {deleteNote.isPending ? 'กำลังลบ...' : 'ลบโพสต์'}
+              </button>
+              <button className="btn" onClick={() => setDeleting(null)}>ยกเลิก</button>
+            </div>
+          </div>
+        </dialog>
+      )}
+    </section>
+  )
+}
+
 function EditSheetForm({ sheet, onDone }: { sheet: Sheet; onDone: (message?: string) => void }) {
   const update = useUpdateSheet()
   const [draft, setDraft] = useState({ title: sheet.title, author: sheet.author, grade: sheet.grade })
@@ -227,9 +345,7 @@ function EditSheetForm({ sheet, onDone }: { sheet: Sheet; onDone: (message?: str
         <select id="editGrade" required className="select select-bordered w-full border border-gray-300 bg-white" value={draft.grade}
           onChange={(e) => setDraft({ ...draft, grade: e.target.value })}>
           <option value="">เลือกระดับชั้น</option>
-          <option value="ม.4">ม.4</option>
-          <option value="ม.5">ม.5</option>
-          <option value="ม.6">ม.6</option>
+          {['ม.1', 'ม.2', 'ม.3', 'ม.4', 'ม.5', 'ม.6'].map((g) => <option key={g} value={g}>{g}</option>)}
         </select>
       </FormField>
       <div className="flex gap-2">
