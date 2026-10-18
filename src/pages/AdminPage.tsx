@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router'
-import { useApproveSheet, useDeleteSheet, useSheets } from '../hooks/useSheets'
-import { useNotes } from '../hooks/useNotes'
 import { isUserNote } from '../api/notes'
+import { useNotes } from '../hooks/useNotes'
+import { useApproveSheet, useDeleteSheet, useSheets } from '../hooks/useSheets'
 import { useAuthStore } from '../store/authStore'
 import type { Sheet } from '../types'
 
@@ -50,6 +50,11 @@ function AdminDashboard() {
   const logout = useAuthStore((s) => s.logout)
   const navigate = useNavigate()
 
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
   useEffect(() => {
     if (!toastMessage) return
     const timer = setTimeout(() => setToastMessage(null), 3000)
@@ -61,7 +66,11 @@ function AdminDashboard() {
     if (!user) return
     const next: UserStatus = user.status === 'Active' ? 'Inactive' : 'Active'
     setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, status: next } : u)))
-    setToastMessage(next === 'Inactive' ? `ระงับสิทธิ์ผู้ใช้: ${user.name} เรียบร้อยแล้ว` : `ปลดระงับผู้ใช้: ${user.name} เรียบร้อยแล้ว`)
+    setToastMessage(
+      next === 'Inactive'
+        ? `ระงับสิทธิ์ผู้ใช้: ${user.name} เรียบร้อยแล้ว`
+        : `ปลดระงับผู้ใช้: ${user.name} เรียบร้อยแล้ว`,
+    )
   }
 
   const resolveReport = (id: number) => {
@@ -90,40 +99,63 @@ function AdminDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-semibold text-primary-content">A</span>
-            <span className="font-bold mr-1">Administrator</span>
-            <Link to="/" className="btn btn-ghost btn-sm rounded-2xl border-none shadow hover:text-black hover:bg-accent">← กลับหน้าเว็บไซต์</Link>
-            <button className="btn btn-outline btn-sm border-none rounded-2xl shadow hover:text-black hover:bg-accent" onClick={() => { logout(); navigate('/') }}>ออกจากระบบ</button>
+            <span
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-semibold text-primary-content"
+            >
+              A
+            </span>
+            <span className="mr-1 font-bold">Administrator</span>
+            <Link
+              to="/"
+              className="btn btn-ghost btn-sm rounded-2xl border-none shadow hover:text-black hover:bg-accent"
+            >
+              ← กลับหน้าเว็บไซต์
+            </Link>
+            <button
+              className="btn btn-outline btn-sm rounded-2xl border-none shadow hover:text-black hover:bg-accent"
+              onClick={handleLogout}
+            >
+              ออกจากระบบ
+            </button>
           </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-6xl p-6">
-      <div role="tablist" className="tabs tabs-border tabs-lg mb-8 flex-nowrap overflow-x-auto">
-        {tabs.map((t) => (
-          <button
-            key={t.id}
-            role="tab"
-            className={`tab whitespace-nowrap px-6 ${tab === t.id ? 'tab-active font-bold text-primary' : 'opacity-70 hover:opacity-100'}`}
-            onClick={() => setTab(t.id)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {tab === 'dashboard' && <DashboardPanel userCount={users.length} pendingReports={reports.filter((r) => r.status === 'Pending').length} />}
-      {tab === 'sheets' && <SheetsPanel setToastMessage={setToastMessage} />}
-      {tab === 'users' && <UsersPanel users={users} onToggleStatus={toggleUserStatus} />}
-      {tab === 'reports' && <ReportsPanel reports={reports} onResolve={resolveReport} onDelete={deleteReport} />}
-
-      {toastMessage && (
-        <div className="toast toast-bottom toast-end z-50">
-          <div className="alert alert-success text-white shadow-lg" role="status">
-            <span>{toastMessage}</span>
-          </div>
+        <div role="tablist" className="tabs tabs-border tabs-lg mb-8 flex-nowrap overflow-x-auto">
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              role="tab"
+              className={`tab whitespace-nowrap px-6 ${
+                tab === t.id ? 'tab-active font-bold text-primary' : 'opacity-70 hover:opacity-100'
+              }`}
+              onClick={() => setTab(t.id)}
+            >
+              {t.label}
+            </button>
+          ))}
         </div>
-      )}
+
+        {tab === 'dashboard' && (
+          <DashboardPanel
+            userCount={users.length}
+            pendingReports={reports.filter((r) => r.status === 'Pending').length}
+          />
+        )}
+        {tab === 'sheets' && <SheetsPanel setToastMessage={setToastMessage} />}
+        {tab === 'users' && <UsersPanel users={users} onToggleStatus={toggleUserStatus} />}
+        {tab === 'reports' && (
+          <ReportsPanel reports={reports} onResolve={resolveReport} onDelete={deleteReport} />
+        )}
+
+        {toastMessage && (
+          <div className="toast toast-bottom toast-end z-50">
+            <div className="alert alert-success text-white shadow-lg" role="status">
+              <span>{toastMessage}</span>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   )
@@ -148,7 +180,10 @@ function DashboardPanel({ userCount, pendingReports }: { userCount: number; pend
       <p className="mb-6 opacity-70">จัดการข้อมูลต่าง ๆ ของ NotesHub</p>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map((s) => (
-          <div key={s.title} className="flex flex-col items-center justify-center rounded-box bg-white p-6 text-center shadow-md shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-lg">
+          <div
+            key={s.title}
+            className="flex flex-col items-center justify-center rounded-box bg-white p-6 text-center shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-lg"
+          >
             <div className="mb-2 text-5xl font-extrabold text-primary">{s.value}</div>
             <div className="font-semibold">{s.title}</div>
             <div className="text-sm text-gray-500">{s.desc}</div>
@@ -199,7 +234,13 @@ function SheetsPanel({ setToastMessage }: { setToastMessage: SetToast }) {
             </tr>
           </thead>
           <tbody>
-            {isLoading && <tr><td colSpan={5} className="text-center"><span className="loading loading-spinner" /></td></tr>}
+            {isLoading && (
+              <tr>
+                <td colSpan={5} className="text-center">
+                  <span className="loading loading-spinner" />
+                </td>
+              </tr>
+            )}
             {!isLoading && sheets.length === 0 && <tr><td colSpan={5} className="text-center">ไม่มีข้อมูลชีท</td></tr>}
             {sheets.map((s) => (
               <tr key={s.id}>
@@ -207,17 +248,36 @@ function SheetsPanel({ setToastMessage }: { setToastMessage: SetToast }) {
                 <td>{s.author}</td>
                 <td>{s.grade}</td>
                 <td>
-                  <span className={`badge badge-sm ${s.status === 'pending' ? 'badge-warning text-gray-900' : 'badge-success text-white'}`}>
+                  <span
+                    className={`badge badge-sm ${
+                      s.status === 'pending'
+                        ? 'badge-warning text-gray-900'
+                        : 'badge-success text-white'
+                    }`}
+                  >
                     {s.status === 'pending' ? 'รออนุมัติ' : 'อนุมัติแล้ว'}
                   </span>
                 </td>
                 <td>
                   <div className="flex gap-1">
-                    <Link to={`/post/${s.id}`} className="btn btn-info btn-xs text-white rounded-full">ดูเนื้อหาโพสต์</Link>
+                    <Link to={`/post/${s.id}`} className="btn btn-info btn-xs text-white rounded-full">
+                      ดูเนื้อหาโพสต์
+                    </Link>
                     {s.status === 'pending' && (
-                      <button className="btn btn-success btn-xs text-white rounded-full" disabled={approve.isPending} onClick={() => handleApprove(s)}>อนุมัติ</button>
+                      <button
+                        className="btn btn-success btn-xs text-white rounded-full"
+                        disabled={approve.isPending}
+                        onClick={() => handleApprove(s)}
+                      >
+                        อนุมัติ
+                      </button>
                     )}
-                    <button className="btn btn-error btn-xs text-white rounded-full" onClick={() => setDeleteId(s.id)}>ลบ</button>
+                    <button
+                      className="btn btn-error btn-xs text-white rounded-full"
+                      onClick={() => setDeleteId(s.id)}
+                    >
+                      ลบ
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -232,8 +292,19 @@ function SheetsPanel({ setToastMessage }: { setToastMessage: SetToast }) {
             <h3 className="text-lg font-bold">ยืนยันการลบ</h3>
             <p className="py-4">คุณต้องการลบชีทนี้ใช่หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
             <div className="modal-action">
-              <button className="btn btn-error rounded-2xl border-none shadow hover:text-black hover:bg-accent" disabled={remove.isPending} onClick={confirmDelete}>ลบข้อมูล</button>
-              <button className="btn bg-white rounded-2xl border-none shadow hover:text-black hover:bg-accent" onClick={() => setDeleteId(null)}>ยกเลิก</button>
+              <button
+                className="btn btn-error rounded-2xl border-none shadow hover:text-black hover:bg-accent"
+                disabled={remove.isPending}
+                onClick={confirmDelete}
+              >
+                ลบข้อมูล
+              </button>
+              <button
+                className="btn bg-white rounded-2xl border-none shadow hover:text-black hover:bg-accent"
+                onClick={() => setDeleteId(null)}
+              >
+                ยกเลิก
+              </button>
             </div>
           </div>
         </dialog>
@@ -264,14 +335,28 @@ function UsersPanel({ users, onToggleStatus }: { users: AdminUser[]; onToggleSta
                 <td>{u.email}</td>
                 <td>{u.role}</td>
                 <td>
-                  <span className={`badge badge-sm text-white ${u.status === 'Active' ? 'badge-success' : 'badge-error'}`}>{u.status}</span>
+                  <span
+                    className={`badge badge-sm text-white ${u.status === 'Active' ? 'badge-success' : 'badge-error'}`}
+                  >
+                    {u.status}
+                  </span>
                 </td>
                 <td>
                   <div className="flex gap-1">
                     {u.status === 'Active' ? (
-                      <button className="btn btn-error btn-xs text-white rounded-full" onClick={() => onToggleStatus(u.id)}>ระงับสิทธิ์</button>
+                      <button
+                        className="btn btn-error btn-xs text-white rounded-full"
+                        onClick={() => onToggleStatus(u.id)}
+                      >
+                        ระงับสิทธิ์
+                      </button>
                     ) : (
-                      <button className="btn btn-success btn-xs text-white rounded-full" onClick={() => onToggleStatus(u.id)}>ปลดระงับ</button>
+                      <button
+                        className="btn btn-success btn-xs text-white rounded-full"
+                        onClick={() => onToggleStatus(u.id)}
+                      >
+                        ปลดระงับ
+                      </button>
                     )}
                   </div>
                 </td>
@@ -284,7 +369,15 @@ function UsersPanel({ users, onToggleStatus }: { users: AdminUser[]; onToggleSta
   )
 }
 
-function ReportsPanel({ reports, onResolve, onDelete }: { reports: AdminReport[]; onResolve: (id: number) => void; onDelete: (id: number) => void }) {
+function ReportsPanel({
+  reports,
+  onResolve,
+  onDelete,
+}: {
+  reports: AdminReport[]
+  onResolve: (id: number) => void
+  onDelete: (id: number) => void
+}) {
   return (
     <section className="flex flex-col gap-6">
       <h2 className="text-xl font-bold">รายงานปัญหา</h2>
@@ -307,14 +400,32 @@ function ReportsPanel({ reports, onResolve, onDelete }: { reports: AdminReport[]
                 <td>{r.reportedBy}</td>
                 <td className="whitespace-nowrap">{r.date}</td>
                 <td>
-                  <span className={`badge badge-sm ${r.status === 'Resolved' ? 'badge-success text-white' : 'badge-warning text-gray-900'}`}>{r.status}</span>
+                  <span
+                    className={`badge badge-sm ${
+                      r.status === 'Resolved'
+                        ? 'badge-success text-white'
+                        : 'badge-warning text-gray-900'
+                    }`}
+                  >
+                    {r.status}
+                  </span>
                 </td>
                 <td>
                   <div className="flex gap-1">
                     {r.status === 'Pending' && (
-                      <button className="btn btn-info btn-xs text-white rounded-full" onClick={() => onResolve(r.id)}>ตรวจสอบ</button>
+                      <button
+                        className="btn btn-info btn-xs text-white rounded-full"
+                        onClick={() => onResolve(r.id)}
+                      >
+                        ตรวจสอบ
+                      </button>
                     )}
-                    <button className="btn btn-error btn-xs text-white rounded-full" onClick={() => onDelete(r.id)}>ลบ</button>
+                    <button
+                      className="btn btn-error btn-xs text-white rounded-full"
+                      onClick={() => onDelete(r.id)}
+                    >
+                      ลบ
+                    </button>
                   </div>
                 </td>
               </tr>
