@@ -23,13 +23,22 @@ export default function FavoriteButton({ className = '', ...item }: Props) {
   return (
     <button
       type="button"
-      className={`btn btn-circle btn-sm ${active ? 'btn-secondary' : 'btn-ghost'} ${className}`}
+      className={`btn btn-circle btn-sm btn-ghost ${className}`}
       aria-label={active ? `นำ ${item.title} ออกจากรายการโปรด` : `เพิ่ม ${item.title} ในรายการโปรด`}
       aria-pressed={active}
       title={!email ? 'เข้าสู่ระบบเพื่อบันทึกรายการโปรด' : active ? 'นำออกจากรายการโปรด' : 'เพิ่มในรายการโปรด'}
       onClick={handleClick}
     >
-      <span aria-hidden className="text-lg leading-none">{active ? '♥' : '♡'}</span>
+      <svg
+        aria-hidden
+        viewBox="0 0 24 24"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`w-5 h-5 ${active ? 'fill-rose-400 stroke-rose-400' : 'fill-none stroke-gray-500'}`}
+      >
+        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+      </svg>
     </button>
   )
 }
