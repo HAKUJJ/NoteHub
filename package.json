@@ -7,9 +7,16 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "db:validate": "prisma validate",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:typecheck": "tsc --ignoreConfig --noEmit --target es2023 --module nodenext --strict --skipLibCheck prisma/seed.ts prisma.config.ts"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
     "@tanstack/react-query": "^5.104.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -24,7 +31,9 @@
     "@vitejs/plugin-react": "^6.1.1",
     "daisyui": "^5.7.47",
     "oxlint": "^1.81.0",
+    "prisma": "7.10.1",
     "tailwindcss": "^4.3.3",
+    "tsx": "4.20.6",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
   }
