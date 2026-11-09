@@ -50,3 +50,10 @@ test('validation refuses forged ownership, malformed fields and attachments',()=
   assert.throws(()=>uuid('1'))
   assert.throws(()=>integer(['1'],1,100))
 })
+test('attachments accept 3 MB and reject a file above the hosted upload limit',()=>{
+  const input={title:'Upload boundary',subjectCode:'math',gradeCode:'m4',type:'note'}
+  const size=3*1024*1024
+  const attachment={name:'limit.pdf',type:'application/pdf',size,data:Buffer.alloc(size).toString('base64')}
+  assert.equal(noteInput({...input,attachment}).attachment?.size,size)
+  assert.throws(()=>noteInput({...input,attachment:{...attachment,size:size+1,data:Buffer.alloc(size+1).toString('base64')}}))
+})

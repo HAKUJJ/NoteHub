@@ -41,7 +41,7 @@ export async function listNotes(query: Record<string, unknown>) {
   if (!['newest','oldest','title'].includes(String(sort))) throw new HttpError(400, 'การเรียงลำดับไม่ถูกต้อง')
   const orderBy: Prisma.NoteOrderByWithRelationInput[] = sort === 'title' ? [{title:'asc'},{id:'asc'}] : [{createdAt:sort === 'oldest' ? 'asc':'desc'},{id:'asc'}]
   const [notes,total] = await prisma.$transaction([
-    // ponytail: JSON attachments are loaded with rows (5 MB each); move binary to object storage if the dataset grows.
+    // ponytail: JSON attachments are loaded with rows (3 MB each); move binary to object storage if the dataset grows.
     prisma.note.findMany({ where, include: includeNote, orderBy, skip: (page-1)*limit, take: limit }),
     prisma.note.count({ where }),
   ], { isolationLevel: 'RepeatableRead' })

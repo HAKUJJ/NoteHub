@@ -164,7 +164,7 @@ function CreatePostForm({ user,note }: { user: AuthUser;note?:Note }) {
             aria-invalid={!!fileError} className={`file-input file-input-bordered w-full border bg-white ${fileError ? 'border-error' : 'border-gray-300'}`} />
           {fileError
             ? <p className="mt-1 text-sm text-error" role="alert">{fileError}</p>
-            : <p className="mt-1 text-sm opacity-60">{file ? `${file.name} (${formatFileSize(file.size)})` : 'ไม่บังคับ · .pdf .doc .docx .png .jpg · ไม่เกิน 5 MB'}</p>}
+            : <p className="mt-1 text-sm opacity-60">{file ? `${file.name} (${formatFileSize(file.size)})` : 'ไม่บังคับ · .pdf .doc .docx .png .jpg · ไม่เกิน 3 MB'}</p>}
         </FormField>
 
         <button type="submit" className="btn btn-primary btn-block" disabled={createNote.isPending || submitting || !subjects.data || !grades.data}>

@@ -1,4 +1,4 @@
-export const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
+export const MAX_FILE_SIZE = 3 * 1024 * 1024 // 3 MB; base64 must fit the hosted API request limit.
 export const ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx', '.png', '.jpg', '.jpeg']
 
 
@@ -7,7 +7,7 @@ export const ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx', '.png', '.jpg', '.jp
 export function validateFile(file: File): string {
   const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase()
   if (!ALLOWED_EXTENSIONS.includes(ext)) return 'รองรับเฉพาะไฟล์ .pdf .doc .docx .png .jpg'
-  if (file.size > MAX_FILE_SIZE) return `ไฟล์ใหญ่เกินไป (${formatFileSize(file.size)}) ขนาดสูงสุด 5 MB`
+  if (file.size > MAX_FILE_SIZE) return `ไฟล์ใหญ่เกินไป (${formatFileSize(file.size)}) ขนาดสูงสุด 3 MB`
   return ''
 }
 

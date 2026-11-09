@@ -28,9 +28,9 @@ export function noteInput(value: unknown) {
     const name = text(a.name, 'ชื่อไฟล์', 255)
     const mime = text(a.type, 'ชนิดไฟล์', 100, true)
     if (!/\.(pdf|doc|docx|png|jpe?g)$/i.test(name)) throw new HttpError(400, 'นามสกุลไฟล์ไม่ถูกต้อง')
-    if (typeof a.data !== 'string' || a.data.length > 7_000_000 || !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(a.data)) throw new HttpError(400, 'ข้อมูลไฟล์ไม่ถูกต้อง')
+    if (typeof a.data !== 'string' || a.data.length > 4_194_304 || a.data.length % 4 !== 0 || !/^[A-Za-z0-9+/]+={0,2}$/.test(a.data)) throw new HttpError(400, 'ข้อมูลไฟล์ไม่ถูกต้อง')
     const size = Buffer.byteLength(a.data, 'base64')
-    if (!size || size > 5 * 1024 * 1024 || size !== a.size) throw new HttpError(400, 'ขนาดไฟล์ไม่ถูกต้อง (สูงสุด 5 MB)')
+    if (!size || size > 3 * 1024 * 1024 || size !== a.size) throw new HttpError(400, 'ขนาดไฟล์ไม่ถูกต้อง (สูงสุด 3 MB)')
     attachment = { name, type: mime, size, data: a.data }
   }
   return { title: text(b.title, 'ชื่อโน้ต', 200), description: text(b.description ?? '', 'คำอธิบาย', 10000, true), content: text(b.content ?? '', 'เนื้อหา', 100000, true), subjectCode: text(b.subjectCode, 'วิชา', 20), subjectName: text(b.subjectName ?? '', 'รายวิชา', 100, true), gradeCode: text(b.gradeCode, 'ระดับชั้น', 20), type, ...(b.attachment !== undefined ? { attachment } : {}) }

@@ -13,7 +13,7 @@ export const app=express()
 app.disable('x-powered-by')
 app.use(cors({origin:config.origins}))
 app.use((_req,res,next)=>{res.set('X-Content-Type-Options','nosniff').set('Cache-Control','no-store');next()})
-app.use(express.json({limit:'8mb'}))
+app.use(express.json({limit:4_400_000}))
 app.get('/api/health',(_req,res)=>{res.json({success:true,message:'NotesHub API is running'})})
 app.get('/api/health/db',async(_req,res)=>{await prisma.$queryRaw`SELECT 1`;res.json({success:true,message:'Database connected'})})
 app.use('/api/auth',auth)
@@ -34,3 +34,5 @@ app.get('/api/grades',async(_req,res)=>{res.json({success:true,data:await prisma
 app.patch('/api/notes/:id/approve',requireAuth,requireAdmin,async(req,res)=>{await prisma.note.update({where:{id:uuid(req.params.id)},data:{status:'approved'}});res.json({success:true})})
 app.use(()=>{throw new HttpError(404,'ไม่พบ API ที่ต้องการ')})
 app.use(errorHandler)
+
+export default app
