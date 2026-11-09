@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="40" height="40" role="img" aria-label="NotesHub logo">
-  <rect x="6" y="4" width="30" height="40" rx="4" fill="#EDBD60" />
-  <rect x="10" y="4" width="30" height="40" rx="4" fill="#B6C8DF" />
-  <rect x="14" y="4" width="30" height="40" rx="4" fill="#FFF8EF" stroke="#3F49A5" stroke-width="2" />
-  <line x1="19" y1="14" x2="38" y2="14" stroke="#3F49A5" stroke-width="2" stroke-linecap="round" />
-  <line x1="19" y1="21" x2="38" y2="21" stroke="#3F49A5" stroke-width="2" stroke-linecap="round" />
-  <line x1="19" y1="28" x2="32" y2="28" stroke="#AB3730" stroke-width="2" stroke-linecap="round" />
-</svg>

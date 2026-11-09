@@ -1,76 +1,34 @@
 # NotesHub
 
-คลังโน้ตและข้อสอบเก่าสำหรับนักเรียน ม.1 - ม.6 ค้นหา แชร์ และบันทึกสรุปเนื้อหาจากรุ่นพี่ได้ในที่เดียว
+React + Vite + TypeScript frontend และ Express + Prisma backend สำหรับ Supabase PostgreSQL
 
-🔗 เว็บไซต์: https://notehub-haku1.vercel.app
+## รันในเครื่อง
 
-## ฟีเจอร์
-
-- **คลังโน้ต** ค้นหาและกรองโน้ตตามหมวดวิชาและระดับชั้น (ม.ต้น / ม.ปลาย / ม.1 - ม.6)
-- **สร้างโพสต์** แชร์สรุปเนื้อหาหรือข้อสอบเก่า (ต้องเข้าสู่ระบบ) และลบโพสต์ของตัวเองได้
-- **รายการโปรด** กดหัวใจเพื่อบันทึกโน้ตและหนังสือไว้ดูทีหลัง
-- **Matcher** ตอบคำถาม 8 ข้อ แล้วระบบแนะนำสาขาวิชาที่เหมาะกับคุณ พร้อมรายวิชา อาชีพ และวิชาที่ควรเตรียม
-- **คลังหนังสือ** ค้นหาหนังสืออ่านเพิ่มเติมจาก [Open Library](https://openlibrary.org)
-- **หน้า Admin** อนุมัติ แก้ไข และลบชีทสรุป (โหมดสาธิต)
-
-> หมายเหตุ: ยังไม่มีฐานข้อมูลจริง ข้อมูลผู้ใช้ โพสต์ และรายการโปรดเก็บไว้ในเบราว์เซอร์ (localStorage)
-> จึงเห็นเฉพาะในเครื่องที่ใช้งาน
-
-## เทคโนโลยีที่ใช้
-
-- React + TypeScript + Vite
-- Tailwind CSS + daisyUI
-- React Router
-- TanStack Query (ดึงข้อมูล / cache)
-- Zustand (จัดการ state เช่น ล็อกอิน ตัวกรอง รายการโปรด)
-- Open Library API
-- Deploy บน Vercel
-
-## วิธีรันในเครื่อง
-
-ต้องมี [Node.js](https://nodejs.org) ติดตั้งไว้ก่อน
+ใช้ Node.js 24+ และ npm 11+ ตั้งค่า `backend/.env` ตาม `.env.example` โดยเก็บ credentials ไว้เฉพาะในเครื่อง
 
 ```bash
-npm install      # ติดตั้งไลบรารี (ครั้งแรก หรือหลัง pull)
-npm run dev      # เปิดเว็บที่ http://localhost:5173
+npm ci
+npm run dev
 ```
 
-คำสั่งอื่น
+- Frontend: http://localhost:5173 (Vite อาจเลือก 5174/5175 เมื่อพอร์ตถูกใช้อยู่)
+- Backend: http://localhost:3000/api
+- ตรวจ API: http://localhost:3000/api/health
+- หยุดด้วย Ctrl+C
+
+รันแยกด้วย `npm run dev --workspace frontend` และ `npm run dev --workspace backend`
+
+## คำสั่งตรวจสอบ
 
 ```bash
-npm run build    # build เว็บสำหรับ deploy (ได้โฟลเดอร์ dist)
-npm run preview  # เปิดดูผล build
-npm run lint     # ตรวจโค้ดด้วย oxlint
+npm run typecheck
+npm run lint
+npm run build
+npm test
+npm run db --workspace backend
+npm run test:integration --workspace backend
 ```
 
-> Windows: ถ้า PowerShell ขึ้น error เรื่อง Execution Policy ให้ใช้ `npm.cmd` แทน `npm`
-> และอย่าเปิดด้วย Live Server (พอร์ต 5500) เพราะหน้าจะขาว ต้องเปิดผ่าน `npm run dev`
+Integration test ใช้ TEST_EMAIL/TEST_PASSWORD ของบัญชีที่ได้รับอนุญาต และลบเฉพาะข้อมูลทดสอบที่สร้างใหม่
 
-## โครงสร้างโปรเจกต์
-
-```
-src/
-  api/          ฟังก์ชันดึงข้อมูล (โน้ต, ชีท, Open Library)
-  components/   ส่วนประกอบที่ใช้ซ้ำ (Navbar, การ์ด, ฟอร์ม ฯลฯ)
-  data/         ข้อมูลตัวอย่าง ป้ายกำกับ และข้อมูลสาขาวิชา
-  hooks/        custom hooks
-  lib/          logic เช่น การคำนวณ Matcher และตัวตรวจฟอร์ม
-  pages/        หน้าต่าง ๆ ของเว็บ
-  store/        state กลาง (Zustand)
-public/images/  รูปภาพ โลโก้ และรูปทีม
-```
-
-## ทีมผู้พัฒนา
-
-| เลขที่ | ชื่อ | รหัสนักศึกษา | หน้าที่ |
-|---|---|---|---|
-| 21 | นาย ณัฐพงษ์ จำจด | 1660703206 | จัดเตรียม Asset เชื่อมต่อ Public APIs จัดการข้อมูลให้พร้อมใช้งาน |
-| 27 | นาย ธิติวุฒิ ทางธนกุล | 1660704642 | Main Developer โครงสร้าง Routing และพัฒนาฟังก์ชัน |
-| 40 | นางสาว อภัคสรา บุพบุตร | 1660707488 | Document Coordinator เขียนโค้ด และออกแบบ UX/UI |
-
-## การทำงานร่วมกัน
-
-- อย่าแก้บน `main` โดยตรง ให้แตก branch ใหม่ แล้วเปิด Pull Request ให้เพื่อนตรวจก่อน merge
-- ก่อน commit ตรวจว่าไม่มีไฟล์ใน `node_modules` หรือ `dist` ติดไปด้วย
-
-ข้อมูลและปกหนังสือจัดทำโดย [Open Library](https://openlibrary.org)
+เก็บ Prisma schema/migrations/seed ใน `backend/prisma/` การตรวจ `db` ไม่ apply migration ห้าม reset ฐานข้อมูลที่มีข้อมูลอยู่ `.env`, node_modules และ dist ไม่เข้า Git
