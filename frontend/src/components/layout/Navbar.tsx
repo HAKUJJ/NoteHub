@@ -63,12 +63,12 @@ export default function Navbar() {
       {user ? (
         <div className="flex flex-none items-center gap-2">
           {isAdmin && <NavLink to="/admin" className="btn btn-ghost btn-sm hidden md:inline-flex border-none rounded-2xl hover:bg-accent">Admin</NavLink>}
-          <span className="flex items-center gap-2 text-sm font-semibold" title={user.email}>
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-content">
-              {user.name.charAt(0).toUpperCase()}
+          <NavLink to="/profile" className="flex items-center gap-2 rounded-full p-1 text-sm font-semibold hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-primary" title="โปรไฟล์ของฉัน" aria-label={`โปรไฟล์ของ ${user.name}`}>
+            <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-primary text-primary-content">
+              {user.avatar ? <img src={user.avatar} alt="" className="h-full w-full object-cover" /> : user.name.charAt(0).toUpperCase()}
             </span>
             <span className="hidden max-w-32 truncate sm:inline">{user.name}</span>
-          </span>
+          </NavLink>
           <button className="btn btn-outline btn-sm md:btn-md border-none rounded-2xl shadow hover:text-black hover:bg-accent" onClick={()=>void logout()}>ออกจากระบบ</button>
         </div>
       ) : (

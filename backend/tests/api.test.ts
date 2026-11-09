@@ -29,6 +29,8 @@ test('CORS allows the Vite fallback port and authorization preflight, but exclud
   assert.equal(denied.headers.get('access-control-allow-origin'),null)
 })
 test('protected routes reject missing identity before database access',async()=>{
+  const profileUpdate=await fetch(`${base}/auth/me`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({avatar:'forged',id:'another-user'})})
+  assert.equal(profileUpdate.status,401)
   for(const [path,method] of [['/notes','POST'],['/notes/31912001-0000-4000-8000-000000000001','PUT'],['/notes/31912001-0000-4000-8000-000000000001','DELETE'],['/favorites','GET'],['/favorites','POST'],['/favorites/31912001-0000-4000-8000-000000000001','DELETE'],['/auth/me','GET'],['/auth/logout','POST']]) {
     const r=await fetch(base+path,{method})
     assert.equal(r.status,401,`${method} ${path}`)
@@ -56,4 +58,15 @@ test('attachments accept 3 MB and reject a file above the hosted upload limit',(
   const attachment={name:'limit.pdf',type:'application/pdf',size,data:Buffer.alloc(size).toString('base64')}
   assert.equal(noteInput({...input,attachment}).attachment?.size,size)
   assert.throws(()=>noteInput({...input,attachment:{...attachment,size:size+1,data:Buffer.alloc(size+1).toString('base64')}}))
+})
+
+test('covers support setting, retaining and removing, and reject unsafe or oversized data',()=>{
+  const input={title:'Cover',subjectCode:'math',gradeCode:'m4',type:'note'}
+  const image='data:image/jpeg;base64,' + Buffer.from([0xff,0xd8,0xff,0xe0,0xff,0xd9]).toString('base64')
+  assert.equal(noteInput({...input,image}).image,image)
+  assert.equal('image' in noteInput(input),false)
+  assert.equal(noteInput({...input,image:null}).image,null)
+  for (const bad of ['https://example.com/cover.jpg','data:image/svg+xml;base64,PHN2Zz4=',123,'data:image/jpeg;base64,YQ==', image + 'A'.repeat(90_000)]) {
+    assert.throws(()=>noteInput({...input,image:bad}))
+  }
 })

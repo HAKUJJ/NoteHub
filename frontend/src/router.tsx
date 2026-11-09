@@ -11,6 +11,7 @@ import PostPage from './pages/PostPage'
 import BooksPage from './pages/BooksPage'
 import BookDetailPage from './pages/BookDetailPage'
 import FavoritesPage from './pages/FavoritesPage'
+import ProfilePage from './pages/ProfilePage'
 import FieldPage from './pages/FieldPage'
 import NotFoundPage from './pages/NotFoundPage'
 
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
       { path: 'books', Component: BooksPage },
       { path: 'books/:id', Component: BookDetailPage },
       { path: 'favorites', Component: FavoritesPage },
+      { path: 'profile', Component: ProfilePage },
       { path: 'fields/:id', Component: FieldPage },
       { path: '*', Component: NotFoundPage },
     ],

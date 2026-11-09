@@ -12,13 +12,14 @@ export interface Note {
   author: string
   /** Ownership is checked by the backend against the verified Auth UUID. */
   authorId?: string
+  authorAvatar?: string | null
   content?: string
   status?: SheetStatus
   createdAt?: string
   updatedAt?: string
   description?: string
   pages?: number
-  image?: string
+  image?: string | null
   topics?: string[]
   relatedBookSubject?: string
   /** Attachment metadata; the file is persisted by the backend. */

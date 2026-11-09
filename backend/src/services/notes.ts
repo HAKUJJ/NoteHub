@@ -11,8 +11,8 @@ export function presentNote(n: FullNote) {
   const a = n.attachment as { name: string; type: string; size: number } | null
   return { id: n.id, title: n.title, description: n.description, content: n.content,
     subject: n.subjectName || n.subject.name, category: n.subjectCode, grade: n.gradeCode,
-    type: n.type, author: n.author.displayName, authorId: n.authorId, status: n.status,
-    createdAt: n.createdAt, updatedAt: n.updatedAt,
+    type: n.type, author: n.author.displayName, authorId: n.authorId, authorAvatar: n.author.avatar, status: n.status,
+    createdAt: n.createdAt, updatedAt: n.updatedAt, image: n.image ?? undefined,
     attachment: a ? { name: a.name, type: a.type, size: a.size } : undefined }
 }
 export async function ensureProfile(user: User) {

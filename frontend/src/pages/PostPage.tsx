@@ -4,10 +4,7 @@ import { useDeleteNote, useNote } from '../hooks/useNotes'
 import { useAuthStore } from '../store/authStore'
 import FavoriteButton from '../components/ui/FavoriteButton'
 import Attachment from '../components/ui/Attachment'
-
-function noteImageUrl(image: string, width = 1200, height = 600) {
-  return `https://images.unsplash.com/${image}?w=${width}&h=${height}&fit=crop&auto=format&q=80`
-}
+import { noteCoverUrl } from '../lib/noteCover'
 
 export default function PostPage() {
   const { id } = useParams()
@@ -46,13 +43,24 @@ export default function PostPage() {
     <article className="mx-auto max-w-5xl space-y-6 p-4 md:p-8">
       <Link to="/" className="link link-primary inline-block">← กลับหน้าแรก</Link>
       <header className="overflow-hidden rounded-box bg-white shadow-md">
+        <div className="relative">
         {note.image ? (
-          <img src={noteImageUrl(note.image)} alt="" className="h-56 w-full object-cover md:h-80" />
+          <img src={noteCoverUrl(note.image)} alt={`ปก ${note.title}`} className="h-56 w-full object-cover md:h-80" />
         ) : (
           <div className="flex h-56 items-center justify-center bg-primary text-7xl font-bold text-primary-content md:h-80">
             {note.subject.charAt(0)}
           </div>
         )}
+          {canDelete && (
+            <Link to={`/post/${note.id}/edit#cover`} aria-label="แก้ไขรูปปก" title="แก้ไขรูปปก"
+              className="absolute bottom-4 right-4 flex size-11 items-center justify-center rounded-full bg-white text-primary shadow-md transition-colors hover:bg-base-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="size-5" aria-hidden="true">
+                <path d="m16 3 5 5-12 12-6 1 1-6L16 3Z" />
+                <path d="m13 6 5 5M4 15l5 5" />
+              </svg>
+            </Link>
+          )}
+        </div>
         <div className="p-6 md:p-8">
           <div className="flex flex-wrap gap-2">
             <span className="badge badge-outline">{note.subject}</span>
@@ -65,6 +73,7 @@ export default function PostPage() {
             <FavoriteButton kind="note" id={String(note.id)} title={note.title} subtitle={`โพสต์โดย: ${note.author}`} note={note} className="btn-md shrink-0" />
           </div>
           <p className="mt-2 text-gray-600">โพสต์โดย: {note.author}</p>
+          {canDelete && <Link to={`/post/${note.id}/edit`} className="btn btn-primary btn-sm mt-4">แก้ไขโพสต์</Link>}
           {note.pages && (
             <div className="mt-5 inline-flex items-center gap-2 rounded-box bg-base-200/60 px-4 py-3">
               <span className="text-xl text-primary" aria-hidden>▤</span>
@@ -111,7 +120,6 @@ export default function PostPage() {
           {note.attachment
             ? <Attachment noteId={note.id} info={note.attachment} />
             : <p className="rounded-box bg-base-200/60 p-3 text-center text-sm opacity-70">โพสต์นี้ไม่มีไฟล์แนบ</p>}
-          {canDelete && <Link to={`/post/${note.id}/edit`} className="btn btn-primary">แก้ไขโพสต์</Link>}
           {canDelete && (
             <button className="btn btn-outline btn-error" onClick={handleDelete} disabled={deleteNote.isPending}>
               {deleteNote.isPending ? 'กำลังลบ...' : isOwner ? 'ลบโพสต์นี้' : 'ลบโพสต์นี้ (Admin)'}

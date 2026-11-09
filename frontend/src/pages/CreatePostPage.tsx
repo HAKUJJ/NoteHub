@@ -1,5 +1,5 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react'
-import { Link, useParams } from 'react-router'
+import { Link, useLocation, useParams } from 'react-router'
 import FormField from '../components/ui/FormField'
 import { useSubjects,useGrades } from '../hooks/useCatalog'
 import { useSaveNote,useNote } from '../hooks/useNotes'
@@ -9,6 +9,7 @@ import type { Grade, NoteType, Subject, Note } from '../types'
 import { useAuthStore, type AuthUser } from '../store/authStore'
 import { useUiStore } from '../store/uiStore'
 import { formatFileSize, validateFile, encodeFile } from '../lib/fileStore'
+import { encodeCover, noteCoverUrl } from '../lib/noteCover'
 
 const cls = (error?: string) => `w-full border bg-white ${error ? 'border-error' : 'border-gray-300'}`
 
@@ -42,6 +43,7 @@ function LoginRequired() {
 }
 
 function CreatePostForm({ user,note }: { user: AuthUser;note?:Note }) {
+  const focusCover = useLocation().hash === '#cover'
   const createNote = useSaveNote(note?.id)
   const subjects=useSubjects()
   const grades=useGrades()
@@ -49,6 +51,24 @@ function CreatePostForm({ user,note }: { user: AuthUser;note?:Note }) {
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState('')
   const [submitting,setSubmitting]=useState(false)
+  const coverRef = useRef<HTMLInputElement>(null)
+  const [image, setImage] = useState<string | null | undefined>(undefined)
+  const [coverError, setCoverError] = useState('')
+  const [readingCover, setReadingCover] = useState(false)
+  const cover = image === undefined ? note?.image : image
+
+  const handleCoverChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const picked = e.target.files?.[0]
+    if (!picked) return
+    setReadingCover(true)
+    setCoverError('')
+    try { setImage(await encodeCover(picked)) }
+    catch (error) { setCoverError(error instanceof Error ? error.message : 'อ่านรูปปกไม่สำเร็จ') }
+    finally {
+      setReadingCover(false)
+      if (coverRef.current) coverRef.current.value = ''
+    }
+  }
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const picked = e.target.files?.[0] ?? null
@@ -70,7 +90,7 @@ function CreatePostForm({ user,note }: { user: AuthUser;note?:Note }) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!validateAll() || fileError) return
+    if (!validateAll() || fileError || coverError || readingCover) return
     setSubmitting(true)
     try {
     const attachment=file ? await encodeFile(file) : undefined
@@ -86,10 +106,12 @@ function CreatePostForm({ user,note }: { user: AuthUser;note?:Note }) {
         description: values.description.trim() || undefined,
         content: values.content.trim(),
         attachment,
+        image,
       },
       {
         onSuccess: () => {
           if(!note) reset()
+          if(!note) setImage(undefined)
           setFile(null)
           if (fileRef.current) fileRef.current.value = ''
         },
@@ -117,6 +139,13 @@ function CreatePostForm({ user,note }: { user: AuthUser;note?:Note }) {
       </section>
 
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+        <FormField label="รูปปกโพสต์" name="cover" error={coverError}>
+          {cover && <img src={noteCoverUrl(cover)} alt="ตัวอย่างรูปปก" className="mb-3 max-h-64 w-full rounded-box object-contain bg-base-200" />}
+          <input ref={coverRef} id="cover" name="cover" type="file" accept="image/jpeg,image/png,image/webp" autoFocus={focusCover} onChange={handleCoverChange} disabled={readingCover || submitting || createNote.isPending}
+            aria-invalid={!!coverError} aria-describedby="cover-help" className="file-input file-input-bordered w-full border border-gray-300 bg-white" />
+          <p id="cover-help" className="mt-1 text-sm opacity-60">{readingCover ? 'กำลังเตรียมรูปปก...' : 'ไม่บังคับ · JPG, PNG, WebP ไม่เกิน 10 MB · ระบบย่อรูปก่อนบันทึก'}</p>
+          {(cover || coverError) && <button type="button" className="btn btn-ghost btn-sm mt-2" disabled={readingCover || submitting || createNote.isPending} onClick={() => { setImage(null); setCoverError('') }}>ลบรูปปก</button>}
+        </FormField>
         <FormField label="ชื่อโน้ต" name="title" error={errors.title}>
           <input {...common('title')} placeholder="เช่น สรุปคณิตศาสตร์ ม.4" className={`input input-bordered ${cls(errors.title)}`} />
         </FormField>
@@ -167,7 +196,7 @@ function CreatePostForm({ user,note }: { user: AuthUser;note?:Note }) {
             : <p className="mt-1 text-sm opacity-60">{file ? `${file.name} (${formatFileSize(file.size)})` : 'ไม่บังคับ · .pdf .doc .docx .png .jpg · ไม่เกิน 3 MB'}</p>}
         </FormField>
 
-        <button type="submit" className="btn btn-primary btn-block" disabled={createNote.isPending || submitting || !subjects.data || !grades.data}>
+        <button type="submit" className="btn btn-primary btn-block" disabled={createNote.isPending || submitting || readingCover || !subjects.data || !grades.data}>
           {createNote.isPending || submitting ? 'กำลังบันทึก...' : note ? 'บันทึกการแก้ไข' : 'เผยแพร่โพสต์'}
         </button>
 

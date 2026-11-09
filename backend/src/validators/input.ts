@@ -19,7 +19,8 @@ export function integer(value: unknown, fallback: number, max: number): number {
 }
 export function noteInput(value: unknown) {
   const b = object(value)
-  if (Object.keys(b).some(k => !['title','description','content','subjectCode','subjectName','gradeCode','type','attachment'].includes(k))) throw new HttpError(400, 'มีฟิลด์ที่ไม่อนุญาต')
+  if (Object.keys(b).some(k => !['title','description','content','subjectCode','subjectName','gradeCode','type','attachment','image'].includes(k))) throw new HttpError(400, 'มีฟิลด์ที่ไม่อนุญาต')
+  if (b.image !== undefined && b.image !== null) validateCover(b.image)
   const type = text(b.type, 'ประเภท', 10)
   if (!['note','exam'].includes(type)) throw new HttpError(400, 'ประเภทต้องเป็น note หรือ exam')
   let attachment: { name: string; type: string; size: number; data: string } | null = null
@@ -33,5 +34,13 @@ export function noteInput(value: unknown) {
     if (!size || size > 3 * 1024 * 1024 || size !== a.size) throw new HttpError(400, 'ขนาดไฟล์ไม่ถูกต้อง (สูงสุด 3 MB)')
     attachment = { name, type: mime, size, data: a.data }
   }
-  return { title: text(b.title, 'ชื่อโน้ต', 200), description: text(b.description ?? '', 'คำอธิบาย', 10000, true), content: text(b.content ?? '', 'เนื้อหา', 100000, true), subjectCode: text(b.subjectCode, 'วิชา', 20), subjectName: text(b.subjectName ?? '', 'รายวิชา', 100, true), gradeCode: text(b.gradeCode, 'ระดับชั้น', 20), type, ...(b.attachment !== undefined ? { attachment } : {}) }
+  return { title: text(b.title, 'ชื่อโน้ต', 200), description: text(b.description ?? '', 'คำอธิบาย', 10000, true), content: text(b.content ?? '', 'เนื้อหา', 100000, true), subjectCode: text(b.subjectCode, 'วิชา', 20), subjectName: text(b.subjectName ?? '', 'รายวิชา', 100, true), gradeCode: text(b.gradeCode, 'ระดับชั้น', 20), type, ...(b.attachment !== undefined ? { attachment } : {}), ...(b.image !== undefined ? { image: b.image as string | null } : {}) }
+}
+
+export function validateCover(value: unknown) {
+  if (typeof value !== 'string' || value.length > 87_407) throw new HttpError(400, 'รูปปกต้องเป็น JPEG ขนาดไม่เกิน 64 KB')
+  const match = /^data:image\/jpeg;base64,([A-Za-z0-9+/]+={0,2})$/.exec(value)
+  if (!match || match[1].length % 4 !== 0) throw new HttpError(400, 'ข้อมูลรูปปกไม่ถูกต้อง')
+  const bytes = Buffer.from(match[1], 'base64')
+  if (bytes.length > 65_536 || bytes.length < 4 || bytes[0] !== 0xff || bytes[1] !== 0xd8 || bytes[2] !== 0xff || bytes[bytes.length - 2] !== 0xff || bytes[bytes.length - 1] !== 0xd9) throw new HttpError(400, 'ข้อมูลรูปปก JPEG ไม่ถูกต้อง')
 }

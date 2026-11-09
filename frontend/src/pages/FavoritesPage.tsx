@@ -1,9 +1,9 @@
 import { Link } from 'react-router'
-import { gradeLabels, subjectLabels, typeLabels } from '../data/labels'
 import { useFavorites } from '../store/useFavoriteStore'
 import { useAuthStore } from '../store/authStore'
 import { useUiStore } from '../store/uiStore'
 import CoverCard from '../components/ui/CoverCard'
+import NoteCard from '../components/ui/NoteCard'
 import FavoriteButton from '../components/ui/FavoriteButton'
 import { getBookCoverUrl } from '../api/openLibrary'
 
@@ -59,28 +59,7 @@ function FavoritesList() {
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {items.map((item, index) => item.kind === 'note' && item.note ? (
-            <div key={`${item.kind}-${item.id}`} className="relative">
-              <CoverCard
-                coverText={item.note.subject.charAt(0)}
-                colorIndex={index}
-                title={item.note.title}
-                subtitle={`โพสต์โดย: ${item.note.author}`}
-                tags={[
-                  subjectLabels[item.note.category],
-                  gradeLabels[item.note.grade],
-                  typeLabels[item.note.type],
-                ]}
-                action={<Link to={`/post/${item.id}`} className="btn btn-primary btn-sm">ดูรายละเอียด</Link>}
-              />
-              <FavoriteButton
-                kind="note"
-                id={item.id}
-                title={item.title}
-                subtitle={item.subtitle}
-                note={item.note}
-                className="absolute right-3 top-3"
-              />
-            </div>
+            <NoteCard key={`${item.kind}-${item.id}`} note={item.note} colorIndex={index} />
           ) : item.kind === 'book' ? (
             <article key={`${item.kind}-${item.id}`} className="card border-t-4 border-primary bg-white shadow-md transition-transform hover:-translate-y-1 hover:shadow-lg">
               <div className="relative flex h-56 items-center justify-center bg-base-200/50 p-3">
@@ -99,17 +78,16 @@ function FavoritesList() {
               </div>
             </article>
           ) : (
-            <div key={`${item.kind}-${item.id}`} className="relative">
               <CoverCard
+                key={`${item.kind}-${item.id}`}
                 coverText={item.title.charAt(0)}
                 colorIndex={index}
                 title={item.title}
                 subtitle={item.subtitle}
                 tags={[]}
+                cornerAction={<FavoriteButton kind="note" id={item.id} title={item.title} subtitle={item.subtitle} className="absolute right-2 top-2 bg-white shadow" />}
                 action={<Link to={`/post/${item.id}`} className="btn btn-primary btn-sm">ดูรายละเอียด</Link>}
               />
-              <FavoriteButton kind="note" id={item.id} title={item.title} subtitle={item.subtitle} className="absolute right-3 top-3" />
-            </div>
           ))}
         </div>
       )}

@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 import { api, json } from '../services/api'
 import { queryClient } from '../lib/queryClient'
 export type Role = 'admin' | 'user'
-export interface AuthUser { id: string; name: string; email: string; role: Role }
+export interface AuthUser { id: string; name: string; email: string; role: Role; avatar?: string | null }
 interface Session { user: AuthUser; accessToken: string; refreshToken: string }
 interface AuthState {
   user: AuthUser | null
@@ -16,11 +16,20 @@ interface AuthState {
   logout: () => Promise<void>
   refresh: () => Promise<boolean>
   initialize: () => Promise<void>
+  updateAvatar: (avatar: string) => Promise<void>
 }
 let refreshing: Promise<boolean> | null = null
 const empty = {user:null,accessToken:null,refreshToken:null,isAdmin:false}
 export const useAuthStore = create<AuthState>()(persist((set,get)=>({
   ...empty,authError:'',
+  updateAvatar: async(avatar)=>{
+    const userId=get().user?.id
+    const {data}=await api<{data:AuthUser}>('/auth/me',json('PATCH',{avatar}))
+    if(get().user?.id === userId) {
+      set({user:data})
+      await Promise.all([queryClient.invalidateQueries({queryKey:['notes']}),queryClient.invalidateQueries({queryKey:['favorites']})])
+    }
+  },
   login: async(email,password)=>{
     const {data}=await api<{data:Session}>('/auth/login',json('POST',{email,password}))
     queryClient.clear()

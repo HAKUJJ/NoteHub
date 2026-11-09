@@ -11,6 +11,7 @@ datasource db {
 model Profile {
   id          String     @id @db.Uuid
   displayName String     @map("display_name") @db.VarChar(100)
+  avatar      String?    @db.Text
   createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
   notes       Note[]
   favorites   Favorite[]
@@ -44,6 +45,7 @@ model Note {
   subjectName String     @default("") @map("subject_name") @db.VarChar(100)
   updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
   attachment  Json?
+  image       String?    @db.Text
   status      String     @default("approved") @db.VarChar(10)
   type        String     @default("note") @db.VarChar(10)
   subjectCode String     @map("subject_code") @db.VarChar(20)
