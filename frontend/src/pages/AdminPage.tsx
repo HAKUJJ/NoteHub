@@ -143,11 +143,19 @@ function AdminDashboard() {
           />
         )}
         {tab === 'sheets' && <SheetsPanel setToastMessage={setToastMessage} />}
-        {tab === 'users' && <p className="alert">ข้อมูลสาธิตจาก Mini Project 2 — การเปลี่ยนสถานะในหน้านี้ไม่เปลี่ยนบัญชี Supabase Auth</p>}
-        {tab === 'users' && <UsersPanel users={users} onToggleStatus={toggleUserStatus} />}
-        {tab === 'reports' && <p className="alert">ข้อมูลสาธิตจาก Mini Project 2 — รายงานปัญหายังไม่เชื่อมฐานข้อมูล</p>}
+        {tab === 'users' && (
+          <>
+            <p className="alert">
+              ข้อมูลสาธิตจาก Mini Project 2 — การเปลี่ยนสถานะในหน้านี้ไม่เปลี่ยนบัญชี Supabase Auth
+            </p>
+            <UsersPanel users={users} onToggleStatus={toggleUserStatus} />
+          </>
+        )}
         {tab === 'reports' && (
-          <ReportsPanel reports={reports} onResolve={resolveReport} onDelete={deleteReport} />
+          <>
+            <p className="alert">ข้อมูลสาธิตจาก Mini Project 2 — รายงานปัญหายังไม่เชื่อมฐานข้อมูล</p>
+            <ReportsPanel reports={reports} onResolve={resolveReport} onDelete={deleteReport} />
+          </>
         )}
 
         {toastMessage && (
@@ -166,9 +174,8 @@ function DashboardPanel({ userCount, pendingReports }: { userCount: number; pend
   const { data: sheets = [] } = useSheets()
   const pending = sheets.filter((s) => s.status === 'pending').length
   const { data: notes = [] } = useNotes()
-  const userPosts = notes.length
   const stats = [
-    { title: 'โพสต์ทั้งหมด', value: notes.length, desc: `ผู้ใช้สร้าง ${userPosts} โพสต์` },
+    { title: 'โพสต์ทั้งหมด', value: notes.length, desc: `ผู้ใช้สร้าง ${notes.length} โพสต์` },
     { title: 'ชีททั้งหมด', value: sheets.length, desc: 'ชีทในระบบ' },
     { title: 'รออนุมัติ', value: pending, desc: 'รอการตรวจสอบ' },
     { title: 'ผู้ใช้งาน', value: userCount, desc: 'สมาชิกทั้งหมด' },
@@ -198,13 +205,16 @@ function DashboardPanel({ userCount, pendingReports }: { userCount: number; pend
 type SetToast = (message: string | null) => void
 
 function SheetsPanel({ setToastMessage }: { setToastMessage: SetToast }) {
-  const { data: sheets = [], isLoading,isError } = useSheets()
+  const { data: sheets = [], isLoading, isError } = useSheets()
   const approve = useApproveSheet()
   const remove = useDeleteSheet()
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
-  const handleApprove = (sheet: Sheet) =>
-    approve.mutate(sheet.id, { onSuccess: () => setToastMessage(`อนุมัติชีท "${sheet.title}" เรียบร้อยแล้ว`) })
+  const handleApprove = (sheet: Sheet) => {
+    approve.mutate(sheet.id, {
+      onSuccess: () => setToastMessage(`อนุมัติชีท "${sheet.title}" เรียบร้อยแล้ว`),
+    })
+  }
 
   const confirmDelete = () => {
     if (deleteId === null) return
@@ -223,7 +233,11 @@ function SheetsPanel({ setToastMessage }: { setToastMessage: SetToast }) {
         <p className="opacity-70">ตรวจสอบและจัดการโพสต์ที่ผู้ใช้งานส่งเข้ามา</p>
       </div>
 
-      {(isError || approve.isError || remove.isError) && <p role="alert" className="alert alert-error">โหลดหรือแก้ไขข้อมูลไม่สำเร็จ</p>}
+      {(isError || approve.isError || remove.isError) && (
+        <p role="alert" className="alert alert-error">
+          โหลดหรือแก้ไขข้อมูลไม่สำเร็จ
+        </p>
+      )}
       <div className="overflow-x-auto rounded-box bg-white p-4 shadow-md">
         <table className="table table-zebra w-full">
           <thead>
@@ -243,7 +257,13 @@ function SheetsPanel({ setToastMessage }: { setToastMessage: SetToast }) {
                 </td>
               </tr>
             )}
-            {!isLoading && sheets.length === 0 && <tr><td colSpan={5} className="text-center">ไม่มีข้อมูลชีท</td></tr>}
+            {!isLoading && sheets.length === 0 && (
+              <tr>
+                <td colSpan={5} className="text-center">
+                  ไม่มีข้อมูลชีท
+                </td>
+              </tr>
+            )}
             {sheets.map((s) => (
               <tr key={s.id}>
                 <td>{s.title}</td>
@@ -395,7 +415,13 @@ function ReportsPanel({
             </tr>
           </thead>
           <tbody>
-            {reports.length === 0 && <tr><td colSpan={5} className="text-center opacity-70">ไม่มีรายงานปัญหา</td></tr>}
+            {reports.length === 0 && (
+              <tr>
+                <td colSpan={5} className="text-center opacity-70">
+                  ไม่มีรายงานปัญหา
+                </td>
+              </tr>
+            )}
             {reports.map((r) => (
               <tr key={r.id}>
                 <td className="font-medium">{r.topic}</td>
